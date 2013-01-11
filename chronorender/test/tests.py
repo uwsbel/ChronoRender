@@ -39,7 +39,6 @@ class test_DataProcessor(unittest.TestCase):
             objs.append(obj)
         return objs
 
-
     def test_function_dumpRIBToFile(self):
         objs = test_DataProcessor.createRenderObjects()
         data_proc = cr.DataProcessor.DataProcessor()
@@ -71,6 +70,21 @@ class test_DataProcessor(unittest.TestCase):
 
         return True
 
+class test_MetaData(unittest.TestCase):
+    def test_function_parse(self):
+        md = cr.MetaData.MetaData()
+        xmlfile = 'testcases/xml/0.xml'
+
+        f = open(xmlfile, 'r')
+        xml = f.read()
+        md.parseXML(xml)
+
+        settings = md.findAll('settings')
+        for inst in settings:
+            s = cr.RndrSettings.RndrSettings(**inst)
+            print s
+
+        return True
 
 if __name__ == '__main__':
     unittest.main()
