@@ -2,34 +2,27 @@
 <!DOCTYPE ChronoRender>
 <ChronoRender> 
     <settings>
-        <write>/home/aaron/Repos/chronoman/test/output/xml_test_###.jpg</write>
-        <data>/home/aaron/Repos/chronoman/test/input/data/stationary/*.dat</data>
+        <out>./output/out_####.tif</out>
+        <in>./testcases/stationary/*.dat</in>
         <dataformat>ID,POS_X,POS_Y,POS_Z,EULER_X,EULER_Y,EULER_Z,ignore,ignore,ignore,ignore</dataformat>
-        <delim>.</delim>
+        <delim>,</delim>
         <scaling>1.0</scaling>
         <radians>False</radians>
         <searchpath>./:/home/aaron/Repos/chronoman/test/input/injection_ribs:/home/aaron/Repos/chronoman/share/injection_ribs/:/home/aaron/Repos/chronoman/share/injection_ribs/cameras:/home/aaron/Repos/chronoman/share/injection_ribs/lighting:/home/aaron/Repos/chronoman/share/injection_ribs/passes:/home/aaron/Repos/chronoman/share/injection_ribs/scenes:/home/aaron/Repos/chronoman/share/injection_ribs/examples"</searchpath>
-        <test>13</test>
         <framerange>0 0</framerange>
     </settings>
+    <shader>
+        <type>Surface</type>
+        <name>plastic</name>
+        <Kd>0.1</Kd>
+    </shader>
+    <geometry>
+        <type>Plane</type>
+        <dims>0.5 7.7</dims>
+    </geometry>
     <renderobject>
         <name>tank</name>
         <range>0 100</range>
-        <shader>
-            <type>Surface</type>
-            <name>plastic</name>
-            <param>
-                <name>float Kd</name>
-                <value>0.1</value>
-            </param>
-        </shader>
-        <geometry>
-            <type>Plane</type>
-            <param>
-                <name>dimensions</name>
-                <value>0.5 7.7</value>
-            </param>
-        </geometry>
     </renderobject>
     <renderpass>
         <name>gorb</name>

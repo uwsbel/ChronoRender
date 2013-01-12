@@ -33,8 +33,11 @@ class MetaData():
         self._filename = ""
         self._root = None
 
-    def parseXML(self, inxmlstring):
+    def parseXMLString(self, inxmlstring):
         self._root = ET.fromstring(inxmlstring)
+
+    def parseXMLFile(self, inxmlfile):
+        self._root = ET.parse(inxmlfile).getroot()
 
     def findAll(self, name):
         out = []

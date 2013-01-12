@@ -1,4 +1,5 @@
-import weakref
+# import weakref
+import Object
 from itertools import izip
 
 class RndrObjectException(Exception):
@@ -7,28 +8,33 @@ class RndrObjectException(Exception):
     def __str__(self):
         return repr(self.value)
 
-class RndrObject(object):
-    _RndrObjectPool = weakref.WeakValueDictionary()
+class RndrObject(Object.Object):
+    # _RndrObjectPool = weakref.WeakValueDictionary()
 
-    def __new__(cls, name):
-        obj = RndrObject._RndrObjectPool.get(name, None)
-        if not obj:
-            obj = object.__new__(cls)
-            RndrObject._RndrObjectPool[name] = obj
-            obj.name = name
-        return obj
+    # def __new__(cls, name):
+        # obj = RndrObject._RndrObjectPool.get(name, None)
+        # if not obj:
+            # obj = object.__new__(cls)
+            # RndrObject._RndrObjectPool[name] = obj
+            # obj.name = name
+        # return obj
 
-    def __init__(self, name):
-        self.idRange = {"begin" : -1, "end" : -1}
-        self.bMotionBlur = False
-        self.bInstanced = True
-        self.bMultiObject = False
+    def __init__(self, *args, **kwargs):
+        super(RndrObject,self).__init__(*args, **kwargs)
 
-        self.name = name
         self.geometry = None
         self.shaders = {}
-        self.color = {"r" : 1, "g" : 0, "b" : 0}
-        self.data = ['test', 'test2']
+        self.data = []
+
+    def _initMembersDict(self):
+        self._members['motionblur']   = [bool, False]
+        self._members['instanced']    = [bool, True]
+        self._members['multiobject']  = [bool, False]
+        self._members['color']        = ['spalist', [1,0,0]]
+        self._members['range']        = ['spalist', [-1,-1]]
+
+    def getTypeName(self):
+        return 'renderobject'
 
     def parseData(self, entry):
         if len(entry) < len(self.data):
