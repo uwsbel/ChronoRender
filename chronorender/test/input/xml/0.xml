@@ -8,7 +8,7 @@
         <delim>,</delim>
         <scaling>1.0</scaling>
         <radians>False</radians>
-        <searchpath>./:/home/aaron/Repos/chronoman/test/input/injection_ribs:/home/aaron/Repos/chronoman/share/injection_ribs/:/home/aaron/Repos/chronoman/share/injection_ribs/cameras:/home/aaron/Repos/chronoman/share/injection_ribs/lighting:/home/aaron/Repos/chronoman/share/injection_ribs/passes:/home/aaron/Repos/chronoman/share/injection_ribs/scenes:/home/aaron/Repos/chronoman/share/injection_ribs/examples"</searchpath>
+        <searchpaths>./:./input</searchpaths>
         <framerange>0 0</framerange>
     </settings>
     <shader>

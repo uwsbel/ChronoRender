@@ -1,4 +1,4 @@
-from cr_object import Object
+from cr_object import Scriptable
 
 class RndrPassException(Exception):
     def __init__(self, value):
@@ -6,7 +6,11 @@ class RndrPassException(Exception):
     def __str__(self):
         return repr(self.value)
 
-class RndrPass(Object):
+class RndrPass(Scriptable):
+
+    @staticmethod
+    def getTypeName():
+        return "renderpass"
 
     def __init__(self, *args, **kwargs):
         super(RndrPass,self).__init__(*args, **kwargs)
@@ -19,9 +23,6 @@ class RndrPass(Object):
         self._members['lighting']       = [str, 'nothing']
         self._members['resolution']     = ['spalist', [-1,-1]]
         self._members['renderobjs']     = ['spalist', ['default']]
-
-    def getTypeName(self):
-        return 'renderpass'
 
     def render(self, data):
         return str(data)

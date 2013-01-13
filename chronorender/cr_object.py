@@ -12,6 +12,10 @@ class Object(object):
     """
     _pprinter = pprint.PrettyPrinter(indent=4)
 
+    @staticmethod
+    def getTypeName():
+        return "object"
+
     def __init__(self, *args, **kwargs):
         self._members = {}
         self._params = {}
@@ -61,12 +65,51 @@ class Object(object):
         else:
             raise ObjectException('no member ' + name + ' in ' + str(type(self)))
 
-    def getTypeName(self):
-        return "object"
-
     def pprint(self):
         print 'Name: ' + self.getTypeName()
         print 'Data: '
         Object._pprinter.pprint(self._members)
         print 'Params: '
         Object._pprinter.pprint(self._params)
+
+
+# extended object, can be rendered
+class RenderableException(ObjectException):
+    def __init__(self, value):
+        self.value = value
+    def __str__(self):
+        return repr(self.value)
+
+class Renderable(Object):
+    def __init__(self, *args, **kwargs):
+        super(Renderable,self).__init__(*args, **kwargs)
+
+        self._resolvedAssetPaths = False
+
+    def __str__(self):
+        return super(Renderable,self).__str__()
+
+    def resolveAssets(self, searchpaths):
+        self._resolvedAssetPaths = True
+        return 
+
+    def render(self, *args, **kwargs):
+        return
+
+
+# extended renderable, can have render scripted
+class ScriptableException(RenderableException):
+    def __init__(self, value):
+        self.value = value
+    def __str__(self):
+        return repr(self.value)
+
+class Scriptable(Renderable):
+    def __init__(self, *args, **kwargs):
+        super(Scriptable,self).__init__(*args, **kwargs)
+
+    def __str__(self):
+        return super(Scriptable,self).__str__()
+
+    def render(self, *args, **kwargs):
+        return

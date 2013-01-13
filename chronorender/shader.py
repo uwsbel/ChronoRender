@@ -1,4 +1,4 @@
-from cr_object import Object, ObjectException
+from cr_object import Renderable, RenderableException
 import slparams
 import os
 
@@ -8,7 +8,11 @@ class ShaderException(Exception):
     def __str__(self):
         return repr(self.value)
 
-class Shader(Object):
+class Shader(Renderable):
+
+    @staticmethod
+    def getTypeName():
+        return "shader"
 
     def __init__(self, *args, **kwargs):
         super(Shader,self).__init__(*args, **kwargs)
@@ -16,8 +20,7 @@ class Shader(Object):
         self._shdrparams = []
         self._paramdict = {}
         self._firstshdr = None
-
-        self._initShaderParameters()
+        self._shdrpath = ''
 
     def _initMembersDict(self):
         self._members['type']   = [str, 'Surface']
@@ -30,7 +33,9 @@ class Shader(Object):
         self._constructParameterDict()
 
     def _parseShaderParameters(self):
-        self._shdrparams = slparams.slparams(self.getMember('name'))
+        if self._shdrpath == '': return
+
+        self._shdrparams = slparams.slparams(self._shdrpath)
         if len(self._shdrparams) <= 0:
             raise ShaderException('no shaders in source file: ' +
                     self.getMember('name'))
@@ -51,7 +56,7 @@ class Shader(Object):
             try:
                 tmp = self.getMember(param.name)
                 val = type(param.default)(tmp)
-            except ObjectException:
+            except Exception:
                 val = param.default
 
             self._paramdict[param.name] = val
@@ -62,5 +67,10 @@ class Shader(Object):
     def getParameters(self):
         return self._paramdict
 
-    def getTypeName(self):
-        return 'shader'
+    # methods of Renderable class
+    def resolveAssets(self, searchpaths):
+        self._initShaderParameters()
+        self._resolvedAssetPaths = True
+
+    def render(self, *args, **kwargs):
+        return

@@ -1,5 +1,5 @@
 # import weakref
-from cr_object import Object
+from cr_object import Scriptable
 from itertools import izip
 
 class RndrObjectException(Exception):
@@ -8,7 +8,11 @@ class RndrObjectException(Exception):
     def __str__(self):
         return repr(self.value)
 
-class RndrObject(Object):
+class RndrObject(Scriptable):
+
+    @staticmethod
+    def getTypeName():
+        return "renderobject"
     # _RndrObjectPool = weakref.WeakValueDictionary()
 
     # def __new__(cls, name):
@@ -34,9 +38,6 @@ class RndrObject(Object):
         self._members['range']        = ['spalist', [-1,-1]]
         self._members['geo']          = ['spalist', ['default']]
         self._members['shaders']      = ['spalist', ['default']]
-
-    def getTypeName(self):
-        return 'renderobject'
 
     def parseData(self, entry):
         if len(entry) < len(self.data):
