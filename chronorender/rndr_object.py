@@ -1,5 +1,5 @@
 # import weakref
-import Object
+from cr_object import Object
 from itertools import izip
 
 class RndrObjectException(Exception):
@@ -8,7 +8,7 @@ class RndrObjectException(Exception):
     def __str__(self):
         return repr(self.value)
 
-class RndrObject(Object.Object):
+class RndrObject(Object):
     # _RndrObjectPool = weakref.WeakValueDictionary()
 
     # def __new__(cls, name):
@@ -32,6 +32,8 @@ class RndrObject(Object.Object):
         self._members['multiobject']  = [bool, False]
         self._members['color']        = ['spalist', [1,0,0]]
         self._members['range']        = ['spalist', [-1,-1]]
+        self._members['geo']          = ['spalist', ['default']]
+        self._members['shaders']      = ['spalist', ['default']]
 
     def getTypeName(self):
         return 'renderobject'

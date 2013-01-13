@@ -1,4 +1,4 @@
-import Object 
+from cr_object import Object
 import glob
 import os
 import re
@@ -9,7 +9,7 @@ class RndrSettingsException(Exception):
     def __str__(self):
         return repr(self.value)
 
-class RndrSettings(Object.Object):
+class RndrSettings(Object):
 
     def __init__(self, *args, **kwargs):
         super(RndrSettings,self).__init__(*args, **kwargs)

@@ -3,7 +3,7 @@
 <ChronoRender> 
     <settings>
         <out>./output/out_####.tif</out>
-        <in>./testcases/stationary/*.dat</in>
+        <in>./input/stationary/*.dat</in>
         <dataformat>ID,POS_X,POS_Y,POS_Z,EULER_X,EULER_Y,EULER_Z,ignore,ignore,ignore,ignore</dataformat>
         <delim>,</delim>
         <scaling>1.0</scaling>

@@ -7,6 +7,9 @@ class ObjectException(Exception):
         return repr(self.value)
 
 class Object(object):
+    """
+    base level object.  Parameterized by 
+    """
     _pprinter = pprint.PrettyPrinter(indent=4)
 
     def __init__(self, *args, **kwargs):
