@@ -7,6 +7,7 @@ from rndr_pass import *
 from rndr_settings import *
 from shader import *
 from ri_stream import *
+import cri_stream
 # import data_processor
 # import geometry     
 # import rndr_pass

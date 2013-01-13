@@ -1,4 +1,4 @@
-import sys, types, time, os, os.path, string, getpass, inspect, gzip
+import sys, types, time, os, os.path, string, getpass, inspect, gzip, cStringIO
 from rib_stream import RIBStream
 from ri_constants import *
 from ri_types import *
@@ -21,6 +21,8 @@ class RiStream():
         if name==RI_NULL or name=="":
             # -> stdout
             outstream = sys.stdout
+        elif name=="str":
+            outstream = cStringIO.StringIO()
         else:
             root, ext = os.path.splitext(name)
             ext=ext.lower()
@@ -33,7 +35,7 @@ class RiStream():
                 # -> pipe
                 outstream = os.popen(name,"w")
 
-        self._ribout = RIBStream(outstream)
+        self._ribout = RIBStream(outstream, name)
         self._current_context = None
         self._contexts = None
         self._objecthandle = None
@@ -42,6 +44,9 @@ class RiStream():
 
     def write(self, data):
         self._ribout.write(data)
+
+    def getText(self):
+        return self._ribout.getText()
 
     # RiErrorHandler
     def RiErrorHandler(self, handler):

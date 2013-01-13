@@ -1,4 +1,3 @@
-
 class RIBStream:
     """This class encapsulates the output stream.
 
@@ -8,8 +7,9 @@ class RIBStream:
     for now).
     """
     
-    def __init__(self, outstream):
+    def __init__(self, outstream, outtype=''):
         self.out = outstream
+        self.outtype = outtype
         self.output_version = 1
 
     def close(self):
@@ -23,11 +23,6 @@ class RIBStream:
 
     def write(self, data):
         """Write data into the stream."""
-        if self.output_version:
-            # The binding contains newer calls, so this version number
-            # might not be accurate anyway.
-#            self.out.write('version 3.03\n')
-            self.output_version = 0
         self.out.write(data)
 
     def writeArchiveRecord(self, data):
@@ -37,3 +32,8 @@ class RIBStream:
         write().
         """
         self.out.write(data)
+
+    def getText(self):
+        if self.outtype == 'str':
+            return self.out.getvalue()
+        return ''
