@@ -12,7 +12,7 @@
         <framerange>0 0</framerange>
     </settings>
     <shader>
-        <name>./input/shaders/plastic.sl</name>
+        <name>plastic.sl</name>
         <Kd>666</Kd>
     </shader>
     <geometry>

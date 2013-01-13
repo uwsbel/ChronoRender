@@ -3,7 +3,9 @@ import chronorender as cr
 
 class ShaderTestCase(unittest.TestCase):
     def setUp(self):
-        self.sdr = cr.Shader(name='./input/shaders/plastic.sl')
+        self.sdr = cr.Shader(name='plastic.sl')
+        self.finder = cr.Finder(['./input/shaders/'])
+        self.sdr.resolveAssets(self.finder)
 
     def tearDown(self):
         del self.sdr

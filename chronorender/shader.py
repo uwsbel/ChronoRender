@@ -1,6 +1,7 @@
 from cr_object import Renderable, RenderableException
 import slparams
 import os
+import finder as mfind
 
 class ShaderException(Exception):
     def __init__(self, value):
@@ -68,7 +69,12 @@ class Shader(Renderable):
         return self._paramdict
 
     # methods of Renderable class
-    def resolveAssets(self, searchpaths):
+    def resolveAssets(self, finder):
+        try:
+            self._shdrpath = finder.find(self.getMember('name'))
+        except mfind.AssetNotFoundException:
+            raise ShaderException('shader src not found')
+
         self._initShaderParameters()
         self._resolvedAssetPaths = True
 
