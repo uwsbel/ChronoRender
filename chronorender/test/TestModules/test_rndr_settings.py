@@ -33,14 +33,6 @@ class RndrSettingsTestCase(unittest.TestCase):
 
         self.assertEqual(retval, outfile)
 
-    def test_resolvedSearchPaths(self):
-        comp_path = './'
-        comp_path = os.path.abspath(comp_path) + os.sep
-
-        paths = self.settings.getSearchPaths()
-        self.assertEqual(len(paths), 2)
-        self.assertEqual(comp_path, paths[0])
-
 def TestSuite():
     tests = ['test_function_getInputDataFiles',
                 'test_function_getOutputFilePath']

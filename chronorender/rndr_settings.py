@@ -20,7 +20,6 @@ class RndrSettings(Object):
 
         self._resolveIOPath('in')
         self._resolveIOPath('out')
-        self._resovleSearchPathsToAbsolute()
         self._resolveOutputFormat()
         self._resolvePadding()
 
@@ -58,14 +57,6 @@ class RndrSettings(Object):
         if os.path.exists(abspath) != True:
             raise RndrSettingsException('path DNE for ' + membername + ': ' + abspath)
         self.setMember(membername, os.path.join(abspath,dre))
-
-    def _resovleSearchPathsToAbsolute(self):
-        resolved_paths = []
-        paths = self.getMember('searchpaths')
-        for i in range(0,len(paths)):
-            if os.path.exists(paths[i]):
-                resolved_paths.append(os.path.abspath(paths[i]) + os.sep)
-        self.setMember('searchpaths', resolved_paths)
 
     def _resolveOutputFormat(self):
         self.setMember('fileformat', os.path.splitext(self.getMember('out'))[1])

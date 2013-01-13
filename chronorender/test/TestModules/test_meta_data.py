@@ -30,9 +30,7 @@ class MetaDataTestCase(unittest.TestCase):
         elem = self.md.findAll('shader')
         for inst in elem:
             sdr = cr.Shader(**inst)
-            self.assertEqual(sdr.getInfo().name, 'plastic')
-            self.assertEqual(sdr.getInfo().type, 'surface')
-            self.assertEqual(sdr.getParameters()['Kd'], 666.0)
+            self.assertEqual(sdr.getMember('Kd'), '666')
 
 def TestSuite():
     tests = ['test_function_parse']

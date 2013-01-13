@@ -8,11 +8,28 @@ class AssetNotFoundException(Exception):
 
 class Finder():
     def __init__(self, paths):
-        self._paths = paths
+        self._searchpaths = self._resolveToAbsolutePaths(paths)
 
     def find(self, assetname):
-        for path in self._paths:
+        for path in self._searchpaths:
             testpath = path + assetname
             if os.path.exists(testpath):
                 return testpath
         raise AssetNotFoundException('could not find: ' + assetname)
+
+    def addPathsStr(self, path_string, delim=':'):
+        paths = path_string.split(delim)
+        self._searchpaths += self._resolveToAbsolutePaths(paths)
+
+    def addPathsList(self, path_list):
+        self._searchpaths += self._resolveToAbsolutePaths(path_list)
+
+    def getSearchPaths(self):
+        return self._searchpaths
+
+    def _resolveToAbsolutePaths(self, paths):
+        resolved_paths = []
+        for i in range(0,len(paths)):
+            if os.path.exists(paths[i]):
+                resolved_paths.append(os.path.abspath(paths[i]) + os.sep)
+        return resolved_paths

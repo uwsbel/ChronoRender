@@ -1,0 +1,7 @@
+object: 
+    geometry:
+        paths: ./geometry
+        plugins: 
+    renderpass:
+        paths: ./renderpass
+        plugins: 
