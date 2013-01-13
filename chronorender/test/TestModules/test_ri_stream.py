@@ -12,7 +12,6 @@ class RiStreamTestCase(unittest.TestCase):
         self.ri.RiFrameBegin(1)
         self.ri.write('test\n')
         self.ri.RiFrameEnd()
-        print self.ri.getText()
 
 def TestSuite():
     tests = ['test_write']

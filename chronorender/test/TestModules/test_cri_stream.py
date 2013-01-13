@@ -13,7 +13,7 @@ class CRiStreamTestCase(unittest.TestCase):
         self.ri.RiFrameBegin(1)
         self.ri.RiWorldBegin()
         self.ri.RiSurface("plastic")
-        self.ri.RiTranslate(0,0,-4)
+        self.ri.RiTranslate(3,0,0)
         self.ri.RiSphere(1,-1,1,360)
         self.ri.RiWorldEnd()
         self.ri.RiFrameEnd()

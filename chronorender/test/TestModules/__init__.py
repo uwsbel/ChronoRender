@@ -3,3 +3,4 @@ import test_meta_data
 import test_ri_stream
 import test_cri_stream
 import test_rndr_settings
+import test_shader

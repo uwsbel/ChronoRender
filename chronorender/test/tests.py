@@ -26,7 +26,8 @@ def getTestSuites(modules):
     suite3 = tm.test_ri_stream.TestSuite()
     suite4 = tm.test_rndr_settings.TestSuite()
     suite5 = tm.test_cri_stream.TestSuite()
-    return [suite1, suite2, suite3, suite4, suite5]
+    suite6 = tm.test_shader.TestSuite()
+    return [suite1, suite2, suite3, suite4, suite5, suite6]
 
 
 def setCWDToTestDir():

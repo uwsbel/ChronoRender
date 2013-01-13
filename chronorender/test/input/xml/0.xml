@@ -13,8 +13,7 @@
     </settings>
     <shader>
         <type>Surface</type>
-        <name>plastic</name>
-        <Kd>0.1</Kd>
+        <name>./input/shaders/plastic.sl</name>
     </shader>
     <geometry>
         <type>Plane</type>
