@@ -45,6 +45,9 @@ class RndrSettings(Object):
             frame += '0'
         outfile = self.getMember('out')
         return re.sub('#+', frame, outfile)
+    
+    def getSearchPaths(self):
+        return self.getMember('searchpaths')
 
     def _resolvePath(self, membername):
         data_re = self.getMember(membername)

@@ -12,8 +12,8 @@
         <framerange>0 0</framerange>
     </settings>
     <shader>
-        <type>Surface</type>
         <name>./input/shaders/plastic.sl</name>
+        <Kd>666</Kd>
     </shader>
     <geometry>
         <type>Plane</type>

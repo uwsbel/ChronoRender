@@ -2,6 +2,7 @@ from data_processor import *
 from geometry import *
 from main import *
 from meta_data import *
+from rndr_doc import *
 from rndr_object import *
 from rndr_pass import *
 from rndr_settings import *
