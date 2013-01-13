@@ -10,13 +10,13 @@ class PluginManagerTestCase(unittest.TestCase):
 
     def test_initFromConfig(self):
         man = PluginManager()
-        self.assertTrue('object' in man._plugins)
-        self.assertTrue('geometry' in man._plugins['object'])
+        self.assertTrue('factory' in man._plugins)
+        self.assertTrue('geometry' in man._plugins['factory'])
 
     def test_loadPlugins(self):
         man = PluginManager()
         man.loadPlugins()
-        self.assertTrue('sphere' in man._plugins['object']['geometry']['plugins'])
+        self.assertTrue('sphere' in man._plugins['factory']['geometry']['plugins'])
 
     def test_registerPlugins(self):
         man = PluginManager()
@@ -28,6 +28,6 @@ class PluginManagerTestCase(unittest.TestCase):
 
         man.loadPlugins()
         man.registerPlugins()
-        geomods = man.getPlugins('object','geometry')
+        geomods = man.getPlugins('factory','geometry')
 
         self.assertTrue(len(geomods) > 0)

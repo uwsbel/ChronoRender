@@ -1,4 +1,4 @@
-object: 
+factory: 
     geometry:
         paths: ./geometry
         plugins: 

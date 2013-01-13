@@ -55,12 +55,10 @@ class PluginManager():
                     vals['plugins'] = [PluginManager._getModuleName(x) for x in glob.glob(path+'*.py')]
 
     def registerPlugins(self):
-        impmodules = []
         for plugintype, val in self._plugins.iteritems():
             for pluginname, vals in val.iteritems():
                 # load paths into the current python context
                 sys.path += vals['paths']
-                impmodules += vals['plugins']
                 try:
                     vals['modules'] = map(__import__,vals['plugins'])
                 except ImportError:
@@ -69,8 +67,9 @@ class PluginManager():
 
     def getPlugins(self, plugintype, pluginname):
         if plugintype not in self._plugins:
-            raise Exception()
+            raise Exception('no plugin type: ' + plugintype)
         elif pluginname not in self._plugins[plugintype]:
-            raise Exception()
+            raise Exception('no plugin name: ' + pluginname + 
+                    ' for plugin type: ' + plugintype)
         else:
             return self._plugins[plugintype][pluginname]['modules']

@@ -29,9 +29,12 @@ class MetaData():
                 out[key] = val.get('__content__')
         return out
 
-    def __init__(self):
-        self._filename = ""
+    def __init__(self, inxmlfile=''):
+        self._filename = inxmlfile
         self._root = None
+
+        if inxmlfile != '':
+            self.parseXMLFile(inxmlfile)
 
     def parseXMLString(self, inxmlstring):
         self._root = ET.fromstring(inxmlstring)
