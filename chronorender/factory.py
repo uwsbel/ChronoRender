@@ -5,9 +5,10 @@ class Factory(Object):
     def getTypeName():
         return "factory"
 
-    def __init__(self):
+    def __init__(self, objtype):
         self._objectconstructors = {}
         self._modules = []
+        self._objtype = objtype
 
     def _loadObjects(self):
         self._objectconstructors.clear()
@@ -16,7 +17,7 @@ class Factory(Object):
             self._objectconstructors[obj.getTypeName()] = mod.build
 
     def getFactoryType(self):
-        return 'baseclass'
+        return self._objtype
 
     def setModules(self, modules):
         self._modules = modules

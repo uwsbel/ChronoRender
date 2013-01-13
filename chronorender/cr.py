@@ -1,13 +1,13 @@
 
 import meta_data as md
 import plugin_manager as pm
-import geometry_factory as gf
+import factory
 
 class ChronoRender():
     def __init__(self):
         self._metadata = md.MetaData()
         self._plugins = pm.PluginManager()
-        self._geofactory = gf.GeometryFactory()
+        self._geofactory = factory.Factory('geometry')
 
         self._initPlugins()
         self._initFactories()
@@ -20,6 +20,8 @@ class ChronoRender():
         modules = self._plugins.getPlugins(self._geofactory.getTypeName(),
                 self._geofactory.getFactoryType())
         self._geofactory.setModules(modules)
+        sph = self._geofactory.build({'name' : 'sphere'})
+        cube = self._geofactory.build({'name' : 'cube'})
 
     def createRenderJob(self, inxml):
         return
