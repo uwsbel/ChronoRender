@@ -1,12 +1,14 @@
 import unittest
 import chronorender as cr
 
+from metadata import MetaData
+
 import sys, os
 
 class RenderSettingsTestCase(unittest.TestCase):
     def setUp(self):
-        self.md = cr.MetaData()
-        self.md.parseXMLFile('input/xml/0.xml')
+        infile = 'input/yaml/0.yaml'
+        self.md = MetaData(infile)
 
         settings = self.md.findAll('rendersettings')
         if len(settings) <= 0:
@@ -17,3 +19,7 @@ class RenderSettingsTestCase(unittest.TestCase):
     def tearDown(self):
         del self.md
         del self.settings
+
+    def test_SearchPaths(self):
+        print self.settings._searchpaths
+        print self.settings._delim

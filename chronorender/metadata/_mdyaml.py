@@ -21,9 +21,7 @@ class _MDYAML(_MDReader):
     def _convertElemToDict(node):
         out = []
         if isinstance(node, list):
-            d = _MDYAML._flatten(node)
-            out += d
-            # d = _MDYAML._convertElemToDict(v)
+            out += _MDYAML._flatten(node)
         elif isinstance(node, dict):
             out.append(node)
         return out
@@ -64,5 +62,4 @@ class _MDYAML(_MDReader):
         for key, val in root.iteritems():
             if key == name:
                 out = _MDYAML._convertElemToDict(val)
-                # out.append(_MDYAML._convertElemToDict(val))
         return out
