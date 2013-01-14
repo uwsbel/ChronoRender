@@ -1,6 +1,7 @@
 from _mdreader import _MDReader
 import yaml
 import copy
+import itertools
 
 class _MDYAML(_MDReader):
     @staticmethod
@@ -8,8 +9,24 @@ class _MDYAML(_MDReader):
         return "mdreaderyaml"
 
     @staticmethod
+    def _flatten(darray):
+        merge = list(itertools.chain(darray))
+        # for i in range(0,len(merge)):
+            # if isinstance(merge[i], list):
+                # merge[i] = _MDYAML._flatten(*merge[i])
+        # merge = list(itertools.chain(*merge))
+        return merge
+
+    @staticmethod
     def _convertElemToDict(node):
-        return copy.deepcopy(node)
+        out = []
+        if isinstance(node, list):
+            d = _MDYAML._flatten(node)
+            out += d
+            # d = _MDYAML._convertElemToDict(v)
+        elif isinstance(node, dict):
+            out.append(node)
+        return out
 
     @staticmethod
     def _convertDictToElem(node):
@@ -33,15 +50,19 @@ class _MDYAML(_MDReader):
 
     def _parseFile(self, infile):
         stream = open(infile, 'r')
-        gen = yaml.load_all(stream)
-        for data in gen:
-            self._root.append(copy.deepcopy(data))
+        self._root = yaml.load(stream)
+        # gen = yaml.load(stream)
+        # for data in gen:
+            # self._root.append(copy.deepcopy(data))
 
     def findAll(self, name):
         out = []
 
-        for elem in self._root:
-            for key, val in elem.iteritems():
-                if key == name:
-                    out.append(val)
+        if 'chronorender'not in self._root:
+            raise Exception
+        root = self._root['chronorender']
+        for key, val in root.iteritems():
+            if key == name:
+                out = _MDYAML._convertElemToDict(val)
+                # out.append(_MDYAML._convertElemToDict(val))
         return out

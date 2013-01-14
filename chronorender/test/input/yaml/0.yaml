@@ -1,32 +1,28 @@
-rendersettings:
-    out: ./output/xml_0/out_####.tif
-    in: ./input/stationary/*.dat
-    dataformat: ID,POS_X,POS_Y,POS_Z,EULER_X,EULER_Y,EULER_Z,ignore,ignore,ignore,ignore
-    delim: .
-    scaling: 1.0
-    radians: False
-    searchpaths: ./,./input,./input/shaders
-    framerange: 0 0
----
-shader:
-    name: plastic.sl
-    Kd: 999
----
-shader:
-    name: gorb.sl
-    Kd: 888
----
-geometry:
-    type: sphere
-    radius: 0.666
-    dims: 0.5 7.7
----
-renderobject:
-    name: tank
-    range: 0 100
----
-renderpass:
-    name: gorb
-    scene: default_scene.rib
-    lighting: default_lighting
-    resolution: 640 480
+chronorender:
+    rendersettings:
+        out: ./output/xml_0/out_####.tif
+        in: ./input/stationary/*.dat
+        dataformat: ID,POS_X,POS_Y,POS_Z,EULER_X,EULER_Y,EULER_Z,ignore,ignore,ignore,ignore
+        delim: .
+        scaling: 1.0
+        radians: False
+        searchpaths: ./,./input,./input/shaders
+        framerange: 0 0
+    shader:
+        - name: plastic.sl
+          Kd: 999
+        - name: gorb.sl
+          Kd: 888
+    geometry:
+        - type: sphere
+          radius: 0.666
+          dims: 0.5 7.7
+        - type: cube
+    renderobject:
+        name: tank
+        range: 0 100
+    renderpass:
+        name: gorb
+        scene: default_scene.rib
+        lighting: default_lighting.rib
+        resolution: 640 480

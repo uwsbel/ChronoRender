@@ -42,7 +42,7 @@ class MetaDataTestCase(unittest.TestCase):
         self.assertEqual(len(rpass), 1)
 
         geom = md.findAll('geometry')
-        self.assertEqual(len(geom), 1)
+        self.assertEqual(len(geom), 2)
 
         shdr = md.findAll('shader')
         self.assertEqual(len(shdr), 2)
