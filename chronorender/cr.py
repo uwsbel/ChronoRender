@@ -3,11 +3,16 @@ import plugin_manager as pm
 import factory
 import rndr_job as rndrjob
 
+from datareader import DataReader
 from geometry import Geometry
+from lighting import Lighting
 from renderobject import RenderObject
 from renderpass import RenderPass
 from rendersettings import RenderSettings
+from scene import Scene
+from simulation import Simulation
 from shader import Shader
+from visualizer import Visualizer
 
 # create all singleton stuff
 class ChronoRender():
@@ -24,11 +29,17 @@ class ChronoRender():
         self._plugins.registerPlugins()
 
     def _initFactories(self):
+        self._createFactory(DataReader.getTypeName())
         self._createFactory(Geometry.getTypeName())
+        self._createFactory(Lighting.getTypeName())
         self._createFactory(RenderObject.getTypeName())
         self._createFactory(RenderPass.getTypeName())
         self._createFactory(RenderSettings.getTypeName())
+        self._createFactory(Scene.getTypeName())
+        self._createFactory(Simulation.getTypeName())
         self._createFactory(Shader.getTypeName())
+        self._createFactory(Visualizer.getTypeName())
+        print self._factories
 
     def _createFactory(self, typename):
         self._factories[typename] = factory.Factory(typename)

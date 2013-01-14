@@ -1,11 +1,21 @@
 factory: 
+    datareader:
+        paths: ./datareader
     geometry:
         paths: ./geometry
+    lighting:
+        paths: ./lighting
     renderobject:
         paths: ./renderobject
     renderpass:
         paths: ./renderpass
     rendersettings:
         paths: ./rendersettings
+    scene:
+        paths: ./scene
     shader:
         paths: ./shader
+    simulation:
+        paths: ./simulation
+    visualizer:
+        paths: ./visualizer

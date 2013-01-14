@@ -2,13 +2,23 @@ import sys, os, inspect
 
 # get submodule paths
 currpath = os.path.abspath(os.path.split(inspect.getfile(inspect.currentframe()))[0])
-geopath = os.path.join(currpath, 'geometry')
-robjpath = os.path.join(currpath, 'renderobject')
-rpasspath = os.path.join(currpath, 'renderpass')
-settingspath = os.path.join(currpath, 'rendersettings')
-shaderpath = os.path.join(currpath, 'shader')
+submodpaths = [                 \
+               'datareader',    \
+               'geometry',      \
+               'lighting',      \
+               'renderobject',  \
+               'renderpass',    \
+               'rendersettings',\
+               'scene',         \
+               'shader',        \
+               'simulation',    \
+               'visualizer'     \
+               ]
 
-paths = [currpath, geopath, robjpath, rpasspath, settingspath, shaderpath]
+paths = [currpath]
+for path in submodpaths:
+    paths.append(os.path.join(currpath, path))
+
 for path in paths:
     if path not in sys.path:
         sys.path.insert(0, path)
@@ -18,19 +28,20 @@ from main import *
 from meta_data import *
 from rndr_doc import *
 from ri_stream import *
+from cr import *
 import cri_stream
 from finder import *
-from cr import *
 from rndr_job import *
 
 # subdirs
+from datareader import *
 from geometry import *
+from lighting import *
 from renderobject import *
 from renderpass import *
 from rendersettings import *
+from scene import *
 from shader import *
-# import data_processor
-# import rndr_pass
-# import meta_data     
-# import rndr_object     
-# import shader     
+from simulation import *
+from visualizer import *
+
