@@ -12,7 +12,3 @@ class RiStreamTestCase(unittest.TestCase):
         self.ri.RiFrameBegin(1)
         self.ri.write('test\n')
         self.ri.RiFrameEnd()
-
-def TestSuite():
-    tests = ['test_write']
-    return unittest.TestSuite(map(RiStreamTestCase, tests))

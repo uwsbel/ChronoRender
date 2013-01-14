@@ -29,7 +29,3 @@ class ShaderTestCase(unittest.TestCase):
         check = self.sdr.getParameters()
         self.assertEqual(newKa, check['Ka'])
         self.assertEqual(newColor, check['specularcolor'])
-
-def TestSuite():
-    tests = ['test_parameters']
-    return unittest.TestSuite(map(ShaderTestCase, tests))

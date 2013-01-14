@@ -39,7 +39,6 @@ class ChronoRender():
         self._createFactory(Simulation.getTypeName())
         self._createFactory(Shader.getTypeName())
         self._createFactory(Visualizer.getTypeName())
-        print self._factories
 
     def _createFactory(self, typename):
         self._factories[typename] = factory.Factory(typename)
