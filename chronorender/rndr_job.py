@@ -1,7 +1,8 @@
-import datetime
+import datetime, os
 
 import meta_data as md
 import rndr_doc as rd
+import ri_stream as ri
 
 # represent a render job
 class RndrJobException(Exception):
@@ -12,10 +13,43 @@ class RndrJobException(Exception):
 
 class RndrJob():
     def __init__(self, inxml, factories):
-
         self._metadata      = md.MetaData(inxml)
         self._rndrdoc       = rd.RndrDoc(factories, self._metadata)
-        self._datecreated   = datetime.date
+        self._timecreated   = datetime.datetime.now()
+        self._frames        = self._rndrdoc.getFrameRange()
+        self._outputpath    = self._rndrdoc.getOutputFileDir()
+        self._outputdirs    = ['OUTPUT', 'SHADERS', 'SCRIPTS', 'ASSETS', 'LOG']
+        self._logfile       = os.path.join(self._outputpath, 'log_' + str(self._timecreated) + '.txt')
+
+        self._renderer      = None
 
     def run(self):
-        self._rndrdoc.render()
+        self._createOutDirs()
+        self._startRenderer()
+        for i in range(self._frames[0], self._frames[1]+1):
+            name = self._rndrdoc.getOutputDataFilePath(i)
+            self._writeToLog('starting render ' + name + ' at: ' + str(datetime.datetime.now()))
+            self._rndrdoc.render(self._renderer, framenumber=i)
+            self._writeToLog('finished render ' + name + ' at: ' + str(datetime.datetime.now()))
+
+    def _writeToLog(self, content):
+        print content
+        return
+
+    def _startRenderer(self, outstream=''):
+        self._writeToLog('starting renderer')
+        self._renderer = ri.RiStream(outstream)
+
+    def _createOutDirs(self):
+        if not os.path.exists(self._outputpath): 
+            os.makedirs(self._outputpath)
+            log_msg = 'created dir: ' + self._outputpath + '\n'
+            self._writeToLog(log_msg)
+
+        dirs = [os.path.join(self._outputpath, d) for d in self._outputdirs]
+        for di in dirs:
+            if not os.path.exists(di):
+                log_msg += di + '\n'
+                os.makedirs(di)
+                log_msg = 'created dir: ' + di + '\n'
+                self._writeToLog(log_msg)

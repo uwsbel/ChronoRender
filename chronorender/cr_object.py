@@ -97,7 +97,7 @@ class Renderable(Object):
         self._resolvedAssetPaths = True
         return 
 
-    def render(self, *args, **kwargs):
+    def render(self, ri, *args, **kwargs):
         return
 
 
@@ -115,5 +115,6 @@ class Scriptable(Renderable):
     def __str__(self):
         return super(Scriptable,self).__str__()
 
-    def render(self, *args, **kwargs):
+    def render(self, ri, *args, **kwargs):
+        # if script, run that
         return

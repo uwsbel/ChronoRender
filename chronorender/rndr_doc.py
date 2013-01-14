@@ -1,4 +1,6 @@
 # contains all assests needed to start a render job
+import glob, re, os
+
 from cr_object import Object
 from finder import Finder, AssetNotFoundException
 
@@ -61,7 +63,7 @@ class RndrDoc():
         self.rndrpasses = self._listFromMD(RenderPass)
         self.shaders    = self._listFromMD(Shader)
         self.geometry   = self._listFromMD(Geometry)
-        self.assetfinder = Finder(self.settings.getSearchPaths())
+        self.assetfinder = Finder(self.settings._searchpaths)
         # TODO lighting and scene
         self._resolveAssets()
 
@@ -75,7 +77,35 @@ class RndrDoc():
                 geo.resolveAssets(self.assetfinder)
         except AssetNotFoundException as err:
             print err
-            raise
 
-    def render(self):
+    def getFrameRange(self):
+        return [int(x) for x in self.settings._framerange]
+
+    def getInputDataFiles(self):
+        return glob.glob(self.settings._in)
+
+    def getOutputFileDir(self):
+        return os.path.abspath(os.path.split(self.settings._out)[0])
+
+    def getOutputDataFilePath(self, framenumber):
+        padd = self.settings._padding
+
+        frame = str(framenumber)
+        while len(frame) < padd:
+            frame = '0' + frame
+        outfile = self.settings._out
+        return re.sub('#+', frame, outfile)
+
+    def getOutputFileNameForFrameNumber(self, frame):
+        return '' 
+
+    def makeDocRelative(self):
+        return
+
+    def writeToFile(self, f):
+        return
+
+    def render(self, rib, **kwargs):
+        for geo in self.geometry:
+            geo.render(rib, **kwargs)
         return

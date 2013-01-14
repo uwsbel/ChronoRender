@@ -2,7 +2,7 @@
 <!DOCTYPE ChronoRender>
 <ChronoRender> 
     <rendersettings>
-        <out>./output/out_####.tif</out>
+        <out>./output/xml_0/out_####.tif</out>
         <in>./input/stationary/*.dat</in>
         <dataformat>ID,POS_X,POS_Y,POS_Z,EULER_X,EULER_Y,EULER_Z,ignore,ignore,ignore,ignore</dataformat>
         <delim>,</delim>
@@ -17,6 +17,7 @@
     </shader>
     <geometry>
         <type>sphere</type>
+        <radius>0.666</radius>
         <dims>0.5 7.7</dims>
     </geometry>
     <renderobject>

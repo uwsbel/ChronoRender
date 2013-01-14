@@ -37,19 +37,14 @@ class ChronoRender():
 
     def createAndRunRenderJob(self, inxml):
         job = self._createRenderJob(inxml)
-        self._createOutputDirectoryStructure()
         job.run()
 
     def createAndSubmitRenderJob(self, inxml):
         job = self._createRenderJob(inxml)
-        self._createOutputDirectoryStructure()
         self._submitRenderJob(job)
 
     def _createRenderJob(self, inxml):
         return rndrjob.RndrJob(inxml, self._factories)
-
-    def _createOutputDirectoryStructure(self):
-        return
 
     def _submitRenderJob(self, job):
         return

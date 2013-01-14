@@ -152,7 +152,7 @@ class RiStream():
                     self._ribout.output_version = 0
             return
                 
-        self._ribout.write('Option "'+name+'"'+_paramlist2string(paramlist, keyparams)+"\n")
+        self._ribout.write('Option "'+name+'"'+riutils.paramlist2string(paramlist, keyparams)+"\n")
 
     # RiAttribute
     def RiAttribute(self, name, *paramlist, **keyparams):
@@ -161,7 +161,7 @@ class RiStream():
         Example: RiAttribute("displacementbound", "sphere", 0.5)
         """
         
-        self._ribout.write('Attribute "'+name+'"'+_paramlist2string(paramlist, keyparams)+"\n")
+        self._ribout.write('Attribute "'+name+'"'+riutils.paramlist2string(paramlist, keyparams)+"\n")
 
     # RiAttributeBegin
     def RiAttributeBegin(self):
@@ -230,7 +230,7 @@ class RiStream():
         """
         
         if type==RI_NULL: type="null"
-        self._ribout.write('Hider "'+type+'"'+_paramlist2string(paramlist, keyparams)+"\n")
+        self._ribout.write('Hider "'+type+'"'+riutils.paramlist2string(paramlist, keyparams)+"\n")
 
     # RiSphere
     def RiSphere(self, radius,zmin,zmax,thetamax,*paramlist, **keyparams):
@@ -245,7 +245,7 @@ class RiStream():
         """
 
         self._ribout.write('Sphere %s %s %s %s'%(radius, zmin, zmax, thetamax)+ \
-                     _paramlist2string(paramlist, keyparams)+"\n")
+                     riutils.paramlist2string(paramlist, keyparams)+"\n")
 
     # RiCone
     def RiCone(self, height, radius, thetamax, *paramlist, **keyparams):
@@ -260,7 +260,7 @@ class RiStream():
         """
 
         self._ribout.write('Cone %s %s %s'%(height, radius, thetamax)+ \
-                     _paramlist2string(paramlist, keyparams)+"\n")
+                     riutils.paramlist2string(paramlist, keyparams)+"\n")
 
     # RiDisk
     def RiDisk(self, height, radius, thetamax, *paramlist, **keyparams):
@@ -274,7 +274,7 @@ class RiStream():
         Example: RiDisk(0.0, 1.0, 360)"""
 
         self._ribout.write('Disk %s %s %s'%(height, radius, thetamax)+ \
-                     _paramlist2string(paramlist, keyparams)+"\n")
+                     riutils.paramlist2string(paramlist, keyparams)+"\n")
 
     # RiCylinder
     def RiCylinder(self, radius,zmin,zmax,thetamax,*paramlist, **keyparams):
@@ -289,7 +289,7 @@ class RiStream():
         """
 
         self._ribout.write('Cylinder %s %s %s %s'%(radius, zmin, zmax, thetamax)+ \
-                     _paramlist2string(paramlist, keyparams)+"\n")
+                     riutils.paramlist2string(paramlist, keyparams)+"\n")
 
     # RiTorus
     def RiTorus(self, major, minor, phimin, phimax, thetamax, *paramlist, **keyparams):
@@ -304,7 +304,7 @@ class RiStream():
         """
 
         self._ribout.write('Torus %s %s %s %s %s'%(major, minor, phimin, phimax, thetamax)+ \
-                     _paramlist2string(paramlist, keyparams)+"\n")
+                     riutils.paramlist2string(paramlist, keyparams)+"\n")
 
     # RiHyperboloid
     def RiHyperboloid(self, point1, point2, thetamax, *paramlist, **keyparams):
@@ -316,7 +316,7 @@ class RiStream():
         p1 = riutils.seq2list(point1, 3)
         p2 = riutils.seq2list(point2, 3)
         self._ribout.write('Hyperboloid '+p1[1:-1]+' '+p2[1:-1]+' '+`thetamax`+ \
-                     _paramlist2string(paramlist, keyparams)+"\n")
+                     riutils.paramlist2string(paramlist, keyparams)+"\n")
 
     # RiParaboloid
     def RiParaboloid(self, rmax, zmin, zmax, thetamax, *paramlist, **keyparams):
@@ -331,7 +331,7 @@ class RiStream():
         """
 
         self._ribout.write('Paraboloid %s %s %s %s'%(rmax, zmin, zmax, thetamax)+ \
-                     _paramlist2string(paramlist, keyparams)+"\n")
+                     riutils.paramlist2string(paramlist, keyparams)+"\n")
 
     # RiPolygon
     def RiPolygon(self, *paramlist, **keyparams):
@@ -347,7 +347,7 @@ class RiStream():
         Example: RiPolygon(P=[0,1,0, 0,1,1, 0,0,1, 0,0,0])
         """
 
-        self._ribout.write('Polygon'+_paramlist2string(paramlist, keyparams)+"\n")
+        self._ribout.write('Polygon'+riutils.paramlist2string(paramlist, keyparams)+"\n")
 
     # RiGeneralPolygon
     def RiGeneralPolygon(self, nverts, *paramlist, **keyparams):
@@ -363,7 +363,7 @@ class RiStream():
         """
 
         self._ribout.write('GeneralPolygon '+ riutils.seq2list(nverts)+ \
-                     _paramlist2string(paramlist, keyparams)+"\n")
+                     riutils.paramlist2string(paramlist, keyparams)+"\n")
 
     # RiPointsPolygons
     def RiPointsPolygons(self, nverts, vertids, *paramlist, **keyparams):
@@ -383,7 +383,7 @@ class RiStream():
 
         self._ribout.write('PointsPolygons '+ riutils.seq2list(nverts)+' '+ \
                      riutils.seq2list(vertids)+ \
-                     _paramlist2string(paramlist, keyparams)+"\n")
+                     riutils.paramlist2string(paramlist, keyparams)+"\n")
 
     # RiPointsGeneralPolygons
     def RiPointsGeneralPolygons(self, nloops, nverts, vertids, *paramlist, **keyparams):
@@ -404,7 +404,7 @@ class RiStream():
 
         self._ribout.write('PointsGeneralPolygons '+riutils.seq2list(nloops)+' '+ \
                      riutils.seq2list(nverts)+' '+riutils.seq2list(vertids)+ \
-                     _paramlist2string(paramlist, keyparams)+"\n")
+                     riutils.paramlist2string(paramlist, keyparams)+"\n")
 
 
     # Predefined basis matrices
@@ -457,7 +457,7 @@ class RiStream():
         Example: RiPatch(RI_BILINEAR, P=[0,0,0, 1,0,0, 0,1,0, 1,1,0])
         """
 
-        self._ribout.write('Patch "'+type+'"'+_paramlist2string(paramlist, keyparams)+"\n")
+        self._ribout.write('Patch "'+type+'"'+riutils.paramlist2string(paramlist, keyparams)+"\n")
 
     # RiPatchMesh
     def RiPatchMesh(self, type, nu, uwrap, nv, vwrap, *paramlist, **keyparams):
@@ -476,7 +476,7 @@ class RiStream():
 
         self._ribout.write('PatchMesh "'+type+'" '+str(nu)+' "'+uwrap+'" '+\
                      str(nv)+' "'+vwrap+'"'+\
-                     _paramlist2string(paramlist, keyparams)+"\n")
+                     riutils.paramlist2string(paramlist, keyparams)+"\n")
         
 
     # RiNuPatch
@@ -492,7 +492,7 @@ class RiStream():
         self._ribout.write('NuPatch '+str(nu)+" "+str(uorder)+' '+riutils.seq2list(uknot)+" "+ \
                      str(umin)+" "+str(umax)+" "+ \
                     str(nv)+" "+str(vorder)+' '+riutils.seq2list(vknot)+" "+ \
-                     str(vmin)+" "+str(vmax)+_paramlist2string(paramlist, keyparams)+"\n")
+                     str(vmin)+" "+str(vmax)+riutils.paramlist2string(paramlist, keyparams)+"\n")
 
     # RiTrimCurve
     def RiTrimCurve(self, ncurves, order, knot, min, max, n, u, v, w):
@@ -520,7 +520,7 @@ class RiStream():
         uniform:  1              vertex:  #points    
         """
 
-        self._ribout.write('Points'+_paramlist2string(paramlist, keyparams)+"\n")
+        self._ribout.write('Points'+riutils.paramlist2string(paramlist, keyparams)+"\n")
 
     # RiCurves
     def RiCurves(self, type, nvertices, wrap, *paramlist, **keyparams):
@@ -543,7 +543,7 @@ class RiStream():
         """
 
         self._ribout.write('Curves "'+type+'" '+riutils.seq2list(nvertices)+' "'+wrap+'"'+
-                      _paramlist2string(paramlist, keyparams)+'\n')
+                      riutils.paramlist2string(paramlist, keyparams)+'\n')
 
     # RiSubdivisionMesh
     def RiSubdivisionMesh(self, scheme, nverts, vertids, tags, nargs, intargs, floatargs, *paramlist, **keyparams):
@@ -570,13 +570,13 @@ class RiStream():
         if len(tags)==0:
             self._ribout.write('SubdivisionMesh "'+scheme+'" '+riutils.seq2list(nverts)+' '+ \
                      riutils.seq2list(vertids)+' '+ \
-                     _paramlist2string(paramlist, keyparams)+"\n")
+                     riutils.paramlist2string(paramlist, keyparams)+"\n")
         else:
             self._ribout.write('SubdivisionMesh "'+scheme+'" '+riutils.seq2list(nverts)+' '+ \
                      riutils.seq2list(vertids)+' '+riutils.seq2list(tags)+' '+ \
                      riutils.seq2list(nargs)+' '+riutils.seq2list(intargs)+' '+ \
                      riutils.seq2list(floatargs)+' '+ \
-                     _paramlist2string(paramlist, keyparams)+"\n")
+                     riutils.paramlist2string(paramlist, keyparams)+"\n")
 
     # RiBlobby
     def RiBlobby(self, nleaf, code, floats, strings, *paramlist, **keyparams):
@@ -594,7 +594,7 @@ class RiStream():
 
         self._ribout.write('Blobby '+str(nleaf)+' '+riutils.seq2list(code)+' '+riutils.seq2list(floats)+
                       ' '+riutils.seq2list(strings)+
-                      _paramlist2string(paramlist, keyparams)+'\n')
+                      riutils.paramlist2string(paramlist, keyparams)+'\n')
 
     # RiColorSamples
     def RiColorSamples(self, nRGB, RGBn):
@@ -675,7 +675,7 @@ class RiStream():
         Example: RiShader("plastic", "plastic_layer", Kd=0.7, Ks=0.3)"""
 
         self._ribout.write('Shader "'+name+'"'+' "'+handle+'"'+ \
-                     _paramlist2string(paramlist, keyparams)+"\n")
+                     riutils.paramlist2string(paramlist, keyparams)+"\n")
         
     # RiSurface
     def RiSurface(self, name, *paramlist, **keyparams):
@@ -684,7 +684,7 @@ class RiStream():
         Example: RiSurface("plastic", Kd=0.7, Ks=0.3)"""
 
         self._ribout.write('Surface "'+name+'"'+ \
-                     _paramlist2string(paramlist, keyparams)+"\n")
+                     riutils.paramlist2string(paramlist, keyparams)+"\n")
 
     # RiInterior
     def RiInterior(self, name, *paramlist, **keyparams):
@@ -693,7 +693,7 @@ class RiStream():
         Example: RiInterior("water")
         """
 
-        self._ribout.write('Interior "'+name+'"'+_paramlist2string(paramlist, keyparams)+"\n")
+        self._ribout.write('Interior "'+name+'"'+riutils.paramlist2string(paramlist, keyparams)+"\n")
 
     # RiExterior
     def RiExterior(self, name, *paramlist, **keyparams):
@@ -702,7 +702,7 @@ class RiStream():
         Example: RiExterior("fog")
         """
 
-        self._ribout.write('Exterior "'+name+'"'+_paramlist2string(paramlist, keyparams)+"\n")
+        self._ribout.write('Exterior "'+name+'"'+riutils.paramlist2string(paramlist, keyparams)+"\n")
 
     # RiAtmosphere
     def RiAtmosphere(self, name, *paramlist, **keyparams):
@@ -717,7 +717,7 @@ class RiStream():
             self._ribout.write('Atmosphere\n')
         else:
             self._ribout.write('Atmosphere "'+name+'"'+ \
-                          _paramlist2string(paramlist, keyparams)+"\n")
+                          riutils.paramlist2string(paramlist, keyparams)+"\n")
 
     # RiDisplacement
     def RiDisplacement(self, name, *paramlist, **keyparams):
@@ -726,7 +726,7 @@ class RiStream():
         Example: RiDisplacement("dented", km=1.5)
         """
 
-        self._ribout.write('Displacement "'+name+'"'+_paramlist2string(paramlist, keyparams)+"\n")
+        self._ribout.write('Displacement "'+name+'"'+riutils.paramlist2string(paramlist, keyparams)+"\n")
 
     # RiImager
     def RiImager(self, name, *paramlist, **keyparams):
@@ -740,7 +740,7 @@ class RiStream():
         if name==RI_NULL:
             self._ribout.write('Imager\n')
         else:
-            self._ribout.write('Imager "'+name+'"'+_paramlist2string(paramlist, keyparams)+"\n")
+            self._ribout.write('Imager "'+name+'"'+riutils.paramlist2string(paramlist, keyparams)+"\n")
 
     # RiClipping
     def RiClipping(self, near, far):
@@ -774,7 +774,7 @@ class RiStream():
         """
 
         self._ribout.write('Display "'+name+'" "'+type+'" "'+mode+'"'+ \
-                     _paramlist2string(paramlist, keyparams)+"\n")
+                     riutils.paramlist2string(paramlist, keyparams)+"\n")
 
     # RiDisplayChannel
     def RiDisplayChannel(self, channel, *paramlist, **keyparams):
@@ -782,7 +782,7 @@ class RiStream():
 
         Example: RiDisplayChannel("color aovCi", "string opacity", "aovOi")
         """
-        self._ribout.write('DisplayChannel "%s"%s\n'%(channel, _paramlist2string(paramlist, keyparams)))
+        self._ribout.write('DisplayChannel "%s"%s\n'%(channel, riutils.paramlist2string(paramlist, keyparams)))
 
     # RiFormat
     def RiFormat(self, xres, yres, aspect):
@@ -825,7 +825,7 @@ class RiStream():
             self._ribout.write('Projection\n')
         else:
             self._ribout.write('Projection "'+name+'"'+ \
-                          _paramlist2string(paramlist, keyparams)+"\n")
+                          riutils.paramlist2string(paramlist, keyparams)+"\n")
 
     # RiCamera
     def RiCamera(self, name, *paramlist, **keyparams):
@@ -833,7 +833,7 @@ class RiStream():
 
         Example: RiCamera("rightcamera")
         """
-        self._ribout.write('Camera "%s"%s\n'%(name, _paramlist2string(paramlist, keyparams)))
+        self._ribout.write('Camera "%s"%s\n'%(name, riutils.paramlist2string(paramlist, keyparams)))
 
     # RiScreenWindow
     def RiScreenWindow(self, left, right, bottom, top):
@@ -1168,7 +1168,7 @@ class RiStream():
         if lshandle is None:
             self._lighthandle += 1
             lshandle = self._lighthandle
-            self._ribout.write('LightSource "%s" %d%s\n'%(name, lshandle, rituils.paramlist2string(paramlist, {})))
+            self._ribout.write('LightSource "%s" %d%s\n'%(name, lshandle, riuils.paramlist2string(paramlist, {})))
         else:
             self._ribout.write('LightSource "%s" "%s"%s\n'%(name, lshandle, riutils.paramlist2string(paramlist, {})))
             
@@ -1500,7 +1500,7 @@ class RiStream():
 
         self._ribout.write('MakeLatLongEnvironment "'+picname+'" "'+texname+'" "'+
                       filterfunc+'" '+str(swidth)+' '+str(twidth)+
-                      ritutils.paramlist2string(paramlist, keyparams)+'\n')
+                      riutils.paramlist2string(paramlist, keyparams)+'\n')
 
     # RiMakeCubeFaceEnvironment
     def RiMakeCubeFaceEnvironment(self, px,nx,py,ny,pz,nz, texname, fov, filterfunc, swidth, twidth, *paramlist, **keyparams):

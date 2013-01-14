@@ -12,3 +12,7 @@ class RndrJobTestCase(unittest.TestCase):
 
     def test_initJob(self):
         job = cr.RndrJob(self._infilexml, self._cr._factories)
+
+    def test_runJob(self):
+        job = cr.RndrJob(self._infilexml, self._cr._factories)
+        job.run()
