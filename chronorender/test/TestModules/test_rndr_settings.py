@@ -3,7 +3,7 @@ import chronorender as cr
 
 import sys, os
 
-class RndrSettingsTestCase(unittest.TestCase):
+class RenderSettingsTestCase(unittest.TestCase):
     def setUp(self):
         self.md = cr.MetaData()
         self.md.parseXMLFile('input/xml/0.xml')
@@ -12,7 +12,7 @@ class RndrSettingsTestCase(unittest.TestCase):
         if len(settings) <= 0:
             raise Exception('invalid settings')
 
-        self.settings = cr.RndrSettings(**settings[0])
+        self.settings = cr.RenderSettings(**settings[0])
 
     def tearDown(self):
         del self.md
@@ -32,8 +32,3 @@ class RndrSettingsTestCase(unittest.TestCase):
         retval = self.settings.getOutputDataFilePath(1200)
 
         self.assertEqual(retval, outfile)
-
-def TestSuite():
-    tests = ['test_function_getInputDataFiles',
-                'test_function_getOutputFilePath']
-    return unittest.TestSuite(map(RndrSettingsTestCase, tests))

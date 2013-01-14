@@ -1,6 +1,6 @@
-from chronorender.cr_object import Renderable
+from geometry import Geometry
 
-class Cube(Renderable):
+class Cube(Geometry):
     @staticmethod
     def getTypeName():
         return "cube"

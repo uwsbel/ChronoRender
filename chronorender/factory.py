@@ -23,6 +23,9 @@ class Factory(Object):
         self._modules = modules
         self._loadObjects()
 
-    def build(self, elem):
-        objname = elem['name'] 
-        return self._objectconstructors[objname]()
+    def build(self, typename, **kwargs):
+        if typename not in self._objectconstructors:
+            raise Exception('no object ' + typename + ' for factory type ' +
+                    self.getFactoryType())
+
+        return self._objectconstructors[typename]()

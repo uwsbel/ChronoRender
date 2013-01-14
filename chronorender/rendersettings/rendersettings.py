@@ -3,20 +3,20 @@ import glob
 import os
 import re
 
-class RndrSettingsException(Exception):
+class RenderSettingsException(Exception):
     def __init__(self, value):
         self.value = value
     def __str__(self):
         return repr(self.value)
 
-class RndrSettings(Object):
+class RenderSettings(Object):
 
     @staticmethod
     def getTypeName():
-        return "settings"
+        return "rendersettings"
 
     def __init__(self, *args, **kwargs):
-        super(RndrSettings,self).__init__(*args, **kwargs)
+        super(RenderSettings,self).__init__(*args, **kwargs)
 
         self._resolveIOPath('in')
         self._resolveIOPath('out')
@@ -55,7 +55,7 @@ class RndrSettings(Object):
         dpath, dre = os.path.split(data_re)
         abspath = os.path.abspath(dpath)
         if os.path.exists(abspath) != True:
-            raise RndrSettingsException('path DNE for ' + membername + ': ' + abspath)
+            raise RenderSettingsException('path DNE for ' + membername + ': ' + abspath)
         self.setMember(membername, os.path.join(abspath,dre))
 
     def _resolveOutputFormat(self):
@@ -64,3 +64,6 @@ class RndrSettings(Object):
     def _resolvePadding(self):
         filename = os.path.split(self.getMember('out'))[1]
         self.setMember('padding', len(re.findall('#+', filename)[-1]))
+
+def build():
+    return RenderSettings()

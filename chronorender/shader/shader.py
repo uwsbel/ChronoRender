@@ -80,3 +80,6 @@ class Shader(Renderable):
 
     def render(self, *args, **kwargs):
         return
+
+def build():
+    return Shader()

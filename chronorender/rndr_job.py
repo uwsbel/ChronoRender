@@ -1,3 +1,5 @@
+import meta_data as md
+import rndr_doc as rd
 
 # represent a render job
 class RndrJobException(Exception):
@@ -7,6 +9,17 @@ class RndrJobException(Exception):
         return repr(self.value)
 
 class RndrJob():
-    def __init__(self):
-        self.name = ''
-        self.datecreated = datetime.date
+    def __init__(self, inxml, factories):
+
+        self._metadata      = md.MetaData(inxml)
+        self._rndrdoc       = rd.RndrDoc(factories, self._metadata)
+        # self._datecreated   = datetime.date
+
+    def _createOutputDirectoryStructure(self):
+        return
+
+    def run(self):
+        return
+
+    def submit(self):
+        return

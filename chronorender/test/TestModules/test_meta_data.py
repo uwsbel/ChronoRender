@@ -17,13 +17,13 @@ class MetaDataTestCase(unittest.TestCase):
 
         elem = self.md.findAll('settings')
         for inst in elem:
-            s = cr.RndrSettings(**inst)
+            s = cr.RenderSettings(**inst)
         elem = self.md.findAll('renderobject')
         for inst in elem:
-            robj = cr.RndrObject(**inst)
+            robj = cr.RenderObject(**inst)
         elem = self.md.findAll('renderpass')
         for inst in elem:
-            rpass = cr.RndrPass(**inst)
+            rpass = cr.RenderPass(**inst)
         elem = self.md.findAll('geometry')
         for inst in elem:
             geo = cr.Geometry(**inst)

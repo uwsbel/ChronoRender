@@ -1,7 +1,11 @@
 factory: 
     geometry:
         paths: ./geometry
-        plugins: 
+    renderobject:
+        paths: ./renderobject
     renderpass:
         paths: ./renderpass
-        plugins: 
+    rendersettings:
+        paths: ./rendersettings
+    shader:
+        paths: ./shader

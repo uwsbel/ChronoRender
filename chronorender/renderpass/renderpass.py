@@ -1,19 +1,19 @@
 from cr_object import Scriptable
 
-class RndrPassException(Exception):
+class RenderPassException(Exception):
     def __init__(self, value):
         self.value = value
     def __str__(self):
         return repr(self.value)
 
-class RndrPass(Scriptable):
+class RenderPass(Scriptable):
 
     @staticmethod
     def getTypeName():
         return "renderpass"
 
     def __init__(self, *args, **kwargs):
-        super(RndrPass,self).__init__(*args, **kwargs)
+        super(RenderPass,self).__init__(*args, **kwargs)
 
         self.rndrobjects = []
 
@@ -26,3 +26,6 @@ class RndrPass(Scriptable):
 
     def render(self, data):
         return str(data)
+
+def build():
+    return RenderPass()

@@ -14,6 +14,7 @@ class RndrDocTestCase(unittest.TestCase):
         md.parseXMLFile(infile_xml)
 
         self.doc.initFromMetadata(md)
+        print self.doc.geometry
 
     # TODO
     def test_resolveAssets(self):

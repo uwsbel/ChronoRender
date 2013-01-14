@@ -2,13 +2,13 @@
 from cr_object import Scriptable
 from itertools import izip
 
-class RndrObjectException(Exception):
+class RenderObjectException(Exception):
     def __init__(self, value):
         self.value = value
     def __str__(self):
         return repr(self.value)
 
-class RndrObject(Scriptable):
+class RenderObject(Scriptable):
 
     @staticmethod
     def getTypeName():
@@ -24,7 +24,7 @@ class RndrObject(Scriptable):
         # return obj
 
     def __init__(self, *args, **kwargs):
-        super(RndrObject,self).__init__(*args, **kwargs)
+        super(RenderObject,self).__init__(*args, **kwargs)
 
         self.geometry = None
         self.shaders = {}
@@ -44,7 +44,7 @@ class RndrObject(Scriptable):
             msg = 'invalid data entry for ' + self.name +\
                     '\n  expected: ' + str(self.data) +\
                     '\n  got: ' + str(entry)
-            raise RndrObjectException(msg)
+            raise RenderObjectException(msg)
 
         ientry = iter(entry)
         idata = iter(self.data)
@@ -52,3 +52,6 @@ class RndrObject(Scriptable):
 
     def render(self, data):
         return str(data)
+
+def build():
+    return RenderObject()

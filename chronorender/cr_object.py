@@ -13,6 +13,10 @@ class Object(object):
     _pprinter = pprint.PrettyPrinter(indent=4)
 
     @staticmethod
+    def getInstanceQualifier():
+        return "type"
+
+    @staticmethod
     def getTypeName():
         return "object"
 

@@ -1,6 +1,8 @@
-from chronorender.cr_object import Renderable
+# from chronorender.cr_object import Renderable
 
-class Sphere(Renderable):
+from geometry import Geometry
+
+class Sphere(Geometry):
     @staticmethod
     def getTypeName():
         return "sphere"

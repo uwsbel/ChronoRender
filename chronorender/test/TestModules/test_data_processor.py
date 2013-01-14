@@ -8,7 +8,7 @@ class DataProcessorTestCase(unittest.TestCase):
         self.data_proc = cr.DataProcessor()
         self.objs = []
         for i in range(0,10):
-            self.objs.append(cr.RndrObject("obj"+str(i)))
+            self.objs.append(cr.RenderObject("obj"+str(i)))
         self.infile_stationary = './input/stationary/0.dat'
 
     def tearDown(self):
@@ -33,9 +33,3 @@ class DataProcessorTestCase(unittest.TestCase):
         self.data_proc.dumpRIBToStdOut(self.objs, self.infile_stationary)
 
         return True
-
-def TestSuite():
-    tests = ['test_function_dumpRIBToFile',
-                'test_function_dumpRIBToStdOut',
-                'test_function_dumpRIBToStdOut_Large']
-    return unittest.TestSuite(map(DataProcessorTestCase, tests))

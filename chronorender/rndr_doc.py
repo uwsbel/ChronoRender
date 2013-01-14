@@ -1,8 +1,7 @@
 # contains all assests needed to start a render job
-from rndr_settings import RndrSettings
 from cr_object import Object
-from rndr_settings import RndrSettings
-from rndr_pass import RndrPass
+from rendersettings import RenderSettings
+from renderpass import RenderPass
 from shader import Shader
 from geometry import Geometry
 
@@ -14,33 +13,48 @@ class RndrDocException(Exception):
 
 class RndrDoc():
 
-    @staticmethod
-    def _singletonFromMD( md, elemtype, bRequired=True):
-        elems = md.findAll(elemtype.getTypeName())
+    def _constructObject(self, instance, elemtype):
+        qual = elemtype.getInstanceQualifier()
+        if qual not in instance:
+            instance[qual] = elemtype.getTypeName()
+        concr_name = instance[qual]
+        return self.factories[elemtype.getTypeName()].build(concr_name, **instance)
+
+    def _singletonFromMD(self, elemtype, bRequired=True):
+        elems = self.md.findAll(elemtype.getTypeName())
         if len(elems) != 1 and bRequired:
             raise RndrDocException('not only ONE ' + elemtype.getTypeName() + ' in metadata')
-        return ([elemtype(**inst) for inst in elems])[0]
+        return self._constructObject(elems[0], elemtype)
 
-    @staticmethod
-    def _listFromMD(md, elemtype, bRequired=True):
-        elems = md.findAll(elemtype.getTypeName())
+    def _listFromMD(self, elemtype, bRequired=True):
+        elems = self.md.findAll(elemtype.getTypeName())
         if len(elems) <= 0 and bRequired:
             raise RndrDocException('no ' + elemtype.getTypeName() + ' in metadata')
-        return [elemtype(**inst) for inst in elems]
 
-    def __init__(self, **kwargs):
-        self.settings   = RndrSettings()
+        out = []
+        for inst in elems:
+            out.append(self._constructObject(inst, elemtype))
+        return out
+
+
+    def __init__(self, factories, md=None, **kwargs):
+        self.settings   = RenderSettings()
         self.rndrpasses = []
         self.shaders    = []
         self.geometry   = []
         self.lighting   = []
         self.scene      = []
+        self.factories  = factories
+        
+        if md != None:
+            self.initFromMetadata(md)
 
     def initFromMetadata(self, md):
-        self.settings   = RndrDoc._singletonFromMD(md, RndrSettings)
-        self.rndrpasses = RndrDoc._listFromMD(md, RndrPass)
-        self.shaders    = RndrDoc._listFromMD(md, Shader)
-        self.geometry   = RndrDoc._listFromMD(md, Geometry)
+        self.md = md
+        self.settings   = self._singletonFromMD(RenderSettings)
+        self.rndrpasses = self._listFromMD(RenderPass)
+        self.shaders    = self._listFromMD(Shader)
+        self.geometry   = self._listFromMD(Geometry)
         # TODO lighting and scene
 
     def resolveAssets(self):

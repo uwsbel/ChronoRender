@@ -15,7 +15,8 @@ class Geometry(Scriptable):
     def __init__(self, *args, **kwargs):
         super(Geometry,self).__init__(*args, **kwargs)
 
-        self.geoparams = {}
-
     def _initMembersDict(self):
-        self._members['type']   = [str, 'Surface']
+        return
+
+def build():
+    return Geometry()

@@ -44,11 +44,9 @@ class PluginManager():
         for plugintype, val in self._plugins.iteritems():
             for pluginname, vals in val.iteritems():
                 if 'paths' not in vals: 
-                    print 'not path'
                     self._plugins[plugintype][pluginname]['paths'] = []
                 if 'plugins' not in vals:
                     self._plugins[plugintype][pluginname]['plugins'] = []
-                    print 'not plugin'
 
                 vals['paths'] = self._getPaths(vals['paths'])
                 for path in vals['paths']:
@@ -58,7 +56,10 @@ class PluginManager():
         for plugintype, val in self._plugins.iteritems():
             for pluginname, vals in val.iteritems():
                 # load paths into the current python context
-                sys.path += vals['paths']
+                paths = vals['paths']
+                for path in paths:
+                    if path not in sys.path:
+                        sys.path.insert(0,path)
                 try:
                     vals['modules'] = map(__import__,vals['plugins'])
                 except ImportError:
