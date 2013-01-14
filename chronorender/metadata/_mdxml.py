@@ -1,26 +1,14 @@
 import xml.etree.ElementTree as ET
 from itertools import groupby
+from _mdreader import _MDReader
 
-class MetaDataException(Exception):
-    def __init__(self, value):
-        self.value = value
-    def __str__(self):
-        return repr(self.value)
-
-class MetaData():
+class _MDXML(_MDReader):
     @staticmethod
-    def _convertXMLToDict(parent):
-        # ret = {}
-        # if parent.items(): ret.update(dict(parent.items()))
-        # if parent.text: ret['__content__'] = parent.text
-        # if ('List' in parent.tag):
-            # ret['__list__'] = []
-            # for elem in parent:
-                # ret['__list__'].append(MetaData._convertXMLToDict(elem))
-        # else:
-            # for elem in parent:
-                # ret[elem.tag] = MetaData._convertXMLToDict(elem)
-        # return ret
+    def getTypeName():
+        return "mdreaderxml"
+
+    @staticmethod
+    def _convertElemToDict(node):
         def _xml2d(e):
             kids = dict(e.attrib)
             if e.text:
@@ -31,10 +19,10 @@ class MetaData():
                 g = [_xml2d(x) for x in g]
                 kids[k] = g
             return kids
-        return { parent.tag : _xml2d(parent) }
+        return { node.tag : _xml2d(node) }
 
     @staticmethod
-    def _convertDictToXML(parent):
+    def _convertDictToElem(node):
         def _d2xml(d, p):
             for k,v in d.items():
                 if isinstance(v,dict):
@@ -50,12 +38,11 @@ class MetaData():
                     p.tail = v
                 else:
                     p.set(k,v)
-        k,v = d.items()[0]
-        node = etree.Element(k)
-        _d2xml(v,node)
-        return node
+        k,v = node.items()[0]
+        elem = etree.Element(k)
+        _d2xml(v,elem)
+        return elem
 
-    # TODO
     @staticmethod
     def _convertDictToKwargs(args):
         def _attrToKwargs(var, attr, out):
@@ -77,23 +64,24 @@ class MetaData():
                     # out[key] = val.get(attr)                   
         return out
 
-    def __init__(self, inxmlfile=''):
+    def __init__(self, inxmlfile):
         self._filename = inxmlfile
         self._root = None
 
-        if inxmlfile != '':
-            self.parseXMLFile(inxmlfile)
+        self._parseFile(inxmlfile)
 
-    def parseXMLString(self, inxmlstring):
-        self._root = ET.fromstring(inxmlstring)
+    def _parseString(self, instring):
+        self._root = ET.fromstring(instring)
+        return
 
-    def parseXMLFile(self, inxmlfile):
-        self._root = ET.parse(inxmlfile).getroot()
+    def _parseFile(self, infile):
+        self._root = ET.parse(infile).getroot()
+        return
 
     def findAll(self, name):
         out = []
         for elem in self._root.iter(name):
-            d = MetaData._convertXMLToDict(elem)
-            kwargs = MetaData._convertDictToKwargs(d)
+            d = _MDXML._convertElemToDict(elem)
+            kwargs = _MDXML._convertDictToKwargs(d)
             out.append(kwargs)
         return out

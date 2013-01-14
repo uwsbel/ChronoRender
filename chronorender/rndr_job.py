@@ -1,6 +1,6 @@
 import datetime, os
 
-import meta_data as md
+import metadata as md
 import rndr_doc as rd
 import ri_stream as ri
 

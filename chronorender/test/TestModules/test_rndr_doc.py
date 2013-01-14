@@ -1,10 +1,12 @@
 import unittest, os
 import chronorender as cr
 
+from metadata import MetaData
+
 class RndrDocTestCase(unittest.TestCase):
     def setUp(self):
         self._cr = cr.ChronoRender()
-        md = cr.MetaData('./input/xml/0.xml')
+        md = MetaData('./input/xml/0.xml')
         self.doc = cr.RndrDoc(self._cr._factories, md)
 
     def tearDown(self):

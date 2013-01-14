@@ -1,36 +1,51 @@
 import unittest
 import chronorender as cr
 
+from metadata import MetaData
+
 import sys, os
 
 class MetaDataTestCase(unittest.TestCase):
-    def setUp(self):
-        self.md = cr.MetaData()
-        self.infile_xml = './input/xml/0.xml'
+    def test_XML(self):
+        infile_xml = './input/xml/0.xml'
+        md = MetaData(infile_xml)
 
-    def tearDown(self):
-        del self.md
+        elem = md.findAll('rendersettings')
+        self.assertEqual(len(elem), 1)
 
-    # TODO
-    def test_function_parse(self):
-        self.md.parseXMLFile(self.infile_xml)
+        elem = md.findAll('renderobject')
+        self.assertEqual(len(elem), 1)
 
-        elem = self.md.findAll('settings')
-        for inst in elem:
-            s = cr.RenderSettings(**inst)
-        elem = self.md.findAll('renderobject')
-        for inst in elem:
-            robj = cr.RenderObject(**inst)
-        elem = self.md.findAll('renderpass')
-        for inst in elem:
-            rpass = cr.RenderPass(**inst)
-        elem = self.md.findAll('geometry')
-        for inst in elem:
-            geo = cr.Geometry(**inst)
-        elem = self.md.findAll('shader')
+        elem = md.findAll('renderpass')
+        self.assertEqual(len(elem), 1)
+
+        elem = md.findAll('geometry')
+        self.assertEqual(len(elem), 1)
+
+        elem = md.findAll('shader')
+        self.assertEqual(len(elem), 1)
         for inst in elem:
             sdr = cr.Shader(**inst)
             self.assertEqual(sdr.getMember('Kd'), '666')
+
+    def test_YANML(self):
+        infile_yaml = './input/yaml/0.yaml'
+        md = MetaData(infile_yaml)
+
+        sett = md.findAll('rendersettings')
+        self.assertEqual(len(sett), 1)
+
+        robj = md.findAll('renderobject')
+        self.assertEqual(len(robj), 1)
+
+        rpass = md.findAll('renderpass')
+        self.assertEqual(len(rpass), 1)
+
+        geom = md.findAll('geometry')
+        self.assertEqual(len(geom), 1)
+
+        shdr = md.findAll('shader')
+        self.assertEqual(len(shdr), 2)
 
 def TestSuite():
     tests = ['test_function_parse']

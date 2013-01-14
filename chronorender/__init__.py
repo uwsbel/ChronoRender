@@ -2,22 +2,29 @@ import sys, os, inspect
 
 # get submodule paths
 currpath = os.path.abspath(os.path.split(inspect.getfile(inspect.currentframe()))[0])
-submodpaths = [                 \
-               'datareader',    \
-               'geometry',      \
-               'lighting',      \
-               'renderobject',  \
-               'renderpass',    \
-               'rendersettings',\
-               'scene',         \
-               'shader',        \
-               'simulation',    \
-               'visualizer'     \
-               ]
 
+# do select paths
+# submodpaths = [                 \
+               # 'datareader',    \
+               # 'geometry',      \
+               # 'lighting',      \
+               # 'renderobject',  \
+               # 'renderpass',    \
+               # 'rendersettings',\
+               # 'scene',         \
+               # 'shader',        \
+               # 'simulation',    \
+               # 'visualizer'     \
+               # ]
+# paths = [currpath]
+# for path in submodpaths:
+    # paths.append(os.path.join(currpath, path))
+
+# do all
 paths = [currpath]
-for path in submodpaths:
-    paths.append(os.path.join(currpath, path))
+for entry in os.listdir(currpath):
+    if os.path.isdir(entry):
+        paths.append(os.path.abspath(entry))
 
 for path in paths:
     if path not in sys.path:
@@ -25,7 +32,6 @@ for path in paths:
 
 from data_processor import *
 from main import *
-from meta_data import *
 from rndr_doc import *
 from ri_stream import *
 from cr import *
