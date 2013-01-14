@@ -28,4 +28,4 @@ class Factory(Object):
             raise Exception('no object ' + typename + ' for factory type ' +
                     self.getFactoryType())
 
-        return self._objectconstructors[typename]()
+        return self._objectconstructors[typename](**kwargs)

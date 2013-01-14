@@ -1,3 +1,5 @@
+import datetime
+
 import meta_data as md
 import rndr_doc as rd
 
@@ -13,13 +15,7 @@ class RndrJob():
 
         self._metadata      = md.MetaData(inxml)
         self._rndrdoc       = rd.RndrDoc(factories, self._metadata)
-        # self._datecreated   = datetime.date
-
-    def _createOutputDirectoryStructure(self):
-        return
+        self._datecreated   = datetime.date
 
     def run(self):
-        return
-
-    def submit(self):
-        return
+        self._rndrdoc.render()

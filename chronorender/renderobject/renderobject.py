@@ -53,5 +53,5 @@ class RenderObject(Scriptable):
     def render(self, data):
         return str(data)
 
-def build():
-    return RenderObject()
+def build(**kwargs):
+    return RenderObject(**kwargs)

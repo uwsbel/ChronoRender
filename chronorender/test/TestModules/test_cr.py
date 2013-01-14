@@ -8,7 +8,7 @@ class ChronoRenderTestCase(unittest.TestCase):
     def tearDown(self):
         del self._cr
 
-    def test_createRenderJob(self):
+    def test_createAndRunRenderJob(self):
         inxml = './input/xml/0.xml'
 
-        self._cr.createRenderJob(inxml)
+        self._cr.createAndRunRenderJob(inxml)

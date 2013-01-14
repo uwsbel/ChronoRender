@@ -1,21 +1,26 @@
 import os
 
 class AssetNotFoundException(Exception):
-    def __init__(self, value):
+    def __init__(self, finder, value):
+        self.finder = finder
         self.value = value
     def __str__(self):
-        return repr(self.value)
+        msg = self.value + ' on paths: ' + str(self.finder)
+        return repr(msg)
 
 class Finder():
     def __init__(self, paths):
         self._searchpaths = self._resolveToAbsolutePaths(paths)
+
+    def __str__(self):
+        return str(self._searchpaths)
 
     def find(self, assetname):
         for path in self._searchpaths:
             testpath = path + assetname
             if os.path.exists(testpath):
                 return testpath
-        raise AssetNotFoundException('could not find: ' + assetname)
+        raise AssetNotFoundException(self, 'could not find: ' + assetname)
 
     def addPathsStr(self, path_string, delim=':'):
         paths = path_string.split(delim)

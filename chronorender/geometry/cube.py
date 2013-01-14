@@ -8,5 +8,5 @@ class Cube(Geometry):
     def __str__(self):
         return 'cube'
 
-def build():
-    return Cube()
+def build(**kwargs):
+    return Cube(**kwargs)

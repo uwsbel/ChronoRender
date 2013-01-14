@@ -27,5 +27,5 @@ class RenderPass(Scriptable):
     def render(self, data):
         return str(data)
 
-def build():
-    return RenderPass()
+def build(**kwargs):
+    return RenderPass(**kwargs)

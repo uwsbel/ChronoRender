@@ -8,7 +8,7 @@
         <delim>,</delim>
         <scaling>1.0</scaling>
         <radians>False</radians>
-        <searchpaths>./:./input</searchpaths>
+        <searchpaths>./:./input:./input/shaders</searchpaths>
         <framerange>0 0</framerange>
     </rendersettings>
     <shader>

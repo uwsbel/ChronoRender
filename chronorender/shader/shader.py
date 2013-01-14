@@ -70,16 +70,12 @@ class Shader(Renderable):
 
     # methods of Renderable class
     def resolveAssets(self, finder):
-        try:
-            self._shdrpath = finder.find(self.getMember('name'))
-        except mfind.AssetNotFoundException:
-            raise ShaderException('shader src not found')
-
+        self._shdrpath = finder.find(self.getMember('name'))
         self._initShaderParameters()
         self._resolvedAssetPaths = True
 
     def render(self, *args, **kwargs):
         return
 
-def build():
-    return Shader()
+def build(**kwargs):
+    return Shader(**kwargs)

@@ -2,7 +2,8 @@
 """
 
 import types, re
-import ri
+import ri_utils
+# import ri
 # from cgtypes import vec3
 try:
     import ctypes
@@ -1487,7 +1488,7 @@ class _RenderManAPI:
         Appends None (RI_NULL) to the parameter list.
         """
         # Combine the paramlist and keyparams values...
-        res = ri._merge_paramlist(paramlist, keyparams)
+        res = ri_utils.merge_paramlist(paramlist, keyparams)
     
         # Check if the values need conversion...
         for i in range(0, len(res), 2):

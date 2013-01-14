@@ -18,5 +18,5 @@ class Geometry(Scriptable):
     def _initMembersDict(self):
         return
 
-def build():
-    return Geometry()
+def build(**kwargs):
+    return Geometry(**kwargs)

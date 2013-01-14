@@ -8,7 +8,7 @@ class RenderSettingsTestCase(unittest.TestCase):
         self.md = cr.MetaData()
         self.md.parseXMLFile('input/xml/0.xml')
 
-        settings = self.md.findAll('settings')
+        settings = self.md.findAll('rendersettings')
         if len(settings) <= 0:
             raise Exception('invalid settings')
 

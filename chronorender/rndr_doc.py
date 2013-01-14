@@ -1,7 +1,10 @@
 # contains all assests needed to start a render job
 from cr_object import Object
-from rendersettings import RenderSettings
+from finder import Finder, AssetNotFoundException
+
+from renderobject import RenderObject
 from renderpass import RenderPass
+from rendersettings import RenderSettings
 from shader import Shader
 from geometry import Geometry
 
@@ -38,13 +41,15 @@ class RndrDoc():
 
 
     def __init__(self, factories, md=None, **kwargs):
-        self.settings   = RenderSettings()
-        self.rndrpasses = []
-        self.shaders    = []
-        self.geometry   = []
-        self.lighting   = []
-        self.scene      = []
-        self.factories  = factories
+        self.settings       = RenderSettings()
+        self.rndrobjs       = []
+        self.rndrpasses     = []
+        self.shaders        = []
+        self.geometry       = []
+        self.lighting       = []
+        self.scene          = []
+        self.factories      = factories
+        self.assetfinder    = None
         
         if md != None:
             self.initFromMetadata(md)
@@ -52,21 +57,25 @@ class RndrDoc():
     def initFromMetadata(self, md):
         self.md = md
         self.settings   = self._singletonFromMD(RenderSettings)
+        self.rndrobjs   = self._listFromMD(RenderObject)
         self.rndrpasses = self._listFromMD(RenderPass)
         self.shaders    = self._listFromMD(Shader)
         self.geometry   = self._listFromMD(Geometry)
+        self.assetfinder = Finder(self.settings.getSearchPaths())
         # TODO lighting and scene
+        self._resolveAssets()
 
-    def resolveAssets(self):
-        paths = self.settings.getSearchPaths()
-
+    def _resolveAssets(self):
         try:
             for rpass in self.rndrpasses:
-                rpass.resolveAssets(paths)
+                rpass.resolveAssets(self.assetfinder)
             for shdr in self.shaders:
-                shdr.resolveAssets(paths)
+                shdr.resolveAssets(self.assetfinder)
             for geo in self.geometry:
-                geo.resolveAssets(paths)
-        except Exception:
-            print 'whoops'
-            return
+                geo.resolveAssets(self.assetfinder)
+        except AssetNotFoundException as err:
+            print err
+            raise
+
+    def render(self):
+        return

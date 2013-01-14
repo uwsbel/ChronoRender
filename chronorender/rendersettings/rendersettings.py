@@ -65,5 +65,5 @@ class RenderSettings(Object):
         filename = os.path.split(self.getMember('out'))[1]
         self.setMember('padding', len(re.findall('#+', filename)[-1]))
 
-def build():
-    return RenderSettings()
+def build(**kwargs):
+    return RenderSettings(**kwargs)

@@ -20,6 +20,8 @@ from rndr_doc import *
 from ri_stream import *
 import cri_stream
 from finder import *
+from cr import *
+from rndr_job import *
 
 # subdirs
 from geometry import *
