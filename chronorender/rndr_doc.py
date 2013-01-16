@@ -4,11 +4,11 @@ import glob, re, os
 from cr_object import Object
 from finder import Finder, AssetNotFoundException
 
-from renderobject import RenderObject
-from renderpass import RenderPass
-from rendersettings import RenderSettings
-from shader import Shader
-from geometry import Geometry
+from chronorender.renderobject import RenderObject
+from chronorender.renderpass import RenderPass
+from chronorender.rendersettings import RenderSettings
+from chronorender.shader import Shader
+from chronorender.geometry import Geometry
 
 class RndrDocException(Exception):
     def __init__(self, value):
@@ -18,32 +18,8 @@ class RndrDocException(Exception):
 
 class RndrDoc():
 
-    def _constructObject(self, instance, elemtype):
-        qual = elemtype.getInstanceQualifier()
-        if qual not in instance:
-            instance[qual] = elemtype.getTypeName()
-        concr_name = instance[qual]
-        return self.factories[elemtype.getTypeName()].build(concr_name, **instance)
-
-    def _singletonFromMD(self, elemtype, bRequired=True):
-        elems = self.md.findAll(elemtype.getTypeName())
-        if len(elems) != 1 and bRequired:
-            raise RndrDocException('not only ONE ' + elemtype.getTypeName() + ' in metadata')
-        return self._constructObject(elems[0], elemtype)
-
-    def _listFromMD(self, elemtype, bRequired=True):
-        elems = self.md.findAll(elemtype.getTypeName())
-        if len(elems) <= 0 and bRequired:
-            raise RndrDocException('no ' + elemtype.getTypeName() + ' in metadata')
-
-        out = []
-        for inst in elems:
-            out.append(self._constructObject(inst, elemtype))
-        return out
-
-
-    def __init__(self, factories, md=None, **kwargs):
-        self.settings       = RenderSettings()
+    def __init__(self, factories, md, *args, **kwargs):
+        self.settings       = None
         self.rndrobjs       = []
         self.rndrpasses     = []
         self.shaders        = []
@@ -52,17 +28,17 @@ class RndrDoc():
         self.scene          = []
         self.factories      = factories
         self.assetfinder    = None
+        self.md             = md
         
-        if md != None:
-            self.initFromMetadata(md)
+        self.initFromMetadata(md)
 
     def initFromMetadata(self, md):
         self.md = md
-        self.settings   = self._singletonFromMD(RenderSettings)
-        self.rndrobjs   = self._listFromMD(RenderObject)
-        self.rndrpasses = self._listFromMD(RenderPass)
-        self.shaders    = self._listFromMD(Shader)
-        self.geometry   = self._listFromMD(Geometry)
+        self.settings   = self.factories.buildObject(RenderSettings, md.singleFromClassType(RenderSettings))
+        self.rndrobjs   = self.factories.buildObject(RenderObject, md.listFromClassType(RenderObject))
+        self.rndrpasses = self.factories.buildObject(RenderPass, md.listFromClassType(RenderPass))
+        self.shaders    = self.factories.buildObject(Shader, md.listFromClassType(Shader))
+        self.geometry   = self.factories.buildObject(Geometry, md.listFromClassType(Geometry))
         self.assetfinder = Finder(self.settings._searchpaths)
         # TODO lighting and scene
         self._resolveAssets()

@@ -1,24 +1,26 @@
-
-import plugin_manager as pm
+import inspect
+import chronorender.plugins as pm
 import factory
 import rndr_job as rndrjob
+import factorydict as fdict
 
-from dataparser import DataParser
-from geometry import Geometry
-from lighting import Lighting
-from renderobject import RenderObject
-from renderpass import RenderPass
-from rendersettings import RenderSettings
-from scene import Scene
-from simulation import Simulation
-from shader import Shader
-from visualizer import Visualizer
+from ribgenerator import RIBGenerator
+from chronorender.geometry import Geometry
+from chronorender.datasource import DataSource
+from chronorender.lighting import Lighting
+from chronorender.renderobject import RenderObject
+from chronorender.renderpass import RenderPass
+from chronorender.rendersettings import RenderSettings
+from chronorender.scene import Scene
+from chronorender.simulation import Simulation
+from chronorender.shader import Shader
+from chronorender.visualizer import Visualizer
 
 # create all singleton stuff
 class ChronoRender():
     def __init__(self):
         self._plugins           = pm.PluginManager()
-        self._factories         = {}
+        self._factories         = fdict.FactoryDict()
         self._jobs              = []
 
         self._initPlugins()
@@ -29,21 +31,25 @@ class ChronoRender():
         self._plugins.registerPlugins()
 
     def _initFactories(self):
-        self._createFactory(DataParser.getTypeName())
-        self._createFactory(Geometry.getTypeName())
-        self._createFactory(Lighting.getTypeName())
-        self._createFactory(RenderObject.getTypeName())
-        self._createFactory(RenderPass.getTypeName())
-        self._createFactory(RenderSettings.getTypeName())
-        self._createFactory(Scene.getTypeName())
-        self._createFactory(Simulation.getTypeName())
-        self._createFactory(Shader.getTypeName())
-        self._createFactory(Visualizer.getTypeName())
+        self._createFactory(DataSource)
+        self._createFactory(Geometry)
+        self._createFactory(Lighting)
+        self._createFactory(RenderObject)
+        self._createFactory(RenderPass)
+        self._createFactory(RenderSettings)
+        self._createFactory(Scene)
+        self._createFactory(Simulation)
+        self._createFactory(Shader)
+        self._createFactory(Visualizer)
 
-    def _createFactory(self, typename):
-        self._factories[typename] = factory.Factory(typename)
-        modules = self._plugins.getPlugins(factory.Factory.getTypeName(), typename)
-        self._factories[typename].setModules(modules)
+    def _createFactory(self, cls):
+        modules = self._plugins.getPlugins(factory.Factory.getTypeName(), cls.getTypeName())
+        # add default constructor
+        modules.append(inspect.getmodule(cls))
+        self._factories.addFactory(cls.getTypeName(), modules)
+
+    def getFactories(self, typename):
+            return self._factories.getFactory(typename)
 
     def createAndRunRenderJob(self, inxml):
         job = self._createRenderJob(inxml)

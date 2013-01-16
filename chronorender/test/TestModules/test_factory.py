@@ -1,11 +1,11 @@
 import unittest
 
 from chronorender.factory import Factory
-from chronorender.plugin_manager import PluginManager
+import chronorender.plugins as pm
 
 class FactoryTestCase(unittest.TestCase):
     def setUp(self):
-        self._pm = PluginManager()
+        self._pm = pm.PluginManager()
         self._pm.loadPlugins()
         self._pm.registerPlugins()
 

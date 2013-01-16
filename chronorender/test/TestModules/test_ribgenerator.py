@@ -1,11 +1,15 @@
 import unittest
 import chronorender as cr
 
+from metadata import MetaData
+
 import sys, os
 
-class DataProcessorTestCase(unittest.TestCase):
+class RIBGenertorTestCase(unittest.TestCase):
     def setUp(self):
-        self.data_proc = cr.DataProcessor()
+        self._cr = cr.ChronoRender()
+        md = MetaData('./input/yaml/1.yaml')
+        self.data_proc = cr.RIBGenerator(self._cr._factories, md)
         self.objs = []
         for i in range(0,10):
             self.objs.append(cr.RenderObject("obj"+str(i)))

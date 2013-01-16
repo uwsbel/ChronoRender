@@ -5,7 +5,7 @@ from visualizer import Visualizer
 class VisualizerTestCase(unittest.TestCase):
     def setUp(self):
         self._cr = ChronoRender()
-        self._factory = self._cr._factories[Visualizer.getTypeName()]
+        self._factory = self._cr._factories.getFactory(Visualizer.getTypeName())
 
     def tearDown(self):
         del self._cr

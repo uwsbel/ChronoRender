@@ -5,7 +5,7 @@ from simulation import Simulation
 class SimulationTestCase(unittest.TestCase):
     def setUp(self):
         self._cr = ChronoRender()
-        self._factory = self._cr._factories[Simulation.getTypeName()]
+        self._factory = self._cr._factories.getFactory(Simulation.getTypeName())
 
     def tearDown(self):
         del self._cr

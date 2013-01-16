@@ -1,27 +1,38 @@
 import os
 import StringIO
 
-class DataProcessorException(Exception):
+from chronorender.datasource import DataSource
+
+class RIBGeneratorException(Exception):
     def __init__(self, value):
         self.value = value
     def __str__(self):
         return repr(self.value)
 
-class DataProcessor():
+class RIBGenerator():
 
     # max in mem at give time
     _MaxBufferSize = 5000000
 
-    def __init__(self):
-        self._datadelim = ","
-        self._filename = ""
-        self._datapath = "./"
-        self._idcounter = 0
-        self._idindex = -1
-        self._buffersize = 0
-        self._rawdata =[]
+    def __init__(self, factories, md, *args, **kwargs):
+        self._datadelim     = ","
+        self._filename      = ""
+        self._datapath      = "./"
+        self._idcounter     = 0
+        self._idindex       = -1
+        self._buffersize    = 0
+        self._rawdata       = []
         self._organizeddata = {}
-        self._bytesread = 0
+        self._bytesread     = 0
+        self.factories      = factories
+        self.datasources    = []
+
+        self.initFromMetadata(md)
+
+    def initFromMetadata(self, md):
+        self.md = md
+        self.datasources    = self.factories.buildObject(DataSource, md.listFromClassType(DataSource))
+        print self.datasources
 
     def dumpRIBToFile(self, rndrobjs, filein, fileout):
         self.__initOrganizedDataMap(rndrobjs)
@@ -45,7 +56,7 @@ class DataProcessor():
 
     def __readRawData(self, filein):
         if os.path.exists(filein) != True:
-            raise DataProcessorException('could not find data file: ' + filein)
+            raise RIBGeneratorException('could not find data file: ' + filein)
 
         filesize = os.path.getsize(filein)
 
@@ -53,9 +64,9 @@ class DataProcessor():
             self._bytesread = 0
             return True
 
-        if (filesize - self._bytesread) > DataProcessor._MaxBufferSize:
+        if (filesize - self._bytesread) > RIBGenerator._MaxBufferSize:
             self.__slowFileRead(filein)
-            self._bytesread += DataProcessor._MaxBufferSize
+            self._bytesread += RIBGenerator._MaxBufferSize
         else:
             self.__fastFileRead(filein)
             self._bytesread = filesize
@@ -70,10 +81,10 @@ class DataProcessor():
 
 
     def __slowFileRead(self, filein):
-        raise DataProcessorException('file too big: ' + filein)
+        raise RIBGeneratorException('file too big: ' + filein)
         f = open(filein, 'r')
         for line in f:
-            self._bytesread += DataProcessor._MaxBufferSize
+            self._bytesread += RIBGenerator._MaxBufferSize
         f.close()
 
     def __organizeRawData(self, rndrobjs):

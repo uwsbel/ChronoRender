@@ -5,7 +5,7 @@ from scene import Scene
 class SceneTestCase(unittest.TestCase):
     def setUp(self):
         self._cr = ChronoRender()
-        self._factory = self._cr._factories[Scene.getTypeName()]
+        self._factory = self._cr._factories.getFactory(Scene.getTypeName())
 
     def tearDown(self):
         del self._cr

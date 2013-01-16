@@ -22,15 +22,15 @@ currpath = os.path.abspath(os.path.split(inspect.getfile(inspect.currentframe())
 
 # do all
 paths = [currpath]
-for entry in os.listdir(currpath):
-    if os.path.isdir(entry):
-        paths.append(os.path.abspath(entry))
+# for entry in os.listdir(currpath):
+    # if os.path.isdir(entry):
+        # paths.append(os.path.abspath(entry))
 
 for path in paths:
     if path not in sys.path:
         sys.path.insert(0, path)
 
-from data_processor import *
+from ribgenerator import *
 from main import *
 from rndr_doc import *
 from ri_stream import *

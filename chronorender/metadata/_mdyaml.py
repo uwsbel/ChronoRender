@@ -1,5 +1,5 @@
 from _mdreader import _MDReader
-import yaml
+import thirdparty.yaml as tyaml
 import copy
 import itertools
 
@@ -42,13 +42,13 @@ class _MDYAML(_MDReader):
         self._parseFile(inxmlfile)
 
     def _parseString(self, instring):
-        gen = yaml.load_all(instring)
+        gen = tyaml.load_all(instring)
         for data in gen:
             self._root = copy.deepcopy(data)
 
     def _parseFile(self, infile):
         stream = open(infile, 'r')
-        self._root = yaml.load(stream)
+        self._root = tyaml.load(stream)
         # gen = yaml.load(stream)
         # for data in gen:
             # self._root.append(copy.deepcopy(data))

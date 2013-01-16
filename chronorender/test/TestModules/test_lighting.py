@@ -5,7 +5,7 @@ from lighting import Lighting
 class LightingTestCase(unittest.TestCase):
     def setUp(self):
         self._cr = ChronoRender()
-        self._factory = self._cr._factories[Lighting.getTypeName()]
+        self._factory = self._cr._factories.getFactory(Lighting.getTypeName())
 
     def tearDown(self):
         del self._cr

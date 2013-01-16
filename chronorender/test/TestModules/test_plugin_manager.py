@@ -1,5 +1,5 @@
 import unittest
-from chronorender.plugin_manager import PluginManager
+import chronorender.plugins as pm
 
 class PluginManagerTestCase(unittest.TestCase):
     def setUp(self):
@@ -9,22 +9,22 @@ class PluginManagerTestCase(unittest.TestCase):
         return
 
     def test_initFromConfig(self):
-        man = PluginManager()
+        man = pm.PluginManager()
         self.assertTrue('factory' in man._plugins)
         self.assertTrue('geometry' in man._plugins['factory'])
 
     def test_loadPlugins(self):
-        man = PluginManager()
+        man = pm.PluginManager()
         man.loadPlugins()
         self.assertTrue('sphere' in man._plugins['factory']['geometry']['plugins'])
 
     def test_registerPlugins(self):
-        man = PluginManager()
+        man = pm.PluginManager()
         man.loadPlugins()
         self.assertTrue(man.registerPlugins(), True)
 
     def test_getPlugins(self):
-        man = PluginManager()
+        man = pm.PluginManager()
 
         man.loadPlugins()
         man.registerPlugins()

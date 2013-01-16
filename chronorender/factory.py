@@ -6,6 +6,8 @@ class Factory(Object):
         return "factory"
 
     def __init__(self, objtype):
+        super(Factory,self).__init__()
+
         self._objectconstructors = {}
         self._modules = []
         self._objtype = objtype
@@ -29,3 +31,6 @@ class Factory(Object):
                     self.getFactoryType())
 
         return self._objectconstructors[typename](**kwargs)
+
+    def __str__(self):
+        return str(self._objectconstructors)

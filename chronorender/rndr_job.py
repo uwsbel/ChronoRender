@@ -1,7 +1,8 @@
 import datetime, os
 
-import metadata as md
+import chronorender.metadata as md
 import rndr_doc as rd
+import ribgenerator as ribgen
 import ri_stream as ri
 
 # represent a render job
@@ -15,6 +16,7 @@ class RndrJob():
     def __init__(self, inxml, factories):
         self._metadata      = md.MetaData(inxml)
         self._rndrdoc       = rd.RndrDoc(factories, self._metadata)
+        self._ribgen        = ribgen.RIBGenerator(factories, self._metadata)
         self._timecreated   = datetime.datetime.now()
         self._frames        = self._rndrdoc.getFrameRange()
         self._outputpath    = self._rndrdoc.getOutputFileDir()

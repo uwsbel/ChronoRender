@@ -1,4 +1,4 @@
-import yaml
+import thirdparty.yaml as yaml
 import inspect, os, glob, sys
 
 class PluginManagerException(Exception):
@@ -26,7 +26,7 @@ class PluginManager():
 
     def _findDefaultConfigFile(self):
         self._configpath = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-        return self._configpath + os.sep + PluginManager._defaultConfigFile
+        return os.path.join(self._configpath, PluginManager._defaultConfigFile)
 
     def _getPaths(self, pathstr):
         curr_path = os.getcwd()
@@ -62,7 +62,9 @@ class PluginManager():
                         sys.path.insert(0,path)
                 try:
                     vals['modules'] = map(__import__,vals['plugins'])
-                except ImportError:
+                except ImportError as imp:
+                    print 'import error: ' + str(vals)
+                    print imp
                     return False
         return True
 
