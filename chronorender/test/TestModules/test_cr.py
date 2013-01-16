@@ -9,6 +9,6 @@ class ChronoRenderTestCase(unittest.TestCase):
         del self._cr
 
     def test_createAndRunRenderJob(self):
-        inxml = './input/xml/0.xml'
+        inxml = './input/metadata/xml/0.xml'
 
         self._cr.createAndRunRenderJob(inxml)

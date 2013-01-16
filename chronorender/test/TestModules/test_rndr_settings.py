@@ -7,7 +7,7 @@ import sys, os
 
 class RenderSettingsTestCase(unittest.TestCase):
     def setUp(self):
-        infile = 'input/yaml/0.yaml'
+        infile = './input/metadata/yaml/0.yaml'
         self.md = MetaData(infile)
 
         settings = self.md.findAll('rendersettings')

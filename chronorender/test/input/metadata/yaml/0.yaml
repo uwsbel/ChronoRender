@@ -1,7 +1,7 @@
 chronorender:
     rendersettings:
         out: "./output/xml_0/out_####.tif"
-        in: "./input/stationary/*.dat"
+        in: "./input/data/stationary/*.dat"
         dataformat: "ID,POS_X,POS_Y,POS_Z,EULER_X,EULER_Y,EULER_Z,ignore,ignore,ignore,ignore"
         delim: ","
         scaling: 1.0
@@ -26,3 +26,5 @@ chronorender:
         scene: "default_scene.rib"
         lighting: "default_lighting.rib"
         resolution: 640 480
+    datasource:
+        type: "csv"

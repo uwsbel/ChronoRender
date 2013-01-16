@@ -1,4 +1,4 @@
-import datetime, os
+import datetime, os, logging
 
 import chronorender.metadata as md
 import rndr_doc as rd
@@ -22,8 +22,8 @@ class RndrJob():
         self._outputpath    = self._rndrdoc.getOutputFileDir()
         self._outputdirs    = ['OUTPUT', 'SHADERS', 'SCRIPTS', 'ASSETS', 'LOG']
 
-        self._logfilename   = os.path.join(os.path.join(self._outputpath, 'LOG'), 'log_' + str(self._timecreated) + '.txt')
-        self._logfile       = None
+        self._logfilename   = os.path.join(os.path.join(self._outputpath, 'LOG'), 'log_' + str(self._timecreated) + '.log')
+        self._logger        = None
 
         self._renderer      = None
 
@@ -39,19 +39,28 @@ class RndrJob():
         self._closeLogFile()
 
     def _writeToLog(self, content):
-        self._logfile.write(content+'\n')
+        # self._logger.info('starting render ' + name + ' at: ' + str(datetime.datetime.now()))
+        self._logger.write(content+'\n')   
 
     def _openLogFile(self):
-        self._logfile = open(self._logfilename, 'a')
+        self._logger= open(self._logfilename, 'a')
+
+        # self._logger = logging.getLogger('')
+        # hdlr = logging.FileHandler(self._logfilename)
+        # formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+        # hdlr.setFormatter(formatter)
+        # self._logger.addHandler(hdlr)
+        # self._logger.setLevel(logging.INFO)
 
     def _closeLogFile(self):
-        self._logfile.close()
+        self._logger.close()
 
     def _startRenderer(self, outstream=''):
         self._writeToLog('starting renderer')
         self._renderer = ri.RiStream(outstream)
 
     def _createOutDirs(self):
+        log_msg = ""
         if not os.path.exists(self._outputpath): 
             os.makedirs(self._outputpath)
             log_msg = 'created dir: ' + self._outputpath + '\n'

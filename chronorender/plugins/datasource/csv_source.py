@@ -47,9 +47,9 @@ class UnicodeReader:
     which is encoded in the given encoding.
     """
 
-    def __init__(self, f, dialect='excel', encoding="utf-8", empty_as_null=False, **kwds):
+    def __init__(self, f, dialect='excel', encoding="utf-8", empty_as_null=False, delim=',', **kwds):
         f = UTF8Recoder(f, encoding)
-        self.reader = csv.reader(f, dialect=dialect, **kwds)
+        self.reader = csv.reader(f, dialect=dialect, delimiter=delim, **kwds)
         self.converters = []
         self.empty_as_null = empty_as_null
 
@@ -128,7 +128,7 @@ class CSVDataSource(DataSource):
 
     def __init__(self, resource='', read_header=False, dialect=None, encoding=None,
                  detect_header=False, sample_size=200, skip_rows=None,
-                 empty_as_null=True,fields=None, **reader_args):
+                 empty_as_null=True, fields=None, delim=',', **reader_args):
         """Creates a CSV data source stream.
         
         :Attributes:
@@ -159,6 +159,7 @@ class CSVDataSource(DataSource):
         self.reader_args = reader_args
         self.reader = None
         self.dialect = dialect
+        self.delim = delim
         
         self.close_file = False
         self.skip_rows = skip_rows
@@ -209,7 +210,7 @@ class CSVDataSource(DataSource):
         # self.reader = csv.reader(handle, **self.reader_args)
         self.reader = UnicodeReader(self.file, encoding=self.encoding,
                                     empty_as_null=self.empty_as_null,
-                                    **self.reader_args)
+                                    delim=self.delim, **self.reader_args)
 
         if self.skip_rows:
             for i in range(0, self.skip_rows):
@@ -223,12 +224,17 @@ class CSVDataSource(DataSource):
             # header. (Issue #17 might be somehow related)
             if not self.fields:
                 fields = [ (name, "string", "default") for name in field_names]
-                self.fields = brewery.metadata.FieldList(fields)
+                self.fields = data.metadata.FieldList(fields)
+
+        # TODO
             
         if not self.fields:
             raise RuntimeError("Fields are not initialized. "
                                "Either read fields from CSV header or "
                                "set them manually")
+
+        else:
+            self.fields = data.metadata.FieldList(self.fields)
 
         self.reader.set_fields(self.fields)
         

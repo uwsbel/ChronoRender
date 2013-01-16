@@ -8,12 +8,12 @@ import sys, os
 class RIBGenertorTestCase(unittest.TestCase):
     def setUp(self):
         self._cr = cr.ChronoRender()
-        md = MetaData('./input/yaml/1.yaml')
+        md = MetaData('./input/metadata/yaml/1.yaml')
         self.data_proc = cr.RIBGenerator(self._cr._factories, md)
         self.objs = []
         for i in range(0,10):
             self.objs.append(cr.RenderObject("obj"+str(i)))
-        self.infile_stationary = './input/stationary/0.dat'
+        self.infile_stationary = './input/data/stationary/0.dat'
 
     def tearDown(self):
         del self.data_proc

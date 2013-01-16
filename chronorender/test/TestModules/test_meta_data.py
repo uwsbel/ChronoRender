@@ -7,7 +7,7 @@ import sys, os
 
 class MetaDataTestCase(unittest.TestCase):
     def test_XML(self):
-        infile_xml = './input/xml/0.xml'
+        infile_xml = './input/metadata/xml/0.xml'
         md = MetaData(infile_xml)
 
         elem = md.findAll('rendersettings')
@@ -29,7 +29,7 @@ class MetaDataTestCase(unittest.TestCase):
             self.assertEqual(sdr.getMember('Kd'), '666')
 
     def test_YANML(self):
-        infile_yaml = './input/yaml/0.yaml'
+        infile_yaml = './input/metadata/yaml/0.yaml'
         md = MetaData(infile_yaml)
 
         sett = md.findAll('rendersettings')

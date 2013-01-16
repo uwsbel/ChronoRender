@@ -6,7 +6,7 @@ from metadata import MetaData
 class RndrDocTestCase(unittest.TestCase):
     def setUp(self):
         self._cr = cr.ChronoRender()
-        md = MetaData('./input/xml/0.xml')
+        md = MetaData('./input/metadata/xml/0.xml')
         self.doc = cr.RndrDoc(self._cr._factories, md)
 
     def tearDown(self):
@@ -24,7 +24,7 @@ class RndrDocTestCase(unittest.TestCase):
         if len(files) != 1:
             return False
 
-        filename = os.path.abspath('./input/stationary/0.dat')
+        filename = os.path.abspath('./input/data/stationary/0.dat')
 
         self.assertEqual(files[0], filename)
 
