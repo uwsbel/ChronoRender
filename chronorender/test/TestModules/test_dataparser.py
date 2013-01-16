@@ -1,7 +1,7 @@
 import unittest
 from chronorender.cr import ChronoRender
 
-class DataReaderTestCase(unittest.TestCase):
+class DataParserTestCase(unittest.TestCase):
     def setUp(self):
         self._cr = ChronoRender()
 

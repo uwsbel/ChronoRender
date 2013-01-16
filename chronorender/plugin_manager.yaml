@@ -1,6 +1,6 @@
 factory: 
-    datareader:
-        paths: ./datareader
+    dataparser:
+        paths: ./dataparser
     geometry:
         paths: ./geometry
     lighting:

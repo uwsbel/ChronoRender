@@ -1,12 +1,12 @@
 from cr_object import Object
 
-class DataReader(Object):
+class DataParser(Object):
     @staticmethod
     def getTypeName():
-        return "datareader"
+        return "dataparser"
 
     def __init__(self):
         return
 
 def build(**kwargs):
-    return DataReader(**kwargs)
+    return DataParser(**kwargs)

@@ -40,14 +40,13 @@ from finder import *
 from rndr_job import *
 
 # subdirs
-from datareader import *
-from geometry import *
-from lighting import *
-from renderobject import *
-from renderpass import *
-from rendersettings import *
-from scene import *
-from shader import *
-from simulation import *
-from visualizer import *
+# from geometry import *
+# from lighting import *
+# from renderobject import *
+# from renderpass import *
+# from rendersettings import *
+# from scene import *
+# from shader import *
+# from simulation import *
+# from visualizer import *
 

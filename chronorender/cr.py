@@ -3,7 +3,7 @@ import plugin_manager as pm
 import factory
 import rndr_job as rndrjob
 
-from datareader import DataReader
+from dataparser import DataParser
 from geometry import Geometry
 from lighting import Lighting
 from renderobject import RenderObject
@@ -29,7 +29,7 @@ class ChronoRender():
         self._plugins.registerPlugins()
 
     def _initFactories(self):
-        self._createFactory(DataReader.getTypeName())
+        self._createFactory(DataParser.getTypeName())
         self._createFactory(Geometry.getTypeName())
         self._createFactory(Lighting.getTypeName())
         self._createFactory(RenderObject.getTypeName())
