@@ -22,4 +22,3 @@ class RenderSettingsTestCase(unittest.TestCase):
 
     def test_SearchPaths(self):
         print self.settings._searchpaths
-        print self.settings._delim

@@ -12,9 +12,6 @@ class SimulationTestCase(unittest.TestCase):
         data = meta.singleFromType(sim.Simulation)
         self._sim = sim.Simulation(factories=self._cr._factories, **data)
 
-        for record in self._sim._data.getData():
-            print record
-
     def tearDown(self):
         del self._cr
         del self._sim

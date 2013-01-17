@@ -29,6 +29,10 @@ class DataSource(DataSource, cr_object.Object):
     def _initMembersDict(self):
         return
 
+    def getInputDataFiles(self):
+        return
+        # return glob.glob(self.settings._in)
+
     def initialize(self):
         return
         

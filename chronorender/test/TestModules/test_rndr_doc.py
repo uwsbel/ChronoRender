@@ -19,15 +19,6 @@ class RndrDocTestCase(unittest.TestCase):
     def test_resolveAssets(self):
         self.doc._resolveAssets()
 
-    def test_function_getInputDataFiles(self):
-        files = self.doc.getInputDataFiles()
-        if len(files) != 1:
-            return False
-
-        filename = os.path.abspath('./input/data/stationary/0.dat')
-
-        self.assertEqual(files[0], filename)
-
     def test_function_getOutputFilePath(self):
         outfile = os.path.abspath('./output/xml_0/out_1200.tif')
         retval = self.doc.getOutputDataFilePath(1200)
