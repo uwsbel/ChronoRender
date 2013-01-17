@@ -34,10 +34,13 @@ class ChronoRender():
 
     def _initFactories(self):
         self._createFactory(DataObject)
+
         self._createFactory(dp.DataProcess)
         self._addFactoryModule(dp.DataProcess, dp.SelectNode)
+
         self._createFactory(ds.DataSource)
         self._addFactoryModule(ds.DataSource, ds.CSVDataSource)
+
         self._createFactory(Geometry)
         self._createFactory(Lighting)
         self._createFactory(RenderObject)

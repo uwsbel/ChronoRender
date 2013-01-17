@@ -18,5 +18,8 @@ class Geometry(Scriptable):
     def _initMembersDict(self):
         return
 
+    def render(self, ri, *args, **kwargs):
+        ri.RiSphere(0.1, -0.1, 0.1, 360)
+
 def build(**kwargs):
     return Geometry(**kwargs)
