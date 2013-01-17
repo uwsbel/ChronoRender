@@ -21,8 +21,15 @@ chronorender:
         scene: "default_scene.rib"
         lighting: "default_lighting.rib"
         resolution: 640 480
-    data:
-        - datasource:
-            - name: "gorb data"
-          dataprocess:
-            - name: "append"
+    simulation:
+        data:
+            datasource:
+                type: "csv"
+                name: "gorb data"
+                fields: ["id", "pos_x", "pos_y", "pos_z", "euler_x", "euler_y", "euler_z"]
+                delim: ","
+            dataprocess:
+                - type: "select"
+                  condition: "id >= 5"
+                - type: "select"
+                  condition: "id <= 8"

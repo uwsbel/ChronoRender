@@ -23,7 +23,7 @@ class SelectNode(dp.DataProcess):
     def getTypeName():
         return "select"
 
-    def __init__(self, condition = None, discard = False):
+    def __init__(self, condition = None, discard = False, **kwargs):
         """Creates and initializes selection node
         """
         super(SelectNode, self).__init__()

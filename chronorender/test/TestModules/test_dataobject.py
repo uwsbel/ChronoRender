@@ -13,7 +13,7 @@ class DataObjectTestCase(unittest.TestCase):
 
     def test_build(self):
         meta = md.MetaData('./input/metadata/yaml/1.yaml')
-        ddata = meta.listFromClassType(ds.DataObject)
+        ddata = meta.listFromType(ds.DataObject)
         self.assertTrue(len(ddata) > 0)
 
         for data in ddata:

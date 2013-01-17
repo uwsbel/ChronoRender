@@ -126,6 +126,7 @@ class CSVDataSource(DataSource):
     def __init__(self, resource='', read_header=False, dialect=None, encoding=None,
                  detect_header=False, sample_size=200, skip_rows=None,
                  empty_as_null=True, fields=None, delim=',', **reader_args):
+        super(CSVDataSource, self).__init__(**reader_args)
         """Creates a CSV data source stream.
         
         :Attributes:

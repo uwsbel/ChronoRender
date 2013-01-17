@@ -1,4 +1,5 @@
 from data.ds.base import DataSource
+import cr_object
 # Should implement:
 # * fields
 # * prepare()
@@ -11,7 +12,7 @@ class DataSourceException(Exception):
     def __str__(self):
         return repr(self.value)
 
-class DataSource(DataSource):
+class DataSource(DataSource, cr_object.Object):
     @staticmethod
     def getInstanceQualifier():
         return "type"

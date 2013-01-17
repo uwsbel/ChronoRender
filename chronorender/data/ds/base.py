@@ -59,7 +59,7 @@ def open_resource(resource, mode = None):
 class DataStream(object):
     """Shared methods for data targets and data sources"""
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         """
         A data stream object – abstract class.
 
@@ -126,7 +126,7 @@ class DataStream(object):
 class DataSource(DataStream):
     """Input data stream - for reading."""
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         """Abstrac class for data sources."""
         super(DataSource, self).__init__()
 
@@ -215,7 +215,7 @@ class DataSource(DataStream):
 class DataTarget(DataStream):
     """Output data stream - for writing.
     """
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         """Abstrac class for data targets."""
         super(DataTarget, self).__init__()
 

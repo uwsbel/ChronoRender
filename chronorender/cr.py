@@ -3,6 +3,7 @@ import chronorender.plugins as pm
 import factory
 import rndr_job as rndrjob
 import factorydict as fdict
+import cr_object
 
 from ribgenerator import RIBGenerator
 from chronorender.data import DataObject
@@ -18,7 +19,6 @@ from chronorender.simulation import Simulation
 from chronorender.shader import Shader
 from chronorender.visualizer import Visualizer
 
-# create all singleton stuff
 class ChronoRender():
     def __init__(self):
         self._plugins           = pm.PluginManager()
@@ -56,7 +56,6 @@ class ChronoRender():
         # add default constructor
         modules.append(inspect.getmodule(cls))
         self._factories.addFactory(cls.getTypeName(), modules)
-        # print self.getFactories(cls.getTypeName())
 
     def _addFactoryModule(self, basecls, cls):
         self._factories.appendFactory(basecls.getTypeName(), inspect.getmodule(cls))

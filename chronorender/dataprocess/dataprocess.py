@@ -1,6 +1,7 @@
 import data.nodes.base
+import cr_object
 
-class DataProcess(data.nodes.base.Node):
+class DataProcess(data.nodes.base.Node, cr_object.Object):
     node_info = {
         "label" : "PassThrough (default)",
         "description" : "does nothing",

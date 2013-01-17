@@ -33,7 +33,7 @@ class RIBGenerator():
     def initFromMetadata(self, md):
         self.md = md
         print md
-        self.datasources    = self.factories.buildObject(ds.DataSource, md.listFromClassType(ds.DataSource))
+        self.datasources    = self.factories.buildObject(ds.DataSource, md.listFromType(ds.DataSource))
 
         for src in self.datasources:
             self.datasourcenodes.append(ds.DataSourceNode(src))

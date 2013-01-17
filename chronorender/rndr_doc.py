@@ -34,11 +34,11 @@ class RndrDoc():
 
     def initFromMetadata(self, md):
         self.md = md
-        self.settings   = self.factories.buildObject(RenderSettings, md.singleFromClassType(RenderSettings))
-        self.rndrobjs   = self.factories.buildObject(RenderObject, md.listFromClassType(RenderObject))
-        self.rndrpasses = self.factories.buildObject(RenderPass, md.listFromClassType(RenderPass))
-        self.shaders    = self.factories.buildObject(Shader, md.listFromClassType(Shader))
-        self.geometry   = self.factories.buildObject(Geometry, md.listFromClassType(Geometry))
+        self.settings   = self.factories.buildObject(RenderSettings, md.singleFromType(RenderSettings))
+        self.rndrobjs   = self.factories.buildObject(RenderObject, md.listFromType(RenderObject))
+        self.rndrpasses = self.factories.buildObject(RenderPass, md.listFromType(RenderPass))
+        self.shaders    = self.factories.buildObject(Shader, md.listFromType(Shader))
+        self.geometry   = self.factories.buildObject(Geometry, md.listFromType(Geometry))
         self.assetfinder = Finder(self.settings._searchpaths)
         # TODO lighting and scene
         self._resolveAssets()

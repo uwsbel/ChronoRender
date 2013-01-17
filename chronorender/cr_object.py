@@ -1,10 +1,17 @@
-import pprint
+import pprint, inspect
+import chronorender.factorydict as fd
 
 class ObjectException(Exception):
     def __init__(self, value):
         self.value = value
     def __str__(self):
         return repr(self.value)
+
+# def static_var(varname, value):
+    # def decorate(func):
+        # setattr(func, varname, value)
+        # return func
+    # return decorate
 
 class Object(object):
     """
@@ -20,15 +27,22 @@ class Object(object):
     def getTypeName():
         return "object"
 
-    def __init__(self, *args, **kwargs):
+    def _buildFromFactory(self, basename, typename, **kwargs):
+        fact = self._factories.getFactory(basename)
+        return fact.build(typename, **kwargs)
+
+    def __init__(self, factories=None, *args, **kwargs):
         self._members = {}
         self._params = {}
+        self._factories = factories
 
         self._initMembersDict()
         self._initFromNamedArgs(kwargs)
 
     def __str__(self):
-        return str(self._members) + str(self._params)
+        string = pprint.pformat(self._members)
+        string += pprint.pformat(self._params)
+        return string
 
     def _initMembersDict(self):
         return
@@ -49,6 +63,16 @@ class Object(object):
             out = str.split(val, ' ')
         elif vtype == 'comlist':
             out = str.split(val, ',')
+        elif isinstance(val, list):
+            out = []
+            for elem in val:
+                out.append(self._evalParamType(vtype, elem))
+        elif isinstance(val, dict):
+            if self._factories and Object.getInstanceQualifier() in val:
+                out = self._buildFromFactory(vtype.getTypeName(), 
+                        val[Object.getInstanceQualifier()], **val)
+            else:
+                out = vtype(factories=self._factories, **val)
         else: 
             out = vtype(val)
         return out
@@ -69,6 +93,7 @@ class Object(object):
         else:
             raise ObjectException('no member ' + name + ' in ' + str(type(self)))
 
+
     def pprint(self):
         print 'Name: ' + self.getTypeName()
         print 'Data: '
@@ -76,6 +101,10 @@ class Object(object):
         print 'Params: '
         Object._pprinter.pprint(self._params)
 
+    def getBaseClassTypeName(self):
+        if isinstance(self, Object):
+            return Object.getTypeName()
+        return super(Object, self).getTypeName()
 
 # extended object, can be rendered
 class RenderableException(ObjectException):

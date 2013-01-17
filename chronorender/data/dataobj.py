@@ -14,10 +14,10 @@ class DataObject(Object):
         self._datasrcs      = self.getMember(ds.DataSource.getTypeName())
         self._dataprocs     = self.getMember(dp.DataProcess.getTypeName())
         self._brun          = False
-
+ 
     def _initMembersDict(self):
-        self._members[ds.DataSource.getTypeName()] = [list, []]
-        self._members[dp.DataProcess.getTypeName()] = [list, []]
+        self._members[ds.DataSource.getTypeName()] = [ds.DataSource, []]
+        self._members[dp.DataProcess.getTypeName()] = [dp.DataProcess, []]
 
     def addDataSource(self, src):
         self._datasrcs.append(src)
@@ -37,3 +37,4 @@ class DataObject(Object):
 
 def build(**kwargs):
     return DataObject(**kwargs)
+

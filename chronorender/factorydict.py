@@ -8,11 +8,18 @@ class FactoryDict():
         return str(self._factories)
 
     def addFactory(self, typename, modules):
-        self._factories[typename] = Factory(typename)
-        self._factories[typename].setModules(modules)
+        if typename in self._factories:
+            self.appendFactory(typename, modules)
+        else:
+            self._factories[typename] = Factory(typename)
+            self._factories[typename].setModules(modules)
 
     def appendFactory(self, typename, module):
         self._factories[typename].addModule(module)
+
+    def removeFactory(self, typename, module):
+        if typename in self._factories:
+            self._factories[typename].removeModule(module)
 
     def getFactory(self, typename):
         try:

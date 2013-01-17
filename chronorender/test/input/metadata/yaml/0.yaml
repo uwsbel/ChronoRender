@@ -1,11 +1,6 @@
 chronorender:
     rendersettings:
         out: "./output/xml_0/out_####.tif"
-        in: "./input/data/stationary/*.dat"
-        dataformat: "ID,POS_X,POS_Y,POS_Z,EULER_X,EULER_Y,EULER_Z,ignore,ignore,ignore,ignore"
-        delim: ","
-        scaling: 1.0
-        radians: False
         searchpaths: "./:./input:./input/shaders"
         framerange: 0 0
     shader:
