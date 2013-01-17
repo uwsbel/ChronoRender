@@ -37,7 +37,7 @@ chronorender:
                   delim: ","
                 - type: "csv"
                   resource: "./input/data/ascending/0.dat"
-                  name: "cuntdata"
+                  name: "samedata"
                   fields: [["id", integer],
                             ["pos_x", float], 
                             ["pos_y", float], 
