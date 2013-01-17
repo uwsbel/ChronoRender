@@ -44,9 +44,9 @@ class UnicodeReader:
     which is encoded in the given encoding.
     """
 
-    def __init__(self, f, dialect='excel', encoding="utf-8", empty_as_null=False, delim=',', **kwds):
+    def __init__(self, f, dialect='excel', encoding="utf-8", empty_as_null=False, delim=','):
         f = UTF8Recoder(f, encoding)
-        self.reader = csv.reader(f, dialect=dialect, delimiter=delim, **kwds)
+        self.reader = csv.reader(f, dialect=dialect, delimiter=delim)
         self.converters = []
         self.empty_as_null = empty_as_null
 
@@ -161,7 +161,7 @@ class CSVDataSource(DataSource):
         
         self.close_file = False
         self.skip_rows = skip_rows
-        self.fields = fields
+        self.fields = data.metadata.FieldList(fields)
         
     def initialize(self):
         """Initialize CSV source stream:
@@ -208,7 +208,7 @@ class CSVDataSource(DataSource):
         # self.reader = csv.reader(handle, **self.reader_args)
         self.reader = UnicodeReader(self.file, encoding=self.encoding,
                                     empty_as_null=self.empty_as_null,
-                                    delim=self.delim, **self.reader_args)
+                                    delim=self.delim)
 
         if self.skip_rows:
             for i in range(0, self.skip_rows):

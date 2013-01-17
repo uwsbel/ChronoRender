@@ -7,11 +7,6 @@ class ObjectException(Exception):
     def __str__(self):
         return repr(self.value)
 
-# def static_var(varname, value):
-    # def decorate(func):
-        # setattr(func, varname, value)
-        # return func
-    # return decorate
 
 class Object(object):
     """
@@ -51,7 +46,15 @@ class Object(object):
         for key, val in args.iteritems():
             if key in self._members:
                 vtype = self._members[key][0]
-                self._members[key][1] = self._evalParamType(vtype, val)
+
+                out = self._evalParamType(vtype, val)
+                if isinstance(self._members[key][1], list):
+                    if isinstance(out, list):
+                        self._members[key][1] += out
+                    else:
+                        self._members[key][1].append(out)
+                else:
+                    self._members[key][1] = out
             else:
                 self._params[key] = val
 

@@ -13,8 +13,9 @@ class DataProcess(data.nodes.base.Node, cr_object.Object):
     def getTypeName():
         return "dataprocess"
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, name="default", *args, **kwargs):
         super(data.nodes.base.Node, self).__init__(*args, **kwargs)
+        self.name = name
 
     def initialize(self):
         return

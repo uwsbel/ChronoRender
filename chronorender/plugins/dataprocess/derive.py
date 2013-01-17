@@ -55,10 +55,10 @@ class DeriveNode(dp.DataProcess):
 
 
     def __init__(self, formula = None, field_name = "new_field", analytical_type = "unknown",
-                        storage_type = "unknown"):
+                        storage_type = "unknown", **kwargs):
         """Creates and initializes selection node
         """
-        super(DeriveNode, self).__init__()
+        super(DeriveNode, self).__init__(**kwargs)
         self.formula = formula
         self.field_name = field_name
         self.analytical_type = analytical_type

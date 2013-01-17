@@ -24,12 +24,33 @@ chronorender:
     simulation:
         data:
             datasource:
-                type: "csv"
-                name: "gorb data"
-                fields: ["id", "pos_x", "pos_y", "pos_z", "euler_x", "euler_y", "euler_z"]
-                delim: ","
+                - type: "csv"
+                  resource: "./input/data/ascending/0.dat"
+                  name: "gorbdata"
+                  fields: [["id", integer],
+                            ["pos_x", float], 
+                            ["pos_y", float], 
+                            ["pos_z", float], 
+                            ["euler_x", float], 
+                            ["euler_y", float], 
+                            ["euler_z", float]]
+                  delim: ","
+                - type: "csv"
+                  resource: "./input/data/ascending/0.dat"
+                  name: "cuntdata"
+                  fields: [["id", integer],
+                            ["pos_x", float], 
+                            ["pos_y", float], 
+                            ["pos_z", float], 
+                            ["euler_x", float], 
+                            ["euler_y", float], 
+                            ["euler_z", float]]
+                  delim: ","
             dataprocess:
                 - type: "select"
+                  name: "idbig"
                   condition: "id >= 5"
-                - type: "select"
-                  condition: "id <= 8"
+                - type: "derive"
+                  name: "idsmall"
+                  formula: "id * 10"
+                  field_name: "gorb" 

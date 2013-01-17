@@ -21,8 +21,10 @@ class DataSource(DataSource, cr_object.Object):
     def getTypeName():
         return "datasource"
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, name="default", *args, **kwargs):
         super(DataSource,self).__init__(*args, **kwargs)
+
+        self.name = name
 
     def _initMembersDict(self):
         return

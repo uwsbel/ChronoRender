@@ -26,7 +26,7 @@ class SelectNode(dp.DataProcess):
     def __init__(self, condition = None, discard = False, **kwargs):
         """Creates and initializes selection node
         """
-        super(SelectNode, self).__init__()
+        super(SelectNode, self).__init__(**kwargs)
         self.condition = condition
         self.discard = discard
 
