@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import string
 import os
 import shutil
@@ -15,7 +12,7 @@ except:
 class YamlDirectoryDataSource(DataSource):
     """docstring for ClassName
     """
-    def __init__(self, path, extension="yml", expand=False, filename_field=None):
+    def __init__(self, path="", extension="yml", expand=False, filename_field=None):
         """Creates a YAML directory data source stream.
         
         The data source reads files from a directory and treats each file as single record. For example,
@@ -77,4 +74,4 @@ class YamlDirectoryDataSource(DataSource):
             yield row
 
 def build(**kwargs):
-    return DataSource(**kwargs)
+    return YamlDirectoryDataSource(**kwargs)

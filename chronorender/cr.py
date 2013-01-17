@@ -5,8 +5,10 @@ import rndr_job as rndrjob
 import factorydict as fdict
 
 from ribgenerator import RIBGenerator
+from chronorender.data import DataObject
+import chronorender.dataprocess as dp
+import chronorender.datasource as ds
 from chronorender.geometry import Geometry
-from chronorender.datasource import DataSource
 from chronorender.lighting import Lighting
 from chronorender.renderobject import RenderObject
 from chronorender.renderpass import RenderPass
@@ -31,7 +33,11 @@ class ChronoRender():
         self._plugins.registerPlugins()
 
     def _initFactories(self):
-        self._createFactory(DataSource)
+        self._createFactory(DataObject)
+        self._createFactory(dp.DataProcess)
+        self._addFactoryModule(dp.DataProcess, dp.SelectNode)
+        self._createFactory(ds.DataSource)
+        self._addFactoryModule(ds.DataSource, ds.CSVDataSource)
         self._createFactory(Geometry)
         self._createFactory(Lighting)
         self._createFactory(RenderObject)
@@ -47,9 +53,13 @@ class ChronoRender():
         # add default constructor
         modules.append(inspect.getmodule(cls))
         self._factories.addFactory(cls.getTypeName(), modules)
+        # print self.getFactories(cls.getTypeName())
+
+    def _addFactoryModule(self, basecls, cls):
+        self._factories.appendFactory(basecls.getTypeName(), inspect.getmodule(cls))
 
     def getFactories(self, typename):
-            return self._factories.getFactory(typename)
+        return self._factories.getFactory(typename)
 
     def createAndRunRenderJob(self, inxml):
         job = self._createRenderJob(inxml)

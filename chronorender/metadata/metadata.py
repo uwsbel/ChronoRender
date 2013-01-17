@@ -1,5 +1,6 @@
-from itertools import groupby
+import pprint
 
+from itertools import groupby
 from mdreader_factory import MDReaderFactory
 
 class MetaDataException(Exception):
@@ -12,6 +13,9 @@ class MetaData():
     def __init__(self, infile=''):
         self._filename = infile
         self._mdreader = MDReaderFactory.build(infile)
+
+    def __str__(self):
+        return str(self._mdreader)
 
     def findAll(self, name):
         return self._mdreader.findAll(name)

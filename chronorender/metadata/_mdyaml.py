@@ -1,7 +1,7 @@
 from _mdreader import _MDReader
+
 import thirdparty.yaml as tyaml
-import copy
-import itertools
+import pprint, copy, itertools
 
 class _MDYAML(_MDReader):
     @staticmethod
@@ -40,6 +40,9 @@ class _MDYAML(_MDReader):
         self._root = []
 
         self._parseFile(inxmlfile)
+
+    def __str__(self):
+        return pprint.pformat(self._root)
 
     def _parseString(self, instring):
         gen = tyaml.load_all(instring)

@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import data.ds.base
 import data.metadata as metadata
 try:
@@ -15,6 +12,9 @@ from datasource import DataSource
 # http://gdata-python-client.googlecode.com/svn/trunk/pydocs/
 
 class GoogleSpreadsheetDataSource(DataSource):
+    @staticmethod
+    def getTypeName():
+        return "gdocs"
     """Reading data from a google spreadsheet.
     
     Some code taken from OKFN Swiss library.
@@ -126,4 +126,4 @@ class GDocRecordIterator(object):
         return record.content
 
 def build(**kwargs):
-    return DataSource(**kwargs)
+    return GoogleSpreadsheetDataSource(**kwargs)

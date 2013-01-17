@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import data.ds.base
 import datetime
 from data.metadata import FieldList
@@ -13,13 +10,16 @@ except:
     xlrd = MissingPackage("xlrd", "Reading MS Excel XLS Files", "http://pypi.python.org/pypi/xlrd")
 
 class XLSDataSource(DataSource):
+    @staticmethod
+    def getTypeName():
+        return "xls"
     """Reading Microsoft Excel XLS Files
 
     Requires the xlrd package (see pypi).
 
     Based on the OKFN Swiss library.
     """
-    def __init__(self, resource, sheet=None, encoding=None, skip_rows=None, read_header=True):
+    def __init__(self, resource="", sheet=None, encoding=None, skip_rows=None, read_header=True):
         """Creates a XLS spreadsheet data source stream.
         
         :Attributes:
@@ -130,4 +130,4 @@ class XLSRowIterator(object):
             return cell.value
 
 def build(**kwargs):
-    return DataSource(**kwargs)
+    return XLSDataSource(**kwargs)

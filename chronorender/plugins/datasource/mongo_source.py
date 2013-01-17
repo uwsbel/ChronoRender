@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import data.ds.base
 import data.dq
 
@@ -13,9 +10,12 @@ except ImportError:
 from datasource import DataSource
 
 class MongoDBDataSource(DataSource):
+    @staticmethod
+    def getTypeName():
+        return "mongo"
     """docstring for ClassName
     """
-    def __init__(self, collection, database=None, host=None, port=None,
+    def __init__(self, collection="", database=None, host=None, port=None,
                  expand=False, **mongo_args):
         """Creates a MongoDB data source stream.
 
@@ -187,4 +187,4 @@ class MongoDBRecordIterator(object):
             return collapse_record(record)
 
 def build(**kwargs):
-    return DataSource(**kwargs)
+    return MongoDBDataSource(**kwargs)

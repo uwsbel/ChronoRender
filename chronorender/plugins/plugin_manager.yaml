@@ -1,8 +1,12 @@
 factory: 
-    geometry:
-        paths: "geometry"
+    data:
+        paths: ""
+    dataprocess:
+        paths: "dataprocess"
     datasource:
         paths: "datasource"
+    geometry:
+        paths: "geometry"
     lighting:
         paths: "lighting"
     renderobject:

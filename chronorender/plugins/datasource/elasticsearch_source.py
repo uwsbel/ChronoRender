@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import data.ds.base
 import data.dq
 import time
@@ -14,9 +11,12 @@ except ImportError:
     pyes = MissingPackage("pyes", "ElasticSearch streams", "http://www.elasticsearch.org/")
 
 class ESDataSource(DataSource):
+    @staticmethod
+    def getTypeName():
+        return "elasticsearch"
     """docstring for ClassName
     """
-    def __init__(self, document_type, database=None, host=None, port=None,
+    def __init__(self, document_type='', database=None, host=None, port=None,
                  expand=False, **elasticsearch_args):
         """Creates a ElasticSearch data source stream.
 
@@ -167,4 +167,4 @@ class ESRecordIterator(object):
             return expand_record(record)
 
 def build(**kwargs):
-    return DataSource(**kwargs)
+    return ESDataSource(**kwargs)

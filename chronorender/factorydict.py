@@ -11,6 +11,9 @@ class FactoryDict():
         self._factories[typename] = Factory(typename)
         self._factories[typename].setModules(modules)
 
+    def appendFactory(self, typename, module):
+        self._factories[typename].addModule(module)
+
     def getFactory(self, typename):
         try:
             return self._factories[typename]

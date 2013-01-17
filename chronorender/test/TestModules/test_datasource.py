@@ -34,3 +34,17 @@ class DataSourceTestCase(unittest.TestCase):
         for i in range(0, len(rows)):
             for j in range(0, len(rows[i])):
                 self.assertEqual(str(csvrows[i][j]), str(rows[i][j]))
+
+    def test_csvParseSpeed(self):
+        import csv
+        meta = md.MetaData('./input/metadata/yaml/1.yaml')
+        infile = './input/data/large/0.dat'
+        csvsrc = self._factories.build('csv', resource=infile,
+                fields=[["gorb", "integer"], "test", "test2", "n4", "n5", "n6", "n7"])
+
+        csvsrc.initialize()
+        rows = []
+        reader = csvsrc.records()
+        for row in reader:
+            rows.append(row)
+        print 'parsed: ' + str(len(rows))

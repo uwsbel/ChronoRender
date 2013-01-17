@@ -1,9 +1,9 @@
-from cr_object import Object
+# from cr_object import Object
 
-class _MDReader(Object):
-    @staticmethod
-    def getTypeName():
-        return "mdreader"
+class _MDReader():
+    # @staticmethod
+    # def getTypeName():
+        # return "mdreader"
 
     @staticmethod
     def _convertElemToDict(node):

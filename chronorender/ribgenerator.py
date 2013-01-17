@@ -1,7 +1,7 @@
 import os
 import StringIO
 
-from chronorender.datasource import DataSource
+import chronorender.datasource as ds
 
 class RIBGeneratorException(Exception):
     def __init__(self, value):
@@ -15,24 +15,29 @@ class RIBGenerator():
     _MaxBufferSize = 5000000
 
     def __init__(self, factories, md, *args, **kwargs):
-        self._datadelim     = ","
-        self._filename      = ""
-        self._datapath      = "./"
-        self._idcounter     = 0
-        self._idindex       = -1
-        self._buffersize    = 0
-        self._rawdata       = []
-        self._organizeddata = {}
-        self._bytesread     = 0
-        self.factories      = factories
-        self.datasources    = []
+        self._datadelim         = ","
+        self._filename          = ""
+        self._datapath          = "./"
+        self._idcounter         = 0
+        self._idindex           = -1
+        self._buffersize        = 0
+        self._rawdata           = []
+        self._organizeddata     = {}
+        self._bytesread         = 0
+        self.factories          = factories
+        self.datasources        = []
+        self.datasourcenodes    = []
 
         self.initFromMetadata(md)
 
     def initFromMetadata(self, md):
         self.md = md
-        self.datasources    = self.factories.buildObject(DataSource, md.listFromClassType(DataSource))
-        print self.datasources
+        print md
+        self.datasources    = self.factories.buildObject(ds.DataSource, md.listFromClassType(ds.DataSource))
+
+        for src in self.datasources:
+            self.datasourcenodes.append(ds.DataSourceNode(src))
+
 
     def dumpRIBToFile(self, rndrobjs, filein, fileout):
         self.__initOrganizedDataMap(rndrobjs)

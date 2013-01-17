@@ -1,3 +1,4 @@
+from dataobj import *
 from metadata import *
 from streams import *
 from utils import *
