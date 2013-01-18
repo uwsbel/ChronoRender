@@ -50,8 +50,16 @@ class DataObject(Object):
     def addDataProcess(self, proc):
         self._dataprocs.append(proc)
 
-    def getData(self, srcnumber):
-        return self._run(srcnumber)
+    def getData(self, srcnumber, selectcondition=""):
+        out = self._run(srcnumber)
+
+        if selectcondition != "":
+            src= ds.RecordListSourceNode(name="tmp", a_list=out, 
+                    fields=data.FieldList(self._allfields))
+            procs = []
+            procs.append(dp.SelectNode(condition=selectcondition))
+            out = DataObject._doProcs(src, procs)
+        return out
 
     def _initCrossSrcFields(self):
         for srclist in self._datasrcs:
@@ -73,12 +81,12 @@ class DataObject(Object):
 
         if len(self._datasrcs) == 1:
             node = ds.DataSourceNode(self._getResource(0, srcnumber))
-            return self._doProcs(node)
+            return self._doProcs(node, self._dataprocs)
 
         combined_data = self._combineSrcs(srcnumber)
 
         target = ds.RecordListSourceNode(name="tmp", a_list=combined_data.data, fields=data.FieldList(self._allfields))
-        return self._doProcs(target)
+        return self._doProcs(target, self._dataprocs)
 
     def _getResource(self, listnum, number):
         srcs = self._datasrcs[listnum]
@@ -106,22 +114,24 @@ class DataObject(Object):
         return target
 
 
-    def _doProcs(self, datasrcnode):
+    @staticmethod
+    def _doProcs(datasrcnode, procs):
         out = dt.DataTarget()
         nodes = {
                     "in" : datasrcnode,
                     "out" : out
                 }
 
-        connections = self._createProcGraph(nodes, "in","out")
+        connections = DataObject._createProcGraph(nodes, procs, "in","out")
         stream = data.Stream(nodes, connections)
         stream.run() 
         return out.data
 
-    def _createProcGraph(self, nodes, inname, outname):
+    @staticmethod
+    def _createProcGraph(nodes, procs, inname, outname):
         connections = [[inname, ""]]
-        for i in range(0, len(self._dataprocs)):
-            proc = self._dataprocs[i]
+        for i in range(0, len(procs)):
+            proc = procs[i]
             nodes[proc.name] = proc
             connections[i][1] = proc.name
             connections.append([proc.name, ""])

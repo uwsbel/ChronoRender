@@ -37,7 +37,7 @@ chronorender:
                   - name: "plastic.sl"
                     Kd: 999
             - name: "gorb"
-              range: 101 200
+              condition: "id == 7"
               geometry:
                   - type: "cone"
               shader:

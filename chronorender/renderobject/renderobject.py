@@ -32,15 +32,17 @@ class RenderObject(Scriptable):
         self.geometry = self.getMember(cg.Geometry.getTypeName())
         self.shaders = self.getMember(cs.Shader.getTypeName())
         self.data = []
+        self.condition = self.getMember('condition')
 
     def _initMembersDict(self):
-        self._members['motionblur']   = [bool, False]
-        self._members['instanced']    = [bool, True]
-        self._members['multiobject']  = [bool, False]
-        self._members['color']        = ['spalist', [1,0,0]]
-        self._members['range']        = ['spalist', [-1,-1]]
+        self._members['motionblur']     = [bool, False]
+        self._members['instanced']      = [bool, True]
+        self._members['multiobject']    = [bool, False]
+        self._members['color']          = ['spalist', [1,0,0]]
+        self._members['range']          = ['spalist', [-1,-1]]
         self._members[cg.Geometry.getTypeName()] = [cg.Geometry, []]
         self._members[cs.Shader.getTypeName()] = [cs.Shader, []]
+        self._members['condition']      = [str, ""]
 
     def parseData(self, entry):
         if len(entry) < len(self.data):

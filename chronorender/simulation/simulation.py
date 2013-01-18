@@ -20,5 +20,6 @@ class Simulation(Scriptable):
         self._members['name']   = [str, 'sim']
         self._members[cro.RenderObject.getTypeName()] = [cro.RenderObject, []]
 
+
 def build(**kwargs):
     return Simulation(**kwargs)

@@ -20,7 +20,7 @@ class SimulationTestCase(unittest.TestCase):
 
     def test_simulationFactory(self):
         for robj in self._sim._robjs:
-            print robj
-            for geo in robj.geometry:
-                print geo
+            print "CONDITION: " + robj.condition
+            for row in self._sim._data.getData(0, robj.condition):
+                print row
         self.assertTrue(True != False)
