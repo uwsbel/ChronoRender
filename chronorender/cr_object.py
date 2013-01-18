@@ -34,6 +34,15 @@ class Object(object):
         self._initMembersDict()
         self._initFromNamedArgs(kwargs)
 
+    # override new to make Object a metacalls
+    # return a concrete instance if factories are defined
+    def __new__(cls, factories=None, *args, **kwargs):
+        if factories and Object.getInstanceQualifier() in kwargs:
+            fact = factories.getFactory(cls.getTypeName())
+            return fact.build(kwargs[Object.getInstanceQualifier()], **kwargs)
+        obj = object.__new__(cls, *args, **kwargs)
+        return obj
+
     def __str__(self):
         string = pprint.pformat(self._members)
         string += pprint.pformat(self._params)
@@ -117,8 +126,8 @@ class RenderableException(ObjectException):
         return repr(self.value)
 
 class Renderable(Object):
-    def __init__(self, *args, **kwargs):
-        super(Renderable,self).__init__(*args, **kwargs)
+    def __init__(self, factories=None, *args, **kwargs):
+        super(Renderable,self).__init__(factories=factories, *args, **kwargs)
 
         self._resolvedAssetPaths = False
 
@@ -141,8 +150,8 @@ class ScriptableException(RenderableException):
         return repr(self.value)
 
 class Scriptable(Renderable):
-    def __init__(self, *args, **kwargs):
-        super(Scriptable,self).__init__(*args, **kwargs)
+    def __init__(self, factories=None, *args, **kwargs):
+        super(Scriptable,self).__init__(factories=factories, *args, **kwargs)
 
     def __str__(self):
         return super(Scriptable,self).__str__()

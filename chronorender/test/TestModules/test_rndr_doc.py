@@ -6,7 +6,7 @@ from metadata import MetaData
 class RndrDocTestCase(unittest.TestCase):
     def setUp(self):
         self._cr = cr.ChronoRender()
-        md = MetaData('./input/metadata/xml/0.xml')
+        md = MetaData('./input/metadata/yaml/0.yaml')
         self.doc = cr.RndrDoc(self._cr._factories, md)
 
     def tearDown(self):

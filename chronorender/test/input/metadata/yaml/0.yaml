@@ -6,7 +6,7 @@ chronorender:
     shader:
         - name: "plastic.sl"
           Kd: 999
-        - name: "gorb.sl"
+        - name: "plastic.sl"
           Kd: 888
     geometry:
         - type: "sphere"

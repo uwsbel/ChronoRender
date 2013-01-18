@@ -26,21 +26,21 @@ class RndrDoc():
         self.geometry       = []
         self.lighting       = []
         self.scene          = []
-        self.factories      = factories
         self.assetfinder    = None
         self.md             = md
         
-        self.initFromMetadata(md)
+        self.initFromMetadata(factories, md)
 
-    def initFromMetadata(self, md):
+    def initFromMetadata(self, factories, md):
         self.md = md
-        self.settings   = self.factories.buildObject(RenderSettings, md.singleFromType(RenderSettings))
-        self.rndrobjs   = self.factories.buildObject(RenderObject, md.listFromType(RenderObject))
-        self.rndrpasses = self.factories.buildObject(RenderPass, md.listFromType(RenderPass))
-        self.shaders    = self.factories.buildObject(Shader, md.listFromType(Shader))
-        self.geometry   = self.factories.buildObject(Geometry, md.listFromType(Geometry))
+        self.settings   = RenderSettings(factories=factories,**md.singleFromType(RenderSettings))
+        self.rndrobjs   = [RenderObject(factories=factories, **x) for x in  md.listFromType(RenderObject)]
+        self.rndrpasses = [RenderPass(factories=factories, **x) for x in md.listFromType(RenderPass)]
+        self.shaders    = [Shader(factories=factories, **x) for x in md.listFromType(Shader)]
+        self.geometry   = [Geometry(factories=factories, **x) for x in md.listFromType(Geometry)]
         self.assetfinder = Finder(self.settings._searchpaths)
-        # TODO lighting and scene
+        # TODO lighting,scene, and camera
+
         self._resolveAssets()
 
     def _resolveAssets(self):
