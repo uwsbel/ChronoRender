@@ -2,6 +2,9 @@
 from cr_object import Scriptable
 from itertools import izip
 
+import chronorender.geometry as cg
+import chronorender.shader as cs
+
 class RenderObjectException(Exception):
     def __init__(self, value):
         self.value = value
@@ -26,8 +29,8 @@ class RenderObject(Scriptable):
     def __init__(self, *args, **kwargs):
         super(RenderObject,self).__init__(*args, **kwargs)
 
-        self.geometry = None
-        self.shaders = {}
+        self.geometry = self.getMember(cg.Geometry.getTypeName())
+        self.shaders = self.getMember(cs.Shader.getTypeName())
         self.data = []
 
     def _initMembersDict(self):
@@ -36,8 +39,8 @@ class RenderObject(Scriptable):
         self._members['multiobject']  = [bool, False]
         self._members['color']        = ['spalist', [1,0,0]]
         self._members['range']        = ['spalist', [-1,-1]]
-        self._members['geo']          = ['spalist', ['default']]
-        self._members['shaders']      = ['spalist', ['default']]
+        self._members[cg.Geometry.getTypeName()] = [cg.Geometry, []]
+        self._members[cs.Shader.getTypeName()] = [cs.Shader, []]
 
     def parseData(self, entry):
         if len(entry) < len(self.data):

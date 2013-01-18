@@ -59,7 +59,11 @@ class Object(object):
                 out = self._evalParamType(vtype, val)
                 if isinstance(self._members[key][1], list):
                     if isinstance(out, list):
-                        self._members[key][1] += out
+                        # TODO
+                        if len(self._members[key][1]) > 0:
+                            self._members[key][1] = out
+                        else:
+                            self._members[key][1] += out
                     else:
                         self._members[key][1].append(out)
                 else:

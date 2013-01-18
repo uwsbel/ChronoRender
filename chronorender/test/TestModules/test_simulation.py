@@ -4,6 +4,7 @@ from cr_object import Object
 import chronorender.simulation as sim
 import chronorender.metadata as md
 import chronorender.data as dat
+import chronorender.renderobject as cro
 
 class SimulationTestCase(unittest.TestCase):
     def setUp(self):
@@ -12,9 +13,14 @@ class SimulationTestCase(unittest.TestCase):
         data = meta.singleFromType(sim.Simulation)
         self._sim = sim.Simulation(factories=self._cr._factories, **data)
 
+
     def tearDown(self):
         del self._cr
         del self._sim
 
     def test_simulationFactory(self):
+        for robj in self._sim._robjs:
+            print robj
+            for geo in robj.geometry:
+                print geo
         self.assertTrue(True != False)

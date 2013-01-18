@@ -24,20 +24,11 @@ class RIBGenerator():
         self._rawdata           = []
         self._organizeddata     = {}
         self._bytesread         = 0
-        self.factories          = factories
-        self.datasources        = []
-        self.datasourcenodes    = []
 
         self.initFromMetadata(md)
 
     def initFromMetadata(self, md):
         self.md = md
-        print md
-        self.datasources    = self.factories.buildObject(ds.DataSource, md.listFromType(ds.DataSource))
-
-        for src in self.datasources:
-            self.datasourcenodes.append(ds.DataSourceNode(src))
-
 
     def dumpRIBToFile(self, rndrobjs, filein, fileout):
         self.__initOrganizedDataMap(rndrobjs)

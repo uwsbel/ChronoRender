@@ -5,9 +5,6 @@ class Cube(Geometry):
     def getTypeName():
         return "cube"
 
-    def __str__(self):
-        return 'cube'
-
     def render(self, ri, *args, **kwargs):
         ri.RiSphere(1,-1,1,360)
 

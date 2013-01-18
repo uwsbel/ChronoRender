@@ -48,3 +48,7 @@ chronorender:
         dataprocess:
             - name: "select"
               condition: "id > 0"
+            - type: "derive"
+              name: "idsmall"
+              formula: "id * 10"
+              field_name: "gorb" 
