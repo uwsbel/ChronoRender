@@ -20,6 +20,8 @@ class Simulation(Scriptable):
         self._members['name']   = [str, 'sim']
         self._members[cro.RenderObject.getTypeName()] = [cro.RenderObject, []]
 
+    def render(self, ri, *args, **kwargs):
+        ri.RiSphere(0.1, -0.1, 0.1, 360)
 
 def build(**kwargs):
     return Simulation(**kwargs)

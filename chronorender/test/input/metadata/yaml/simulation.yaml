@@ -13,6 +13,7 @@ chronorender:
             datasource:
                 - type: "csv"
                   resource: "./input/data/ascending/0.dat"
+                  # resource: "./input/data/large/0.dat"
                   name: "gorbdata"
                   fields: [["id", integer],
                             ["pos_x", float], 
@@ -22,13 +23,9 @@ chronorender:
                             ["euler_y", float], 
                             ["euler_z", float]]
                   delim: ","
-            dataprocess:
-                - type: "select"
-                  name: "idbig"
-                  condition: "id >= 5"
         renderobject:
             - name: "tank"
-              range: 0 100
+              condition: "id == 0"
               geometry:
                   - type: "sphere"
                     radius: 0.888
@@ -37,7 +34,7 @@ chronorender:
                   - name: "plastic.sl"
                     Kd: 999
             - name: "gorb"
-              condition: "id == 7"
+              condition: "id < 5 and id >= 1"
               geometry:
                   - type: "cone"
               shader:
