@@ -4,6 +4,7 @@ import data
 import datasource as ds
 import dataprocess as dp
 import datatarget as dt
+import copy
 
 
 class DataObjectException(Exception):
@@ -22,10 +23,26 @@ class DataObject(Object):
 
         self._datasrcs      = self.getMember(ds.DataSource.getTypeName())
         self._dataprocs     = self.getMember(dp.DataProcess.getTypeName())
+        self._allfields     = []
+
+        self._initMultipleSourceResources()
+        self._initCrossSrcFields()
  
     def _initMembersDict(self):
         self._members[ds.DataSource.getTypeName()] = [ds.DataSource, []]
         self._members[dp.DataProcess.getTypeName()] = [dp.DataProcess, []]
+
+    def _initMultipleSourceResources(self):
+        for i in range(0, len(self._datasrcs)):
+            src = self._datasrcs[i]
+
+            resources = src.getInputResources()
+            tmp_srcs = []
+            for resource in resources:
+                new_src = copy.deepcopy(src)
+                new_src.resource = resource
+                tmp_srcs.append(new_src)
+            self._datasrcs[i] = tmp_srcs
 
     def addDataSource(self, src):
         self._datasrcs.append(src)
@@ -33,10 +50,18 @@ class DataObject(Object):
     def addDataProcess(self, proc):
         self._dataprocs.append(proc)
 
-    def getData(self):
-        return self.run()
+    def getData(self, srcnumber):
+        return self._run(srcnumber)
 
-    def run(self):
+    def _initCrossSrcFields(self):
+        for srclist in self._datasrcs:
+            src = srclist[0]
+            if hasattr(src, 'fields'):
+                for field in src.fields:
+                    if field not in self._allfields:
+                        self._allfields.append(field)
+
+    def _run(self, srcnumber):
         #####
         # TODO have procs for filtering each srd
         # data = src.runProcs()
@@ -47,24 +72,32 @@ class DataObject(Object):
             return None
 
         if len(self._datasrcs) == 1:
-            return self._doProcs(ds.DataSourceNode(self._datasrcs[0]))
+            node = ds.DataSourceNode(self._getResource(0, srcnumber))
+            return self._doProcs(node)
 
-        fields, combined_data = self._combineSrcs()
+        fields, combined_data = self._combineSrcs(srcnumber)
 
         target = ds.RecordListSourceNode(name="tmp", a_list=combined_data.data, fields=fields)
         return self._doProcs(target)
 
-    def _combineSrcs(self):
-        all_fields = data.FieldList(["file"])
-        for src in self._datasrcs:
-            for field in src.fields:
-                if field not in all_fields:
-                    all_fields.append(field)
+    def _getResource(self, listnum, number):
+        srcs = self._datasrcs[listnum]
+        if number >= len(srcs):
+            return srcs[len(srcs)-1]
+            # TODO PROGRAM LOGGER
+            # raise DataObjectException("asking for " + str(number) + " when only" 
+                    # + str(len(srcs)) + "available")
+        elif number < 0:
+            return srcs[0]
+        return srcs[number]
+
+    def _combineSrcs(self, srcnumber):
         target = dt.DataTarget()
-        target.fields = data.FieldList(all_fields)
+        target.fields = data.FieldList(self._allfields)
 
         target.initialize()
-        for src in self._datasrcs:
+        for i in range(0, len(self._datasrcs)):
+            src = self._getResource(i, srcnumber)
             src.initialize()
             for record in src.records():
                 target.append(record)

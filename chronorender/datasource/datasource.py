@@ -1,5 +1,6 @@
 from data.ds.base import DataSource
 import cr_object
+import glob
 # Should implement:
 # * fields
 # * prepare()
@@ -21,17 +22,17 @@ class DataSource(DataSource, cr_object.Object):
     def getTypeName():
         return "datasource"
 
-    def __init__(self, name="default", *args, **kwargs):
+    def __init__(self, name="default", resource="", *args, **kwargs):
         super(DataSource,self).__init__(*args, **kwargs)
 
         self.name = name
+        self.resource = resource
 
     def _initMembersDict(self):
         return
 
-    def getInputDataFiles(self):
-        return
-        # return glob.glob(self.settings._in)
+    def getInputResources(self):
+        return glob.glob(self.resource)
 
     def initialize(self):
         return

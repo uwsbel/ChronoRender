@@ -57,9 +57,6 @@ class RndrDoc():
     def getFrameRange(self):
         return [int(x) for x in self.settings._framerange]
 
-    def getInputDataFiles(self):
-        return glob.glob(self.settings._in)
-
     def getOutputFileDir(self):
         return os.path.abspath(os.path.split(self.settings._out)[0])
 

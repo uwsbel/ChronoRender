@@ -3,21 +3,19 @@ from chronorender.cr import ChronoRender
 
 import chronorender.datasource as ds
 import chronorender.metadata as md
+import csv
 
 class DataSourceTestCase(unittest.TestCase):
     def setUp(self):
-        self._factories = ChronoRender().getFactories(ds.DataSource.getTypeName())
+        return
 
     def tearDown(self):
-        del self._factories
+        return
 
     def test_csvDataSource(self):
-        import csv
         meta = md.MetaData('./input/metadata/yaml/1.yaml')
         infile = './input/data/stationary/0.dat'
-        csvsrc = self._factories.build('csv', resource=infile,
-                fields=[["gorb", "integer"], "test", "test2", "n4", "n5", "n6", "n7"])
-
+        csvsrc = ds.CSVDataSource(resource=infile, fields=[["gorb", "integer"], "test", "test2", "n4", "n5", "n6", "n7"])
         csvsrc.initialize()
         rows = []
         reader = csvsrc.rows()
@@ -36,11 +34,9 @@ class DataSourceTestCase(unittest.TestCase):
                 self.assertEqual(str(csvrows[i][j]), str(rows[i][j]))
 
     def test_csvParseSpeed(self):
-        import csv
         meta = md.MetaData('./input/metadata/yaml/1.yaml')
         infile = './input/data/large/0.dat'
-        csvsrc = self._factories.build('csv', resource=infile,
-                fields=[["gorb", "integer"], "test", "test2", "n4", "n5", "n6", "n7"])
+        csvsrc = ds.CSVDataSource(resource=infile, fields=[["gorb", "integer"], "test", "test2", "n4", "n5", "n6", "n7"])
 
         csvsrc.initialize()
         rows = []
