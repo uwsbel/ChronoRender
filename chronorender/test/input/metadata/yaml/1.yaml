@@ -22,7 +22,7 @@ chronorender:
         lighting: "default_lighting.rib"
         resolution: 640 480
     data:
-        - datasource:
+        datasource:
             - type: "csv"
               resource: "./input/data/stationary/*.dat"
               name: "gorbdata"
@@ -34,6 +34,17 @@ chronorender:
                         ["euler_y", float], 
                         ["euler_z", float]]
               delim: ","
-          dataprocess:
+            - type: "csv"
+              resource: "./input/data/stationary/*.dat"
+              name: "asdgsdg"
+              fields: [["id", integer],
+                        ["pos_x", float], 
+                        ["pos_y", float], 
+                        ["pos_z", float], 
+                        ["euler_x", float], 
+                        ["euler_y", float], 
+                        ["euler_z", float]]
+              delim: ","
+        dataprocess:
             - name: "select"
               condition: "id > 0"

@@ -75,9 +75,9 @@ class DataObject(Object):
             node = ds.DataSourceNode(self._getResource(0, srcnumber))
             return self._doProcs(node)
 
-        fields, combined_data = self._combineSrcs(srcnumber)
+        combined_data = self._combineSrcs(srcnumber)
 
-        target = ds.RecordListSourceNode(name="tmp", a_list=combined_data.data, fields=fields)
+        target = ds.RecordListSourceNode(name="tmp", a_list=combined_data.data, fields=data.FieldList(self._allfields))
         return self._doProcs(target)
 
     def _getResource(self, listnum, number):
@@ -103,7 +103,7 @@ class DataObject(Object):
                 target.append(record)
             src.finalize()
         target.finalize()
-        return all_fields, target
+        return target
 
 
     def _doProcs(self, datasrcnode):
