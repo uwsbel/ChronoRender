@@ -8,5 +8,9 @@ class Visualizer(Scriptable):
     def __init__(self):
         return
 
+    def resolveAssets(self, finder):
+        self._resolvedAssetPaths = True
+        return []
+
 def build(**kwargs):
     return Visualizer(**kwargs)

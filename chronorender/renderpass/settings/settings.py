@@ -29,5 +29,9 @@ class Settings(Renderable):
     def render(self, rib, **kwargs):
         rib.write(self.name)
 
+    def resolveAssets(self, finder):
+        self._resolvedAssetPaths = True
+        return []
+
 def build(**kwargs):
     return Settings(**kwargs)

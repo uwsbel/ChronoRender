@@ -36,12 +36,22 @@ class Object(object):
 
     # override new to make Object a metacalls
     # return a concrete instance if factories are defined
-    def __new__(cls, factories=None, *args, **kwargs):
-        if factories and Object.getInstanceQualifier() in kwargs:
-            fact = factories.getFactory(cls.getTypeName())
-            return fact.build(kwargs[Object.getInstanceQualifier()], **kwargs)
-        obj = object.__new__(cls, *args, **kwargs)
-        return obj
+    def __new__(cls, basename="", factories=None, recurse=False, *args, **kwargs):
+        if factories and not recurse:
+            if basename == "":
+                basename = cls.getTypeName()
+
+            # if type specified, create specific impl
+            # else create base class
+            typename = basename
+            if Object.getInstanceQualifier() in kwargs:
+                typename = kwargs[Object.getInstanceQualifier()]
+
+            fact = factories.getFactory(basename)
+            if fact:
+                return fact.build(typename, factories=factories, recurse=True, **kwargs)
+
+        return object.__new__(cls, *args, **kwargs)
 
     def __str__(self):
         string = pprint.pformat(self._members)
@@ -140,7 +150,7 @@ class Renderable(Object):
 
     def resolveAssets(self, searchpaths):
         self._resolvedAssetPaths = True
-        return 
+        return  []
 
     def setAsset(self, assetname, obj):
         return

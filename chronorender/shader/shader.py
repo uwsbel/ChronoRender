@@ -82,6 +82,8 @@ class Shader(Renderable):
         self._initShaderParameters()
         self._resolvedAssetPaths = True
 
+        return [self._shdrpath]
+
     def setAsset(self, assetname, obj):
         if assetname in self._paramdict:
             vtype = type(self._paramdict[assetname])

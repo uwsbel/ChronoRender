@@ -21,7 +21,15 @@ class Simulation(Scriptable):
         self._members[cro.RenderObject.getTypeName()] = [cro.RenderObject, []]
 
     def render(self, ri, *args, **kwargs):
-        ri.RiSphere(0.1, -0.1, 0.1, 360)
+        for robj in self._robjs:
+            robj.render(ri,**kwargs)
+
+    def resolveAssets(self, finder):
+        out = []
+        for robj in self._robjs:
+            out.extend(robj.resolveAssets(finder))
+        self._resolvedAssetPaths = True
+        return out
 
 def build(**kwargs):
     return Simulation(**kwargs)

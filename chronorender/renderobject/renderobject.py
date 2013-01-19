@@ -49,11 +49,13 @@ class RenderObject(Scriptable):
 
     def resolveAssets(self, finder):
         # TODO anythin?
+        out = []
         for geo in self.geometry:
-            geo.resolveAssets(finder)
+            out.extend(geo.resolveAssets(finder))
         for shdr in self.shaders:
-            shdr.resolveAssets(finder)
+            out.extend(shdr.resolveAssets(finder))
         self._resolvedAssetPaths = True
+        return out
 
     def setAsset(self, assetname, obj):
         # TODO anythin?

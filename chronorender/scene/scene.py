@@ -8,5 +8,9 @@ class Scene(Scriptable):
     def __init__(self, *args, **kwargs):
         super(Scene,self).__init__(*args, **kwargs)
 
+    def resolveAssets(self, finder):
+        self._resolvedAssetPaths = True
+        return []
+
 def build(**kwargs):
     return Scene(**kwargs)

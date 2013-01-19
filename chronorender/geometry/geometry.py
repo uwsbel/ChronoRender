@@ -21,5 +21,9 @@ class Geometry(Scriptable):
     def render(self, ri, *args, **kwargs):
         ri.RiSphere(0.1, -0.1, 0.1, 360)
 
+    def resolveAssets(self, finder):
+        self._resolvedAssetPaths = True
+        return []
+
 def build(**kwargs):
     return Geometry(**kwargs)

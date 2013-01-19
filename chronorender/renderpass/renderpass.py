@@ -42,6 +42,7 @@ class RenderPass(Scriptable):
 
     def resolveAssets(self, finder):
         self._resolvedAssetPaths = True
+        return []
 
     def setAsset(self, assetname, obj):
         return

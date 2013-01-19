@@ -12,7 +12,7 @@ chronorender:
         name: "tank"
         range: 0 100
         geometry:
-            type: "sphere"
+            type: "cone"
         shader:
             name: "plastic.sl"
             Kd: 999
@@ -47,4 +47,4 @@ chronorender:
                   - type: "cone"
               shader:
                   - name: "plastic.sl"
-                    Kd: 999
+                    Kd: 666
