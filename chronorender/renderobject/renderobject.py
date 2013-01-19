@@ -14,8 +14,6 @@ class RenderObjectException(Exception):
 
 class RenderObject(Scriptable):
 
-    _idcounter = -1
-
     @staticmethod
     def getTypeName():
         return "renderobject"
@@ -29,9 +27,6 @@ class RenderObject(Scriptable):
         self.condition  = self.getMember('condition')
         self.color      = self.getMember('color')
         self.instanced  = self.getMember('instanced')
-
-        RenderObject._idcounter += 1
-        self.objid = RenderObject._idcounter
 
     def _initMembersDict(self):
         self._members['motionblur']     = [bool, False]
@@ -80,9 +75,9 @@ class RenderObject(Scriptable):
         self._renderTransformData(rib, record, **kwargs)
         
         if self.instanced:
-            rib.RiObjectInstance(self.objid)
+            rib.RiObjectInstance(self.getInstanceID())
         else:
-            self._renderShape(rib, **kwargs)
+            self.renderShape(rib, **kwargs)
         rib.RiTransformEnd()
 
     def _renderTransformData(self, rib, record={}):
@@ -98,13 +93,19 @@ class RenderObject(Scriptable):
         if cre.EULER_Z in record and record[cre.EULER_Z] > 0.0:
             rib.RiRotate(record[cre.EULER_Z], 0, 0, 1)
 
-    def _renderShape(self, rib, **kwargs):
+    def renderShape(self, rib, rendershaders=True, **kwargs):
         rib.RiColor(self.color)
-        for shdr in self.shaders: 
-            shdr.render(rib, **kwargs)
+        
+        if rendershaders:
+            for shdr in self.shaders: 
+                shdr.render(rib, **kwargs)
+
         for geo in self.geometry: 
             geo.render(rib, **kwargs)
 
+
+    def getInstanceables(self):
+        return [self]
 
 def build(**kwargs):
     return RenderObject(**kwargs)

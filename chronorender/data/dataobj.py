@@ -64,6 +64,7 @@ class DataObject(Object):
         if srcnumber >= self._maxindex:
             return None
 
+
         out = self._run(srcnumber)
         if selectcondition != "":
             src= ds.RecordListSourceNode(name="tmp", a_list=out, 

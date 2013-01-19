@@ -38,7 +38,7 @@ class RiStream():
         self._ribout = RIBStream(outstream, name)
         self._current_context = None
         self._contexts = None
-        self._objecthandle = None
+        self._objecthandle = 0
 
         self._init_declarations()
 
@@ -1412,16 +1412,19 @@ class RiStream():
         if self._insideobject:
             self._error(RIE_ILLSTATE, RIE_ERROR, "Object blocks cannot be nested.")
 
-        keyparams = riutils.paramlist2dict(paramlist, keyparams)
+        keyparams = riutils.paramlist2dict(self, paramlist, keyparams)
 
         # Check if the user provided a handle id...
         if RI_HANDLEID in keyparams:
-            objhandle = str(keyparams[RI_HANDLEID])
+            objhandle = keyparams[RI_HANDLEID]
             del keyparams[RI_HANDLEID]
-            self._ribout.write('ObjectBegin "%s"\n'%objhandle)
+            if isinstance(objhandle, int):
+                self._ribout.write('ObjectBegin %d\n'%objhandle)
+            else:
+                self._ribout.write('ObjectBegin "%s"\n'%str(objhandle))
         else:
-            _objecthandle+=1
-            objhandle = _objecthandle
+            self._objecthandle+=1
+            objhandle = self._objecthandle
             self._ribout.write('ObjectBegin %d\n'%objhandle)
         
         self._insideobject=1
@@ -1702,7 +1705,7 @@ class RiStream():
 
     def _save_context(self, handle):
         "Save a context."
-        ctx = (self._ribout, self._colorsamples, self._lighthandle, _objecthandle,
+        ctx = (self._ribout, self._colorsamples, self._lighthandle, self._objecthandle,
                self._errorhandler, self._declarations,
                self._insideframe, self._insideworld, self._insideobject, self._insidesolid,
                self._insidemotion)
@@ -1710,7 +1713,7 @@ class RiStream():
 
     def _load_context(self, handle):
         "Load a context."
-        self._ribout, self._colorsamples, self._lighthandle, _objecthandle, \
+        self._ribout, self._colorsamples, self._lighthandle, self._objecthandle, \
         self._errorhandler, self._declarations, \
         self._insideframe, self._insideworld, self._insideobject, self._insidesolid, \
         self._insidemotion = self._contexts[handle]

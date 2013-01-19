@@ -14,6 +14,7 @@ class Simulation(Scriptable):
         self._data = self.getMember(dat.DataObject.getTypeName())
         self._name = self.getMember('name')
         self._robjs = self.getMember(cro.RenderObject.getTypeName())
+        self.instanced = False
 
     def _initMembersDict(self):
         self._members[dat.DataObject.getTypeName()] = [dat.DataObject, None]
@@ -30,6 +31,12 @@ class Simulation(Scriptable):
         for robj in self._robjs:
             out.extend(robj.resolveAssets(finder))
         self._resolvedAssetPaths = True
+        return out
+
+    def getInstanceables(self):
+        out = []
+        for robj in self._robjs:
+            out.extend(robj.getInstanceables())
         return out
 
 def build(**kwargs):

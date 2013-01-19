@@ -2,20 +2,12 @@ chronorender:
     rendersettings:
         out: "./output/xml_0/out_####.tif"
         searchpaths: "./:./input:./input/shaders"
-        framerange: 0 2
+        framerange: 2 2
     renderpass:
         name: "gorb"
         scene: "default_scene.rib"
         lighting: "default_lighting.rib"
         resolution: 640 480
-    renderobject:
-        name: "tank"
-        range: 0 100
-        geometry:
-            type: "cone"
-        shader:
-            name: "plastic.sl"
-            Kd: 999
     simulation:
         data:
             datasource:
@@ -43,3 +35,8 @@ chronorender:
               shader:
                   - name: "plastic.sl"
                     Kd: 999
+            - name: "gorb"
+              condition: "id >= 0"
+              color: "0.4 0.4 0.1"
+              geometry:
+                  - type: "cone"

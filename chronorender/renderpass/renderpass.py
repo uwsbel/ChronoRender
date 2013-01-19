@@ -22,7 +22,7 @@ class RenderPass(Scriptable):
         self.rndrsettings   = self.getMember(Settings.getTypeName())
         self.lighting       = self.getMember(clight.Lighting.getTypeName())
         self.scene          = self.getMember(cscene.Scene.getTypeName())
-        self.rndrobjects    = []
+        self.renderables    = []
 
     def _initMembersDict(self):
         self._members['name']                           = [str, 'nothing']
@@ -33,9 +33,9 @@ class RenderPass(Scriptable):
 
     def addRenderable(self, obj):
         if isinstance(obj, list):
-            self.rndrobjects += obj
+            self.renderables += obj
         else:
-            self.rndrobjects.append(obj)
+            self.renderables.append(obj)
 
     def getOutput(self):
         return "out"
@@ -47,15 +47,32 @@ class RenderPass(Scriptable):
     def setAsset(self, assetname, obj):
         return
 
-    def render(self, rib, **kwargs):
+    def render(self, rib, framenumber=0, **kwargs):
+        rib.RiFrameBegin(framenumber)
         for sett in self.rndrsettings:
             sett.render(rib, **kwargs)
+
+        self._renderInstanceDecls(rib, framenumber=framenumber, **kwargs)
+
+        rib.RiWorldBegin()
         for light in self.lighting:
             light.render(rib, **kwargs)
         for scene in self.scene:
             scene.render(rib, **kwargs)
-        for obj in self.rndrobjects:
-            obj.render(rib, **kwargs)
+        for obj in self.renderables:
+            obj.render(rib, framenumber=framenumber, **kwargs)
+        rib.RiWorldEnd()
+
+        rib.RiFrameEnd()
+
+    def _renderInstanceDecls(self, rib, **kwargs):
+        for obj in self.renderables:
+            insts =  obj.getInstanceables()
+            for inst in insts:
+                if inst.instanced:
+                    rib.RiObjectBegin(__handleid=inst.getInstanceID())
+                    inst.renderShape(rib, rendershaders=True)
+                    rib.RiObjectEnd()
 
 def build(**kwargs):
     return RenderPass(**kwargs)
