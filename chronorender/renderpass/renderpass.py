@@ -67,12 +67,12 @@ class RenderPass(Scriptable):
 
     def _renderInstanceDecls(self, rib, **kwargs):
         for obj in self.renderables:
-            insts =  obj.getInstanceables()
-            for inst in insts:
-                if inst.instanced:
-                    rib.RiObjectBegin(__handleid=inst.getInstanceID())
-                    inst.renderShape(rib, rendershaders=True)
-                    rib.RiObjectEnd()
+            for inst in obj.getInstanceables():
+                if not inst.instanced: continue
+
+                rib.RiObjectBegin(__handleid=inst.getInstanceID())
+                inst.renderShape(rib, rendershaders=True)
+                rib.RiObjectEnd()
 
 def build(**kwargs):
     return RenderPass(**kwargs)

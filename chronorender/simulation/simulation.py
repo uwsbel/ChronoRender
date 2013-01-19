@@ -33,6 +33,10 @@ class Simulation(Scriptable):
         self._resolvedAssetPaths = True
         return out
 
+    def setAsset(self, assetname, obj):
+        for robj in self._robjs:
+            robj.setAsset(assetname, obj)
+
     def getInstanceables(self):
         out = []
         for robj in self._robjs:
