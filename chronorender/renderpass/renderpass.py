@@ -1,5 +1,8 @@
 from cr_object import Scriptable
 
+import chronorender.scene as cscene
+import chronorender.lighting as clight
+
 class RenderPassException(Exception):
     def __init__(self, value):
         self.value = value
@@ -18,17 +21,29 @@ class RenderPass(Scriptable):
         self.rndrobjects = []
 
     def _initMembersDict(self):
-        self._members['name']           = [str, 'nothing']
-        self._members['scene']          = [str, 'nothing']
-        self._members['lighting']       = [str, 'nothing']
-        self._members['resolution']     = ['spalist', [-1,-1]]
-        self._members['renderobjs']     = ['spalist', ['default']]
+        self._members['name']                           = [str, 'nothing']
+        self._members['resolution']                     = ['spalist', [640, 480]]
+        self._members[cscene.Scene.getTypeName()]       = [cscene.Scene, []]
+        self._members[clight.Lighting.getTypeName()]    = [clight.Lighting, []]
 
-    def render(self, rib, **kwargs):
-        return str(data)
+    def addRenderable(self, obj):
+        if isinstance(obj, list):
+            self.rndrobjects += obj
+        else:
+            self.rndrobjects.append(obj)
 
     def getOutput(self):
         return "out"
+
+    def resolveAssets(self, finder):
+        self._resolvedAssetPaths = True
+
+    def setAsset(self, assetname, obj):
+        return
+
+    def render(self, rib, **kwargs):
+        for obj in self._rndrobjects:
+            obj.render(rib, **kwargs)
 
 def build(**kwargs):
     return RenderPass(**kwargs)

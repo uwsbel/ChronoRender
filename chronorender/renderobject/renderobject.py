@@ -51,7 +51,7 @@ class RenderObject(Scriptable):
         # TODO anythin?
         for geo in self.geometry:
             geo.resolveAssets(finder)
-        for shdr in self.shader:
+        for shdr in self.shaders:
             shdr.resolveAssets(finder)
         self._resolvedAssetPaths = True
 
