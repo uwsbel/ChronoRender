@@ -186,6 +186,5 @@ class Movable(Renderable):
     def __str__(self):
         return super(Movable,self).__str__()
 
-    def render(self, ri, *args, **kwargs):
-        # if script, run that
-        return
+    def getCenter(self):
+        return [0.0,0.0,0.0]

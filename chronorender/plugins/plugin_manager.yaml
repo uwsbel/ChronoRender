@@ -1,4 +1,6 @@
 factory: 
+    camera:
+        paths: "camera"
     data:
         paths: ""
     dataprocess:
