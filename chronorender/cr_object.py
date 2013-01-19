@@ -142,6 +142,9 @@ class Renderable(Object):
         self._resolvedAssetPaths = True
         return 
 
+    def setAsset(self, assetname, obj):
+        return
+
     def render(self, ri, *args, **kwargs):
         return
 

@@ -1,19 +1,34 @@
 import unittest
 import chronorender as cr
 
+import chronorender.finder as finder
+
 class ShaderTestCase(unittest.TestCase):
     def setUp(self):
         self.sdr = cr.Shader(name='plastic.sl')
-        self.finder = cr.Finder(['./input/shaders/'])
-        self.sdr.resolveAssets(self.finder)
+        fine = finder.Finder(['./input/shaders'])
+        self.sdr.resolveAssets(fine)
 
     def tearDown(self):
         del self.sdr
 
+    def test_constructWithFullPath(self):
+        self.sdr = cr.Shader(shdrpath='./input/shaders/plastic.sl')
+        self.assertEqual(self.sdr.getShaderType(), 'surface')
+
+    def test_setAsset(self):
+        param = 'Kd'
+        vtype = type(self.sdr._paramdict[param])
+
+        self.sdr.setAsset(param, 555)
+
+        self.assertEqual(555, self.sdr._paramdict[param])
+        self.assertEqual(type(self.sdr._paramdict[param]), vtype)
+
     def test_parameters(self):
         newKa = 666.0
         newColor = [0.6, 0.6, 0.6]
-        params = self.sdr.getParameters()
+        params = self.sdr._paramdict
 
         # check params
         self.assertTrue('Ka' in params)
@@ -26,6 +41,11 @@ class ShaderTestCase(unittest.TestCase):
         params['specularcolor'] = newColor
 
         # verify params
-        check = self.sdr.getParameters()
+        check = self.sdr._paramdict
         self.assertEqual(newKa, check['Ka'])
         self.assertEqual(newColor, check['specularcolor'])
+
+    def test_render(self):
+        ri = cr.RiStream('str')
+        self.sdr.render(ri)
+        print ri.getText()

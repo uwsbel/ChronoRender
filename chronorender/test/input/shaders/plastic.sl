@@ -4,7 +4,6 @@ plastic (float Ka = 1;
          float Ks = .5;
          float roughness = .1;
 	 color specularcolor = (1, 0, 0);
-     matrix blarg = (1,2,4,5,4,3,2,1);
      )
 {
     normal Nf = faceforward (normalize(N),I);

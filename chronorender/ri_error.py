@@ -1,3 +1,7 @@
+import sys
+from ri_constants import *
+from ri_types import *
+
 def RiErrorIgnore(code, severity, message):
     """Standard error handler.
 

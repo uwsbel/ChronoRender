@@ -17,7 +17,7 @@ class Finder():
 
     def find(self, assetname):
         for path in self._searchpaths:
-            testpath = path + assetname
+            testpath = os.path.join(path,assetname)
             if os.path.exists(testpath):
                 return testpath
         raise AssetNotFoundException(self, 'could not find: ' + assetname)
@@ -34,7 +34,10 @@ class Finder():
 
     def _resolveToAbsolutePaths(self, paths):
         resolved_paths = []
-        for i in range(0,len(paths)):
-            if os.path.exists(paths[i]):
-                resolved_paths.append(os.path.abspath(paths[i]) + os.sep)
+        for path in paths:
+            if os.path.exists(path):
+                if not os.path.isdir(path):
+                    path = os.path.split(path)[0]
+                out = os.path.abspath(path)
+                resolved_paths.append(out)
         return resolved_paths

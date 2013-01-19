@@ -16,23 +16,15 @@ class RenderObject(Scriptable):
     @staticmethod
     def getTypeName():
         return "renderobject"
-    # _RndrObjectPool = weakref.WeakValueDictionary()
-
-    # def __new__(cls, name):
-        # obj = RndrObject._RndrObjectPool.get(name, None)
-        # if not obj:
-            # obj = object.__new__(cls)
-            # RndrObject._RndrObjectPool[name] = obj
-            # obj.name = name
-        # return obj
 
     def __init__(self, *args, **kwargs):
         super(RenderObject,self).__init__(*args, **kwargs)
 
-        self.geometry = self.getMember(cg.Geometry.getTypeName())
-        self.shaders = self.getMember(cs.Shader.getTypeName())
-        self.data = []
-        self.condition = self.getMember('condition')
+        self.geometry   = self.getMember(cg.Geometry.getTypeName())
+        self.shaders    = self.getMember(cs.Shader.getTypeName())
+        self.data       = []
+        self.condition  = self.getMember('condition')
+        self.color      = self.getMember('color')
 
     def _initMembersDict(self):
         self._members['motionblur']     = [bool, False]
@@ -54,6 +46,21 @@ class RenderObject(Scriptable):
         ientry = iter(entry)
         idata = iter(self.data)
         return dict(izip(idata, ientry))
+
+    def resolveAssets(self, finder):
+        # TODO anythin?
+        for geo in self.geometry:
+            geo.resolveAssets(finder)
+        for shdr in self.shader:
+            shdr.resolveAssets(finder)
+        self._resolvedAssetPaths = True
+
+    def setAsset(self, assetname, obj):
+        # TODO anythin?
+        for geo in self.geometry:
+            geo.setAsset(assetname, obj)
+        for shdr in self.shaders:
+            shdr.setAsset(assetname, obj)
 
     def render(self, data):
         return str(data)

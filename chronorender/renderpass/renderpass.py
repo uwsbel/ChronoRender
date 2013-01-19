@@ -24,8 +24,11 @@ class RenderPass(Scriptable):
         self._members['resolution']     = ['spalist', [-1,-1]]
         self._members['renderobjs']     = ['spalist', ['default']]
 
-    def render(self, data):
+    def render(self, rib, **kwargs):
         return str(data)
+
+    def getOutput(self):
+        return "out"
 
 def build(**kwargs):
     return RenderPass(**kwargs)

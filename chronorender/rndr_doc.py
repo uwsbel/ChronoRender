@@ -47,6 +47,8 @@ class RndrDoc():
         try:
             for rpass in self.rndrpasses:
                 rpass.resolveAssets(self.assetfinder)
+            for robj in self.rndrobjs:
+                robj.resolveAssets(self.assetfinder)
             for shdr in self.shaders:
                 shdr.resolveAssets(self.assetfinder)
             for geo in self.geometry:

@@ -1,11 +1,15 @@
+import types
+from ri_constants import *
+from ri_types import *
+from ri_error import *
 
-def seq2col(seq):
+def seq2col(ri, seq):
     """Convert a sequence containing a color into a string."""
-    if len(seq)<self._colorsamples:
-        self._error(RIE_INVALIDSEQLEN, RIE_ERROR, "Invalid sequence length ("+\
-               `len(seq)`+" instead of "+`self._colorsamples`+")")
+    if len(seq)<ri._colorsamples:
+        ri._error(RIE_INVALIDSEQLEN, RIE_ERROR, "Invalid sequence length ("+\
+               `len(seq)`+" instead of "+`ri._colorsamples`+")")
     colseq = tuple(seq)
-    return '['+string.join( map(lambda x: str(x), colseq[:self._colorsamples]) )+']'
+    return '['+string.join( map(lambda x: str(x), colseq[:ri._colorsamples]) )+']'
 
 def flatten(seq):
     """Return a list of the individual items in a (possibly nested) sequence.
@@ -40,7 +44,7 @@ def flatten(seq):
             res += flatten(v)
     return res
 
-def seq2list(seq, count=None):
+def seq2list(ri, seq, count=None):
     """Convert a sequence into a string.
 
     The function checks if the sequence contains count elements (unless
@@ -52,12 +56,12 @@ def seq2list(seq, count=None):
     f = flatten(seq)
     # Has the sequence an incorrect length? then generate an error
     if count!=None and len(f)!=count:
-        self._error(RIE_INVALIDSEQLEN, RIE_ERROR, "Invalid sequence length ("+\
+        ri._error(RIE_INVALIDSEQLEN, RIE_ERROR, "Invalid sequence length ("+\
                `len(f)`+" instead of "+`count`+")")
         
     return '[%s]'%" ".join(f)
 
-def paramlist2dict(paramlist, keyparams):
+def paramlist2dict(ri, paramlist, keyparams):
     """Combine the paramlists (tuple & dict) into one dict.
     
     paramlist is a tuple with function arguments (token/value pairs or
@@ -119,7 +123,7 @@ def merge_paramlist(paramlist, keyparams):
     return res
     
 
-def paramlist2string(paramlist, keyparams={}):
+def paramlist2string(ri, paramlist, keyparams={}):
     """Convert the paramlist into a string representation.
 
     paramlist is a tuple with function arguments (token/value pairs or
@@ -144,8 +148,8 @@ def paramlist2string(paramlist, keyparams={}):
         tokname = f[-1:][0]
         inline  = f[:-1]
 
-        if not (self._declarations.has_key(tokname) or inline!=[]):
-            self._error(RIE_UNDECLARED,RIE_ERROR,'Parameter "'+tokname+
+        if not (ri._declarations.has_key(tokname) or inline!=[]):
+            ri._error(RIE_UNDECLARED,RIE_ERROR,'Parameter "'+tokname+
                    '" is not declared.')
         
         # Check if the value is a sequence (if it returns an iterator)
@@ -159,7 +163,7 @@ def paramlist2string(paramlist, keyparams={}):
             value='["'+value+'"]'
 #        elif type(value)==types.ListType or type(value)==types.TupleType:
         elif isseq:
-            value = seq2list(value)
+            value = seq2list(ri, value)
         else:
             value='[%s]'%value
         res+=' "'+token+'" '+value

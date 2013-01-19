@@ -15,27 +15,34 @@ class Shader(Renderable):
     def getTypeName():
         return "shader"
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, shdrpath='', *args, **kwargs):
         super(Shader,self).__init__(*args, **kwargs)
 
         self._shdrparams = []
         self._paramdict = {}
         self._firstshdr = None
-        self._shdrpath = ''
+        self._filename  = self.getMember('name')
+
+        if shdrpath != '':
+            self._initFromFullPath(shdrpath)
+
+    def _initFromFullPath(self, shdrpath):
+            if not os.path.isfile(shdrpath):
+                raise ShaderException(shdrpath + " is not a shader file")
+            path, self._filename = os.path.split(shdrpath)
+            self.resolveAssets(mfind.Finder([path]))
 
     def _initMembersDict(self):
         self._members['type']   = [str, 'Surface']
-        self._members['name']   = [str, 'plastic.sl']
+        self._members['name']   = [str, '']
 
     def _initShaderParameters(self):
         self._parseShaderParameters()
         self._convertDefaultsToPythonTypes()
-        self._initFirstShader()
+        self._initFirstShader()   
         self._constructParameterDict()
 
     def _parseShaderParameters(self):
-        if self._shdrpath == '': return
-
         self._shdrparams = slparams.slparams(self._shdrpath)
         if len(self._shdrparams) <= 0:
             raise ShaderException('no shaders in source file: ' +
@@ -53,7 +60,6 @@ class Shader(Renderable):
         for param in self._firstshdr.params:
             val = param.default
             
-            # check if parameterized
             try:
                 tmp = self.getMember(param.name)
                 val = type(param.default)(tmp)
@@ -62,20 +68,37 @@ class Shader(Renderable):
 
             self._paramdict[param.name] = val
 
-    def getInfo(self):
-        return self._firstshdr
+    def getShaderType(self):
+        return self._firstshdr.type
+
+    def getShaderName(self):
+        return self._firstshdr.name
 
     def getParameters(self):
         return self._paramdict
 
-    # methods of Renderable class
     def resolveAssets(self, finder):
-        self._shdrpath = finder.find(self.getMember('name'))
+        self._shdrpath = finder.find(self._filename)
         self._initShaderParameters()
         self._resolvedAssetPaths = True
 
-    def render(self, *args, **kwargs):
-        return
+    def setAsset(self, assetname, obj):
+        if assetname in self._paramdict:
+            vtype = type(self._paramdict[assetname])
+            self._paramdict[assetname] = vtype(obj)
+
+    def render(self, rib, *arTs, **kwargs):
+        stype = self.getShaderType()
+        if stype == 'surface':
+            rib.RiSurface(self.getShaderName(), **self.getParameters())
+        elif stype == 'displacement':
+            rib.RiDisplacement(self.getShaderName(), **self.getParameters())
+        elif stype == 'volume':
+            rib.RiVolume(self.getShaderName(), **self.getParameters())
+        elif stype == 'light':
+            rib.RiLightSource(self.getShaderName(), **self.getParameters())
+        elif stype == 'imager':
+            rib.RiImager(self.getShaderName(), **self.getParameters())
 
 def build(**kwargs):
     return Shader(**kwargs)
