@@ -89,3 +89,15 @@ class _MDXML(_MDReader):
             kwargs = _MDXML._convertDictToKwargs(d)
             out.append(kwargs)
         return out
+
+    def getElementsDict(self):
+        out = {}
+        for elem in self._root:
+            d = _MDXML._convertElemToDict(elem)
+            kwargs = _MDXML._convertDictToKwargs(d)
+
+            if elem.tag in out:
+                out[elem.tag].append(kwargs)
+            else:
+                out[elem.tag] = [kwargs]
+        return out

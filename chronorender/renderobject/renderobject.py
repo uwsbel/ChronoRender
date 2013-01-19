@@ -34,7 +34,7 @@ class RenderObject(Scriptable):
         self._members['range']          = ['spalist', [-1,-1]]
         self._members[cg.Geometry.getTypeName()] = [cg.Geometry, []]
         self._members[cs.Shader.getTypeName()] = [cs.Shader, []]
-        self._members['condition']      = [str, ""]
+        self._members['condition']      = [str, '']
 
     def parseData(self, entry):
         if len(entry) < len(self.data):
@@ -62,8 +62,15 @@ class RenderObject(Scriptable):
         for shdr in self.shaders:
             shdr.setAsset(assetname, obj)
 
-    def render(self, data):
-        return str(data)
+    def render(self, rib, data=[], **kwargs):
+        rib.RiTransformBegin()
+        rib.RiTranslate(0, 0, 0)
+        rib.RiRotate(90, 1, 0, 0)
+        for shdr in self.shaders: 
+            shdr.render(rib, **kwargs)
+        for geo in self.geometry: 
+            geo.render(rib, **kwargs)
+        rib.RiTransformEnd()
 
 def build(**kwargs):
     return RenderObject(**kwargs)

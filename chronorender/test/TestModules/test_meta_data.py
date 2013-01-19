@@ -3,7 +3,7 @@ import chronorender as cr
 
 from metadata import MetaData
 
-import sys, os
+import sys, os, pprint
 
 class MetaDataTestCase(unittest.TestCase):
     def test_XML(self):
@@ -28,6 +28,9 @@ class MetaDataTestCase(unittest.TestCase):
             sdr = cr.Shader(**inst)
             self.assertEqual(sdr.getMember('Kd'), '666')
 
+        elems = md.getElementsDict()
+        # pprint.pprint(elems)
+
     def test_YANML(self):
         infile_yaml = './input/metadata/yaml/0.yaml'
         md = MetaData(infile_yaml)
@@ -42,10 +45,13 @@ class MetaDataTestCase(unittest.TestCase):
         self.assertEqual(len(rpass), 1)
 
         geom = md.findAll('geometry')
-        self.assertEqual(len(geom), 2)
+        self.assertEqual(len(geom), 1)
 
         shdr = md.findAll('shader')
-        self.assertEqual(len(shdr), 2)
+        self.assertEqual(len(shdr), 1)
+
+        elems = md.getElementsDict()
+        # pprint.pprint(elems)
 
 def TestSuite():
     tests = ['test_function_parse']

@@ -21,6 +21,8 @@ chronorender:
         scene: "default_scene.rib"
         lighting: "default_lighting.rib"
         resolution: 640 480
+        settings:
+            name: "pass gorb"
     data:
         datasource:
             - type: "csv"

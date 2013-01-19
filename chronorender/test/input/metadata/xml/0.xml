@@ -3,7 +3,6 @@
 <ChronoRender> 
     <rendersettings>
         <out>./output/xml_0/out_####.tif</out>
-        <radians>False</radians>
         <searchpaths>./:./input:./input/shaders</searchpaths>
         <framerange>0 0</framerange>
     </rendersettings>

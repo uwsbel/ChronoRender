@@ -6,7 +6,7 @@ from metadata import MetaData
 class RndrDocTestCase(unittest.TestCase):
     def setUp(self):
         self._cr = cr.ChronoRender()
-        md = MetaData('./input/metadata/yaml/0.yaml')
+        md = MetaData('./input/metadata/yaml/2.yaml')
         self.doc = cr.RndrDoc(self._cr._factories, md)
 
     def tearDown(self):
@@ -24,3 +24,8 @@ class RndrDocTestCase(unittest.TestCase):
         retval = self.doc.getOutputDataFilePath(1200)
 
         self.assertEqual(retval, outfile)
+
+    def test_render(self):
+        ri = cr.RiStream('str')
+        self.doc.render(ri)
+        print ri.getText()

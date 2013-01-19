@@ -52,17 +52,29 @@ class _MDYAML(_MDReader):
     def _parseFile(self, infile):
         stream = open(infile, 'r')
         self._root = tyaml.load(stream)
+
+        if _MDReader._root_name not in self._root:
+            raise Exception
+        self._root = self._root[_MDReader._root_name]
+
         # gen = yaml.load(stream)
         # for data in gen:
             # self._root.append(copy.deepcopy(data))
 
     def findAll(self, name):
         out = []
-
-        if 'chronorender'not in self._root:
-            raise Exception
-        root = self._root['chronorender']
-        for key, val in root.iteritems():
+        for key, val in self._root.iteritems():
             if key == name:
                 out = _MDYAML._convertElemToDict(val)
+        return out
+
+    def getElementsDict(self):
+        out = {}
+        for key, val in self._root.iteritems():
+            elem = _MDYAML._convertElemToDict(val)
+            if key in out:
+                for e in elem:
+                    out[key].append(e)
+            else:
+                out[key] = elem
         return out

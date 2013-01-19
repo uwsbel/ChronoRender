@@ -20,6 +20,9 @@ class MetaData():
     def findAll(self, name):
         return self._mdreader.findAll(name)
 
+    def getElementsDict(self):
+        return self._mdreader.getElementsDict()
+
     def singleFromType(self, elemtype, bRequired=True):
         elems = self.findAll(elemtype.getTypeName())
         if len(elems) != 1 and bRequired:
@@ -33,7 +36,3 @@ class MetaData():
             raise MetaDataException('no ' + elemtype.getTypeName() + ' in metadata')
 
         return elems
-        # out = []
-        # for inst in elems:
-            # out.append(self._constructObject(inst, elemtype))
-        # return out

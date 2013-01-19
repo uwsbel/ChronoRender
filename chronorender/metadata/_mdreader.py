@@ -1,6 +1,8 @@
 # from cr_object import Object
 
 class _MDReader():
+
+    _root_name = "chronorender"
     # @staticmethod
     # def getTypeName():
         # return "mdreader"
@@ -18,6 +20,9 @@ class _MDReader():
         return
 
     def findAll(self, name):
+        return []
+
+    def getElementsDict(self):
         return []
 
     def _parseString(self, instring):

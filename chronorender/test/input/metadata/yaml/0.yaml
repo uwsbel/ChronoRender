@@ -5,14 +5,11 @@ chronorender:
         framerange: 0 0
     shader:
         - name: "plastic.sl"
-          Kd: 999
-        - name: "plastic.sl"
-          Kd: 888
+          Kd: 666
     geometry:
         - type: "sphere"
           radius: 0.666
           dims: 0.5 7.7
-        - type: "cube"
     renderobject:
         name: "tank"
         range: 0 100

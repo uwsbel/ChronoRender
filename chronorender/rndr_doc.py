@@ -34,14 +34,18 @@ class RndrDoc():
     def initFromMetadata(self, factories, md):
         self.md = md
         self.settings   = RenderSettings(factories=factories,**md.singleFromType(RenderSettings))
-        self.rndrobjs   = [RenderObject(factories=factories, **x) for x in  md.listFromType(RenderObject)]
-        self.rndrpasses = [RenderPass(factories=factories, **x) for x in md.listFromType(RenderPass)]
-        self.shaders    = [Shader(factories=factories, **x) for x in md.listFromType(Shader)]
-        self.geometry   = [Geometry(factories=factories, **x) for x in md.listFromType(Geometry)]
+
+        for name, elem in md.getElementsDict().iteritems():
+            print "NAME: " + name + " ELEM: " + str(elem)
+        # self.rndrobjs   = [RenderObject(factories=factories, **x) for x in  md.listFromType(RenderObject)]
+        # self.rndrpasses = [RenderPass(factories=factories, **x) for x in md.listFromType(RenderPass)]
+        # self.shaders    = [Shader(factories=factories, **x) for x in md.listFromType(Shader)]
+        # self.geometry   = [Geometry(factories=factories, **x) for x in md.listFromType(Geometry)]
         self.assetfinder = Finder(self.settings._searchpaths)
         # TODO lighting,scene, and camera
 
         self._resolveAssets()
+        self._initRenderPasses()
 
     def _resolveAssets(self):
         try:
@@ -55,6 +59,11 @@ class RndrDoc():
                 geo.resolveAssets(self.assetfinder)
         except AssetNotFoundException as err:
             print err
+
+    def _initRenderPasses(self):
+        for rpass in self.rndrpasses:
+            for robj in self.rndrobjs:
+                rpass.addRenderable(robj)
 
     def getFrameRange(self):
         return [int(x) for x in self.settings._framerange]
@@ -81,6 +90,5 @@ class RndrDoc():
         return
 
     def render(self, rib, **kwargs):
-        for geo in self.geometry:
-            geo.render(rib, **kwargs)
-        return
+        for rpass in self.rndrpasses:
+            rpass.render(rib, **kwargs)
