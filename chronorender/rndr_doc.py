@@ -50,6 +50,7 @@ class RndrDoc():
     def _initRenderables(self, factories, md):
         for typename, elem in md.getElementsDict().iteritems():
             for e in elem:
+                print e
                 obj = Object(basename=typename, factories=factories, **e)
                 
                 if hasattr(obj, 'render'):

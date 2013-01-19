@@ -23,7 +23,9 @@
         <name>gorb</name>
         <scene>default_scene.rib</scene>
         <lighting>default_lighting</lighting>
-        <resolution>640 480</resolution>
+        <settings>
+            <resolution>640 480</resolution>
+        </settings>
    </renderpass>
    <datasource>
        <type>csv</type>

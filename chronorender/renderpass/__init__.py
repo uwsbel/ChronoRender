@@ -1,2 +1,3 @@
-from chronorender.renderpass.settings import *
+import settings     
+import display     
 from renderpass import *

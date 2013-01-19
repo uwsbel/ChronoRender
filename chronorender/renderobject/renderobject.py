@@ -5,6 +5,7 @@ from itertools import izip
 
 import chronorender.geometry as cg
 import chronorender.shader as cs
+from cr_types import intlist, floatlist
 
 class RenderObjectException(Exception):
     def __init__(self, value):
@@ -32,8 +33,8 @@ class RenderObject(Scriptable):
         self._members['motionblur']     = [bool, False]
         self._members['instanced']      = [bool, True]
         self._members['multiobject']    = [bool, False]
-        self._members['color']          = ['spalist', [1,0,0]]
-        self._members['range']          = ['spalist', [-1,-1]]
+        self._members['color']          = [floatlist, [1,0,0]]
+        self._members['range']          = [intlist, [-1,-1]]
         self._members[cg.Geometry.getTypeName()] = [cg.Geometry, []]
         self._members[cs.Shader.getTypeName()] = [cs.Shader, []]
         self._members['condition']      = [str, '']

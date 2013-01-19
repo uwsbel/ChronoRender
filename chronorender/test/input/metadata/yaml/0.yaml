@@ -2,7 +2,7 @@ chronorender:
     rendersettings:
         out: "./output/xml_0/out_####.tif"
         searchpaths: "./:./input:./input/shaders"
-        framerange: 0 0
+        framerange: 0 1
     shader:
         - name: "plastic.sl"
           Kd: 666

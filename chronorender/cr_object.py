@@ -1,5 +1,6 @@
 import pprint, inspect
 import chronorender.factorydict as fd
+from cr_types import floatlist, intlist, strlist
 
 class ObjectException(Exception):
     def __init__(self, value):
@@ -83,16 +84,13 @@ class Object(object):
 
     def _evalParamType(self, vtype, val):
         out = None
-        if vtype == 'collist':
-            out = str.split(val, ":")
-        elif vtype == 'spalist':
-            out = str.split(val, ' ')
-        elif vtype == 'comlist':
-            out = str.split(val, ',')
+        if vtype == intlist or vtype == floatlist or vtype == strlist:
+            out = vtype(val)
         elif isinstance(val, list):
-            out = []
-            for elem in val:
-                out.append(self._evalParamType(vtype, elem))
+            # out = []
+            out = [self._evalParamType(vtype, x) for x in val]
+            # for elem in val:
+                # out.append(self._evalParamType(vtype, elem))
         elif isinstance(val, dict):
             if self._factories and Object.getInstanceQualifier() in val:
                 out = self._buildFromFactory(vtype.getTypeName(), 

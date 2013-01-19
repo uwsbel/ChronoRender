@@ -1,6 +1,7 @@
 import os, re
 
 from cr_object import Object
+from cr_types import intlist, strlist
 
 class RenderSettingsException(Exception):
     def __init__(self, value):
@@ -23,6 +24,7 @@ class RenderSettings(Object):
         self._searchpaths   = './'
         self._framerange    = [0, 0]
 
+
         self._setMembers()
         self._resolveIOPath('out', False)
         self._resolveOutputFormat()
@@ -32,8 +34,8 @@ class RenderSettings(Object):
         self._members['padding']        = [int, 1]
         self._members['out']            = [str, './out_####.tif']
         self._members['fileformat']     = [str, 'tif']
-        self._members['searchpaths']    = ['collist', ['./']]
-        self._members['framerange']     = ['spalist', [0, 0]]
+        self._members['searchpaths']    = [strlist, ['./']]
+        self._members['framerange']     = [intlist, [0, 0]]
 
     def _setMembers(self):
         self._padding       = self.getMember('padding')

@@ -2,6 +2,8 @@ import unittest
 from chronorender.cr import ChronoRender
 from scene import Scene
 
+from renderpass.settings import Settings
+
 class SceneTestCase(unittest.TestCase):
     def setUp(self):
         self._cr = ChronoRender()
@@ -10,6 +12,13 @@ class SceneTestCase(unittest.TestCase):
     def tearDown(self):
         del self._cr
         del self._factory
+
+    def test_create(self):
+        s = Scene(filename="gorb.rib")
+        print "filanem: " + s.filename
+
+        sett = Settings(resolution=[122,122])
+        print sett.resolution
 
     def test_sceneFactory(self):
         create = self._factory.build(Scene.getTypeName())

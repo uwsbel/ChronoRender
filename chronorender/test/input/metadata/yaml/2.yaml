@@ -7,7 +7,10 @@ chronorender:
         - name: "gorb"
           scene: "default_scene.rib"
           lighting: "default_lighting.rib"
-          resolution: 640 480
+          settings: 
+            resolution: 640 480
+            display:
+                output: "gorb.tif"
     simulation:
         data:
             datasource:
