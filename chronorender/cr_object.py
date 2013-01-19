@@ -173,18 +173,18 @@ class Renderable(Object):
 
 
 # extended renderable, can have render scripted
-class ScriptableException(RenderableException):
+class MovableException(RenderableException):
     def __init__(self, value):
         self.value = value
     def __str__(self):
         return repr(self.value)
 
-class Scriptable(Renderable):
+class Movable(Renderable):
     def __init__(self, factories=None, *args, **kwargs):
-        super(Scriptable,self).__init__(factories=factories, *args, **kwargs)
+        super(Movable,self).__init__(factories=factories, *args, **kwargs)
 
     def __str__(self):
-        return super(Scriptable,self).__str__()
+        return super(Movable,self).__str__()
 
     def render(self, ri, *args, **kwargs):
         # if script, run that

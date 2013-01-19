@@ -1,4 +1,4 @@
-from cr_object import Scriptable
+from cr_object import Renderable
 
 import chronorender.scene as cscene
 import chronorender.lighting as clight
@@ -10,7 +10,7 @@ class RenderPassException(Exception):
     def __str__(self):
         return repr(self.value)
 
-class RenderPass(Scriptable):
+class RenderPass(Renderable):
 
     @staticmethod
     def getTypeName():
@@ -28,7 +28,7 @@ class RenderPass(Scriptable):
         self._members['name']                           = [str, 'nothing']
         self._members[cscene.Scene.getTypeName()]       = [cscene.Scene, []]
         self._members[clight.Lighting.getTypeName()]    = [clight.Lighting, []]
-        self._members[csett.Settings.getTypeName()]           = [csett.Settings, []]
+        self._members[csett.Settings.getTypeName()]     = [csett.Settings, []]
 
     def addRenderable(self, obj):
         if isinstance(obj, list):

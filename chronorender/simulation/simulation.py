@@ -1,9 +1,9 @@
-from cr_object import Scriptable
+from cr_object import Movable
 
 import chronorender.data as dat
 import chronorender.renderobject as cro
 
-class Simulation(Scriptable):
+class Simulation(Movable):
     @staticmethod
     def getTypeName():
         return "simulation"

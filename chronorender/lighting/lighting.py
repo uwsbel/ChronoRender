@@ -1,6 +1,6 @@
-from cr_object import Scriptable
+from cr_object import Movable
 
-class Lighting(Scriptable):
+class Lighting(Movable):
     @staticmethod
     def getTypeName():
         return "lighting"

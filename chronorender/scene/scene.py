@@ -1,6 +1,6 @@
-from cr_object import Scriptable
+from cr_object import Movable
 
-class Scene(Scriptable):
+class Scene(Movable):
     @staticmethod
     def getTypeName():
         return "scene"

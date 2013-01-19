@@ -1,5 +1,5 @@
 # import weakref
-from cr_object import Scriptable
+from cr_object import Movable
 import cr_enums as cre
 from itertools import izip
 
@@ -13,7 +13,7 @@ class RenderObjectException(Exception):
     def __str__(self):
         return repr(self.value)
 
-class RenderObject(Scriptable):
+class RenderObject(Movable):
 
     @staticmethod
     def getTypeName():

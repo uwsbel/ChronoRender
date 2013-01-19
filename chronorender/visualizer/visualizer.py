@@ -1,6 +1,6 @@
-from cr_object import Scriptable
+from cr_object import Renderable
 
-class Visualizer(Scriptable):
+class Visualizer(Renderable):
     @staticmethod
     def getTypeName():
         return "visualizer"

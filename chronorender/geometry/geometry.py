@@ -1,4 +1,4 @@
-from cr_object import Scriptable
+from cr_object import Movable
 
 class GeometryException(Exception):
     def __init__(self, value):
@@ -6,7 +6,7 @@ class GeometryException(Exception):
     def __str__(self):
         return repr(self.value)
 
-class Geometry(Scriptable):
+class Geometry(Movable):
 
     @staticmethod
     def getTypeName():
