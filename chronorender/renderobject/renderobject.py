@@ -14,6 +14,8 @@ class RenderObjectException(Exception):
 
 class RenderObject(Scriptable):
 
+    _idcounter = -1
+
     @staticmethod
     def getTypeName():
         return "renderobject"
@@ -26,6 +28,10 @@ class RenderObject(Scriptable):
         self.data       = []
         self.condition  = self.getMember('condition')
         self.color      = self.getMember('color')
+        self.instanced  = self.getMember('instanced')
+
+        RenderObject._idcounter += 1
+        self.objid = RenderObject._idcounter
 
     def _initMembersDict(self):
         self._members['motionblur']     = [bool, False]
@@ -72,11 +78,11 @@ class RenderObject(Scriptable):
     def _renderSingleObject(self, rib, record={}, **kwargs):
         rib.RiTransformBegin()
         self._renderTransformData(rib, record, **kwargs)
-        rib.RiColor(self.color)
-        for shdr in self.shaders: 
-            shdr.render(rib, **kwargs)
-        for geo in self.geometry: 
-            geo.render(rib, **kwargs)
+        
+        if self.instanced:
+            rib.RiObjectInstance(self.objid)
+        else:
+            self._renderShape(rib, **kwargs)
         rib.RiTransformEnd()
 
     def _renderTransformData(self, rib, record={}):
@@ -85,12 +91,20 @@ class RenderObject(Scriptable):
         pos_z = record[cre.POS_Z] if cre.POS_X in record else 0.0
         rib.RiTranslate(pos_x, pos_y, pos_z)
 
-        if cre.EULER_X in record:
+        if cre.EULER_X in record and record[cre.EULER_X] > 0.0:
             rib.RiRotate(record[cre.EULER_X], 1, 0, 0)
-        if cre.EULER_Y in record:
+        if cre.EULER_Y in record and record[cre.EULER_Y] > 0.0:
             rib.RiRotate(record[cre.EULER_Y], 0, 1, 0)
-        if cre.EULER_Z in record:
+        if cre.EULER_Z in record and record[cre.EULER_Z] > 0.0:
             rib.RiRotate(record[cre.EULER_Z], 0, 0, 1)
+
+    def _renderShape(self, rib, **kwargs):
+        rib.RiColor(self.color)
+        for shdr in self.shaders: 
+            shdr.render(rib, **kwargs)
+        for geo in self.geometry: 
+            geo.render(rib, **kwargs)
+
 
 def build(**kwargs):
     return RenderObject(**kwargs)
