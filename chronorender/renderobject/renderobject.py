@@ -71,14 +71,14 @@ class RenderObject(Scriptable):
             self._renderSingleObject(rib, record=entry, **kwargs)
 
     def _renderSingleObject(self, rib, record={}, **kwargs):
-        rib.RiTransformBegin()
+        rib.RiAttributeBegin()
         self._renderTransformData(rib, record, **kwargs)
         
         if self.instanced:
             rib.RiObjectInstance(self.getInstanceID())
         else:
             self.renderShape(rib, **kwargs)
-        rib.RiTransformEnd()
+        rib.RiAttributeEnd()
 
     def _renderTransformData(self, rib, record={}):
         pos_x = record[cre.POS_X] if cre.POS_X in record else 0.0

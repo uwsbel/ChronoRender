@@ -98,7 +98,6 @@ class RndrDoc():
         return
 
     def render(self, rib, *args, **kwargs):
-        for rpass in self.rndrpasses:
-            rpass.render(rib, **kwargs)
-        # for obj in self.renderables:
-            # obj.render(rib, **kwargs)
+        for i in range(0, len(self.rndrpasses)):
+            rpass = self.rndrpasses[i]
+            rpass.render(rib, passnumber=i, **kwargs)

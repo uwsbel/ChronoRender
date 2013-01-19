@@ -4,10 +4,10 @@ chronorender:
         searchpaths: "./:./input:./input/shaders"
         framerange: 2 2
     renderpass:
-        name: "gorb"
-        scene: "default_scene.rib"
-        lighting: "default_lighting.rib"
-        resolution: 640 480
+        - name: "gorb"
+          scene: "default_scene.rib"
+          lighting: "default_lighting.rib"
+          resolution: 640 480
     simulation:
         data:
             datasource:

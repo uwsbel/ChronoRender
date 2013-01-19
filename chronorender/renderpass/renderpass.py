@@ -47,8 +47,8 @@ class RenderPass(Scriptable):
     def setAsset(self, assetname, obj):
         return
 
-    def render(self, rib, framenumber=0, **kwargs):
-        rib.RiFrameBegin(framenumber)
+    def render(self, rib, passnumber=0, framenumber=0, **kwargs):
+        rib.RiFrameBegin(passnumber)
         for sett in self.rndrsettings:
             sett.render(rib, **kwargs)
 
