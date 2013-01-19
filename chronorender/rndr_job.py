@@ -13,8 +13,8 @@ class RndrJobException(Exception):
         return repr(self.value)
 
 class RndrJob():
-    def __init__(self, inxml, factories):
-        self._metadata      = md.MetaData(inxml)
+    def __init__(self, infile, factories):
+        self._metadata      = md.MetaData(infile)
         self._rndrdoc       = rd.RndrDoc(factories, self._metadata)
         self._ribgen        = ribgen.RIBGenerator(factories, self._metadata)
         self._timecreated   = datetime.datetime.now()

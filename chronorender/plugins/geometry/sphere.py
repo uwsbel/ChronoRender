@@ -22,7 +22,8 @@ class Sphere(Geometry):
         self._members['thetamax']   = [float, 360.0]
 
     def render(self, ri, *args, **kwargs):
-        ri.RiSphere(self.radius, self.zmin, self.zmax, self.thetamax)
+        # ri.RiSphere(self.radius, self.zmin, self.zmax, self.thetamax)
+        ri.RiSphere(self.radius, -self.radius, self.radius, self.thetamax)
 
 def build(**kwargs):
     return Sphere(**kwargs)

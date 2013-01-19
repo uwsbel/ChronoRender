@@ -1,11 +1,11 @@
 from cr_object import Object
+import cr_utils
 
 import data
 import datasource as ds
 import dataprocess as dp
 import datatarget as dt
 import copy
-
 
 class DataObjectException(Exception):
     def __init__(self, value):
@@ -24,6 +24,8 @@ class DataObject(Object):
         self._datasrcs      = self.getMember(ds.DataSource.getTypeName())
         self._dataprocs     = self.getMember(dp.DataProcess.getTypeName())
         self._allfields     = []
+        self._currindex     = 0
+        self._maxindex      = 0
 
         self._initMultipleSourceResources()
         self._initCrossSrcFields()
@@ -37,12 +39,16 @@ class DataObject(Object):
             src = self._datasrcs[i]
 
             resources = src.getInputResources()
+            resources = cr_utils.natural_sort(resources)
             tmp_srcs = []
             for resource in resources:
                 new_src = copy.deepcopy(src)
                 new_src.resource = resource
                 tmp_srcs.append(new_src)
             self._datasrcs[i] = tmp_srcs
+            
+            if len(tmp_srcs) > self._maxindex:
+                self._maxindex = len(tmp_srcs)
 
     def addDataSource(self, src):
         self._datasrcs.append(src)
@@ -50,9 +56,15 @@ class DataObject(Object):
     def addDataProcess(self, proc):
         self._dataprocs.append(proc)
 
-    def getData(self, srcnumber, selectcondition=""):
-        out = self._run(srcnumber)
+    def getData(self, srcnumber=-1, selectcondition=""):
+        if srcnumber == -1:
+            srcnumber = self._currindex
+            self.incrDataSourceCounter()
 
+        if srcnumber >= self._maxindex:
+            return None
+
+        out = self._run(srcnumber)
         if selectcondition != "":
             src= ds.RecordListSourceNode(name="tmp", a_list=out, 
                     fields=data.FieldList(self._allfields))
@@ -60,6 +72,12 @@ class DataObject(Object):
             procs.append(dp.SelectNode(condition=selectcondition))
             out = DataObject._doProcs(src, procs)
         return out
+
+    def incrDataSourceCounter(self):
+        self._currindex += 1
+
+    def resetDataSourceCounter(self):
+        self._currindex = 0
 
     def _initCrossSrcFields(self):
         for srclist in self._datasrcs:

@@ -1,5 +1,6 @@
 # import weakref
 from cr_object import Scriptable
+import cr_enums as cre
 from itertools import izip
 
 import chronorender.geometry as cg
@@ -64,15 +65,32 @@ class RenderObject(Scriptable):
         for shdr in self.shaders:
             shdr.setAsset(assetname, obj)
 
-    def render(self, rib, data=[], **kwargs):
+    def render(self, rib, data=[], *args, **kwargs):
+        for entry in data:
+            self._renderSingleObject(rib, record=entry, **kwargs)
+
+    def _renderSingleObject(self, rib, record={}, **kwargs):
         rib.RiTransformBegin()
-        rib.RiTranslate(0, 0, 0)
-        rib.RiRotate(90, 1, 0, 0)
+        self._renderTransformData(rib, record, **kwargs)
+        rib.RiColor(self.color)
         for shdr in self.shaders: 
             shdr.render(rib, **kwargs)
         for geo in self.geometry: 
             geo.render(rib, **kwargs)
         rib.RiTransformEnd()
+
+    def _renderTransformData(self, rib, record={}):
+        pos_x = record[cre.POS_X] if cre.POS_X in record else 0.0
+        pos_y = record[cre.POS_Y] if cre.POS_X in record else 0.0
+        pos_z = record[cre.POS_Z] if cre.POS_X in record else 0.0
+        rib.RiTranslate(pos_x, pos_y, pos_z)
+
+        if cre.EULER_X in record:
+            rib.RiRotate(record[cre.EULER_X], 1, 0, 0)
+        if cre.EULER_Y in record:
+            rib.RiRotate(record[cre.EULER_Y], 0, 1, 0)
+        if cre.EULER_Z in record:
+            rib.RiRotate(record[cre.EULER_Z], 0, 0, 1)
 
 def build(**kwargs):
     return RenderObject(**kwargs)

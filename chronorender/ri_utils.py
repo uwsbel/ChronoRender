@@ -9,7 +9,7 @@ def seq2col(ri, seq):
         ri._error(RIE_INVALIDSEQLEN, RIE_ERROR, "Invalid sequence length ("+\
                `len(seq)`+" instead of "+`ri._colorsamples`+")")
     colseq = tuple(seq)
-    return '['+string.join( map(lambda x: str(x), colseq[:ri._colorsamples]) )+']'
+    return '['+' '.join( map(lambda x: str(x), colseq[:ri._colorsamples]) )+']'
 
 def flatten(seq):
     """Return a list of the individual items in a (possibly nested) sequence.

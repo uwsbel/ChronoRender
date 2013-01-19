@@ -20,9 +20,10 @@ class Simulation(Scriptable):
         self._members['name']   = [str, 'sim']
         self._members[cro.RenderObject.getTypeName()] = [cro.RenderObject, []]
 
-    def render(self, ri, *args, **kwargs):
+    def render(self, ri, framenumber=0, *args, **kwargs):
         for robj in self._robjs:
-            robj.render(ri,**kwargs)
+            data = self._data.getData(framenumber, robj.condition)
+            robj.render(ri, data, *args, **kwargs)
 
     def resolveAssets(self, finder):
         out = []

@@ -97,6 +97,6 @@ class RndrDoc():
     def writeToFile(self, f):
         return
 
-    def render(self, rib, **kwargs):
+    def render(self, rib, *args, **kwargs):
         for obj in self.renderables:
             obj.render(rib, **kwargs)
