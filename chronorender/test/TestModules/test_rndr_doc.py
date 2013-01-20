@@ -10,25 +10,21 @@ class RndrDocTestCase(unittest.TestCase):
         self.doc = cr.RndrDoc(self._cr._factories, md)
 
     def tearDown(self):
-        return
-        # del self.doc
+        del self.doc
 
     def test_initFromMetadata(self):
         return
 
     # TODO
     def test_resolveAssets(self):
-        return
-        # self.doc._resolveAssets()
+        self.doc._resolveAssets()
 
     def test_function_getOutputFilePath(self):
-        return
-        # outfile = os.path.abspath('./output/xml_0/out_1200.tif')
-        # retval = self.doc.getOutputDataFilePath(1200)
+        outfile = os.path.abspath('./output/xml_0/out_1200.tif')
+        retval = self.doc.getOutputDataFilePath(1200)
 
-        # self.assertEqual(retval, outfile)
+        self.assertEqual(retval, outfile)
 
     def test_render(self):
-        return
-        # ri = cr.RiStream('str')
-        # self.doc.render(ri)
+        ri = cr.RiStream('str')
+        self.doc.render(ri)
