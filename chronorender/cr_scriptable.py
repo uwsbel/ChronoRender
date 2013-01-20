@@ -28,6 +28,7 @@ class Scriptable(Renderable):
         self._func      = None
 
     def _initMembersDict(self):
+        super(Scriptable,self)._initMembersDict()
         self._members['file']     = [str, '']
         self._members['function']   = [str, '']
 

@@ -19,6 +19,9 @@ chronorender:
             resolution: 640 480
             display:
                 output: "gorb.tif"
+          attribute:
+            - name: "visibility"
+              int diffuse: 1
     simulation:
         data:
             datasource:

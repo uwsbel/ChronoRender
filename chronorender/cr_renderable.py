@@ -1,4 +1,5 @@
 from cr_object import Object, ObjectException
+from attribute import Attribute
 
 # extended object, can be rendered
 class RenderableException(ObjectException):
@@ -16,12 +17,13 @@ class Renderable(Object):
         self._resolvedAssetPaths    = False
         self.instanced              = False
         self.instanceid             = Renderable._instanceid
-        self.attributes             = []
+        self.attributes             = self.getMember(Attribute.getTypeName())
 
         Renderable._instanceid += 1
 
-    def __str__(self):
-        return super(Renderable,self).__str__()
+    def _initMembersDict(self):
+        super(Renderable, self)._initMembersDict()
+        self._members[Attribute.getTypeName()]   = [Attribute, []]
 
     def getInstanceID(self):
         return self.instanceid
@@ -36,8 +38,13 @@ class Renderable(Object):
     def setAsset(self, assetname, obj):
         return
 
-    def render(self, ri, *args, **kwargs):
-        return
+
+    def render(self, rib, *args, **kwargs):
+        self.renderAttributes(rib, *args, **kwargs)
+
+    def renderAttributes(self, rib):
+        for attr in self.attributes:
+            attr.render(rib)
 
     def renderShape(self, rib, rendershaders=True, **kwargs):
         return

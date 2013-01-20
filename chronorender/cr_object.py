@@ -60,6 +60,7 @@ class Object(object):
         return string
 
     def _initMembersDict(self):
+        self._members['recurse'] = [bool, False]
         return
 
     def _initFromNamedArgs(self, args):
@@ -124,9 +125,3 @@ class Object(object):
         Object._pprinter.pprint(self._members)
         print 'Params: '
         Object._pprinter.pprint(self._params)
-
-    def getBaseClassTypeName(self):
-        if isinstance(self, Object):
-            return Object.getTypeName()
-        return super(Object, self).getTypeName()
-

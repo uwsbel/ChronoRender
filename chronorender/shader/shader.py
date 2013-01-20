@@ -34,8 +34,8 @@ class Shader(Renderable):
 
     def _initMembersDict(self):
         super(Shader, self)._initMembersDict()
-        self._members['type']   = [str, 'Surface']
-        self._members['name']   = [str, '']
+
+        self._members['name'] = [str, '']
 
     def _initShaderParameters(self):
         self._parseShaderParameters()

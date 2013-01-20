@@ -21,6 +21,7 @@ from chronorender.simulation import Simulation
 from chronorender.shader import Shader
 from chronorender.visualizer import Visualizer
 from cr_scriptable import Scriptable
+import chronorender.attribute as attr
 
 class ChronoRender():
     def __init__(self):
@@ -36,6 +37,8 @@ class ChronoRender():
         self._plugins.registerPlugins()
 
     def _initFactories(self):
+        self._createFactory(attr.Attribute)
+
         self._createFactory(Camera)
 
         self._createFactory(DataObject)
