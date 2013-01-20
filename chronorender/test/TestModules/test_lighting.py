@@ -1,16 +1,17 @@
 import unittest
 from chronorender.cr import ChronoRender
 from lighting import Lighting
+from finder import Finder
+from metadata import MetaData
+from ri_stream import RiStream
 
 class LightingTestCase(unittest.TestCase):
-    def setUp(self):
-        self._cr = ChronoRender()
-        self._factory = self._cr._factories.getFactory(Lighting.getTypeName())
-
-    def tearDown(self):
-        del self._cr
-        del self._factory
-
-    def test_lightingFactory(self):
-        create = self._factory.build(Lighting.getTypeName())
-        self.assertTrue(create != None)
+    def test_create(self):
+        finder = Finder(['./input/shaders'])
+        meta = MetaData('./input/metadata/yaml/3.yaml')
+        data = meta.singleFromType(Lighting)
+        light = Lighting(**data)
+        light.resolveAssets(finder)
+        ri = RiStream('str')
+        light.render(ri)                   
+        print ri.getText()

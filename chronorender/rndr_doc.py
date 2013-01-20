@@ -51,7 +51,6 @@ class RndrDoc():
         for typename, elem in md.getElementsDict().iteritems():
             for e in elem:
                 obj = Object(basename=typename, factories=factories, **e)
-                
                 if hasattr(obj, 'render'):
                     if isinstance(obj, RenderPass):
                         self.rndrpasses.append(obj)

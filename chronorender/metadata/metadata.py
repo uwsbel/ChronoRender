@@ -26,7 +26,7 @@ class MetaData():
     def singleFromType(self, elemtype, bRequired=True):
         elems = self.findAll(elemtype.getTypeName())
         if len(elems) != 1 and bRequired:
-            raise MetaDataException('not only ONE ' + elemtype.getTypeName() + ' in metadata')
+            raise MetaDataException('not only ONE ' + elemtype.getTypeName() + ' in metadata, found: ' + str(len(elems)))
         return elems[0]
         # return self._constructObject(elems[0], elemtype)
 

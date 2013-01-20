@@ -1,17 +1,20 @@
 chronorender:
     rendersettings:
         out: "./output/xml_0/out_####.tif"
-        searchpaths: "./:./input:./input/shaders"
+        searchpaths: "./:./input:./input/shaders:./input/scripts"
         framerange: 2 2
     camera:
-        filename: "gorb_cam.rib"
         script:
             file: "camera_script.py"
             function: "render"
+    lighting:
+        shader:
+            - name: "arealight.sl"
+            - name: "pointlight.sl"
+    scene:
+        - filename: "test.rib"
     renderpass:
         - name: "gorb"
-          scene: "default_scene.rib"
-          lighting: "default_lighting.rib"
           settings: 
             resolution: 640 480
             display:

@@ -70,9 +70,10 @@ class PluginManager():
 
     def getPlugins(self, plugintype, pluginname):
         if plugintype not in self._plugins:
-            raise PluginManagerException('no plugin type: ' + plugintype)
+            # raise PluginManagerException('no plugin type: ' + plugintype)
+            return []
         elif pluginname not in self._plugins[plugintype]:
-            raise PluginManagerException('no plugin name: ' + pluginname + 
-                    ' for plugin type: ' + plugintype)
+            # raise PluginManagerException('no plugin name: ' + pluginname + ' for plugin type: ' + plugintype)
+            return []
         else:
             return self._plugins[plugintype][pluginname]['modules']

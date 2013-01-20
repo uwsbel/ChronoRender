@@ -50,7 +50,6 @@ class _MDXML(_MDReader):
             val = var[attr]
             if isinstance(val, dict):
                 for arg, d in val.iteritems():
-                    # print "GORB" + str(arg) + " " + str(d)
                     _attrToKwargs(var[attr], arg, out)
             else:
                 out[attr] = var[attr][0]['__content__']

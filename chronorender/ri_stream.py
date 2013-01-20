@@ -1168,7 +1168,7 @@ class RiStream():
         if lshandle is None:
             self._lighthandle += 1
             lshandle = self._lighthandle
-            self._ribout.write('LightSource "%s" %d%s\n'%(name, lshandle, riuils.paramlist2string(self, paramlist, {})))
+            self._ribout.write('LightSource "%s" %d%s\n'%(name, lshandle, riutils.paramlist2string(self, paramlist, {})))
         else:
             self._ribout.write('LightSource "%s" "%s"%s\n'%(name, lshandle, riutils.paramlist2string(self, paramlist, {})))
             

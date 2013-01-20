@@ -6,13 +6,15 @@ import factorydict as fdict
 import cr_object
 
 from ribgenerator import RIBGenerator
+from chronorender.camera import Camera
 from chronorender.data import DataObject
 import chronorender.dataprocess as dp
 import chronorender.datasource as ds
 import geometry as geo
 from chronorender.lighting import Lighting
 from chronorender.renderobject import RenderObject
-from chronorender.renderpass import RenderPass
+
+import chronorender.renderpass as rp
 from chronorender.rendersettings import RenderSettings
 from chronorender.scene import Scene
 from chronorender.simulation import Simulation
@@ -33,6 +35,8 @@ class ChronoRender():
         self._plugins.registerPlugins()
 
     def _initFactories(self):
+        self._createFactory(Camera)
+
         self._createFactory(DataObject)
 
         self._createFactory(dp.DataProcess)
@@ -46,7 +50,11 @@ class ChronoRender():
 
         self._createFactory(Lighting)
         self._createFactory(RenderObject)
-        self._createFactory(RenderPass)
+
+        self._createFactory(rp.RenderPass)
+        self._createFactory(rp.settings.Settings)
+        self._createFactory(rp.display.Display)
+
         self._createFactory(RenderSettings)
         self._createFactory(Scene)
         self._createFactory(Simulation)

@@ -4,6 +4,7 @@ from cr_scriptable import Scriptable
 import chronorender.scene as cscene
 import chronorender.lighting as clight
 import settings as csett
+import chronorender.camera as ccam
 
 class RenderPassException(Exception):
     def __init__(self, value):
@@ -22,6 +23,7 @@ class RenderPass(Renderable):
 
         self.rndrsettings   = self.getMember(csett.Settings.getTypeName())
         self.lighting       = self.getMember(clight.Lighting.getTypeName())
+        self.camera         = self.getMember(ccam.Camera.getTypeName())
         self.scene          = self.getMember(cscene.Scene.getTypeName())
         self.renderables    = []
         self.script     = self.getMember(Scriptable.getTypeName())
@@ -32,12 +34,19 @@ class RenderPass(Renderable):
         self._members['name']                           = [str, 'nothing']
         self._members[cscene.Scene.getTypeName()]       = [cscene.Scene, []]
         self._members[clight.Lighting.getTypeName()]    = [clight.Lighting, []]
+        self._members[ccam.Camera.getTypeName()]        = [ccam.Camera, []]
         self._members[csett.Settings.getTypeName()]     = [csett.Settings, []]
         self._members[Scriptable.getTypeName()] = [Scriptable, None]
 
     def addRenderable(self, obj):
         if isinstance(obj, list):
-            self.renderables += obj
+            self.renderables.extend(obj)
+        elif isinstance(obj, clight.Lighting):
+            self.lighting.append(obj)
+        elif isinstance(obj, ccam.Camera):
+            self.camera.append(obj)
+        elif isinstance(obj, cscene.Scene):
+            self.scene.append(obj)
         else:
             self.renderables.append(obj)
 
@@ -61,13 +70,16 @@ class RenderPass(Renderable):
 
             self._renderInstanceDecls(rib, framenumber=framenumber, **kwargs)
 
+            for cam in self.camera:
+                cam.render(rib, **kwargs)
+
             rib.RiWorldBegin()
             for light in self.lighting:
                 light.render(rib, **kwargs)
-            for scene in self.scene:
-                scene.render(rib, **kwargs)
             for obj in self.renderables:
                 obj.render(rib, framenumber=framenumber, **kwargs)
+            for scene in self.scene:
+                scene.render(rib, **kwargs)
             rib.RiWorldEnd()
 
             rib.RiFrameEnd()

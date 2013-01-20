@@ -1,8 +1,6 @@
 factory: 
     camera:
         paths: "camera"
-    data:
-        paths: ""
     dataprocess:
         paths: "dataprocess"
     datasource:

@@ -14,7 +14,7 @@ class Camera(Movable):
 
     def _initMembersDict(self):
         super(Camera, self)._initMembersDict()
-        self._members['filename']   = [str, 'default_camera.rib']
+        self._members['filename']   = [str, '']
         self._members[Scriptable.getTypeName()] = [Scriptable, None]
 
     def resolveAssets(self, finder):
@@ -30,8 +30,10 @@ class Camera(Movable):
     def render(self, rib, *args, **kwargs):
         if self.script:
             self.script.render(rib, *args, **kwargs)
+        elif self.filename != '':
+            rib.RiReadArchive(self.filename)
         else:
             print "NO SCRIPT"
 
 def build(**kwargs):
-    return Scene(**kwargs)
+    return Camera(**kwargs)

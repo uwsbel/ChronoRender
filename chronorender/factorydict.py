@@ -25,7 +25,7 @@ class FactoryDict():
         try:
             return self._factories[typename]
         except KeyError as ke:
-            print ke
+            print "couldn't find factory: " + str(ke)
             return None
 
     def buildObject(self, cls, instances):
