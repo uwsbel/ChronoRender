@@ -26,6 +26,7 @@ class Settings(Renderable):
         self.displays   = self.getMember('display')
 
     def _initMembersDict(self):
+        super(Settings, self)._initMembersDict()
         self._members['name']           = [str, 'default']
         self._members['resolution']     = [intlist, [640, 480]]
         self._members['interpolation']  = [str, 'smooth']

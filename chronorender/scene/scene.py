@@ -11,6 +11,7 @@ class Scene(Movable):
         self.filename = self.getMember('filename')
 
     def _initMembersDict(self):
+        super(Scene, self)._initMembersDict()
         self._members['filename']           = [str, 'default.rib']
 
     def resolveAssets(self, finder):

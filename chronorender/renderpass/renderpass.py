@@ -25,6 +25,8 @@ class RenderPass(Renderable):
         self.renderables    = []
 
     def _initMembersDict(self):
+        super(RenderPass, self)._initMembersDict()
+
         self._members['name']                           = [str, 'nothing']
         self._members[cscene.Scene.getTypeName()]       = [cscene.Scene, []]
         self._members[clight.Lighting.getTypeName()]    = [clight.Lighting, []]

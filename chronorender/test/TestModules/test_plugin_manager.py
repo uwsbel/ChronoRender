@@ -16,7 +16,7 @@ class PluginManagerTestCase(unittest.TestCase):
     def test_loadPlugins(self):
         man = pm.PluginManager()
         man.loadPlugins()
-        self.assertTrue('sphere' in man._plugins['factory']['geometry']['plugins'])
+        self.assertTrue('cone' in man._plugins['factory']['geometry']['plugins'])
 
     def test_registerPlugins(self):
         man = pm.PluginManager()

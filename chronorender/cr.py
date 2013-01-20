@@ -9,7 +9,7 @@ from ribgenerator import RIBGenerator
 from chronorender.data import DataObject
 import chronorender.dataprocess as dp
 import chronorender.datasource as ds
-from chronorender.geometry import Geometry
+import geometry as geo
 from chronorender.lighting import Lighting
 from chronorender.renderobject import RenderObject
 from chronorender.renderpass import RenderPass
@@ -41,7 +41,9 @@ class ChronoRender():
         self._createFactory(ds.DataSource)
         self._addFactoryModule(ds.DataSource, ds.CSVDataSource)
 
-        self._createFactory(Geometry)
+        self._createFactory(geo.Geometry)
+        self._addFactoryModule(geo.Geometry, geo.Sphere)
+
         self._createFactory(Lighting)
         self._createFactory(RenderObject)
         self._createFactory(RenderPass)

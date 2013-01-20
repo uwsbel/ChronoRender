@@ -13,14 +13,15 @@ class Camera(Movable):
         self.script     = self.getMember(Scriptable.getTypeName())
 
     def _initMembersDict(self):
+        super(Camera, self)._initMembersDict()
         self._members['filename']   = [str, 'default_camera.rib']
         self._members[Scriptable.getTypeName()] = [Scriptable, None]
 
     def resolveAssets(self, finder):
         out = []
-        self._resolvedAssetPaths = True
         if self.script:
             out.extend(self.script.resolveAssets(finder))
+        self._resolvedAssetPaths = True
         return out
 
     def setAsset(self, assetname, obj):

@@ -17,6 +17,7 @@ class Simulation(Movable):
         self.instanced = False
 
     def _initMembersDict(self):
+        super(Simulation, self)._initMembersDict()
         self._members[dat.DataObject.getTypeName()] = [dat.DataObject, None]
         self._members['name']   = [str, 'sim']
         self._members[cro.RenderObject.getTypeName()] = [cro.RenderObject, []]

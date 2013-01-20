@@ -31,6 +31,7 @@ class RenderSettings(Object):
         self._resolvePadding()
 
     def _initMembersDict(self):
+        super(RenderSettings, self)._initMembersDict()
         self._members['padding']        = [int, 1]
         self._members['out']            = [str, './out_####.tif']
         self._members['fileformat']     = [str, 'tif']

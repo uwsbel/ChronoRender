@@ -33,6 +33,7 @@ class Shader(Renderable):
             self.resolveAssets(mfind.Finder([path]))
 
     def _initMembersDict(self):
+        super(Shader, self)._initMembersDict()
         self._members['type']   = [str, 'Surface']
         self._members['name']   = [str, '']
 

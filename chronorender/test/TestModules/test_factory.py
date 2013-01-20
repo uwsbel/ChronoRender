@@ -16,7 +16,7 @@ class FactoryTestCase(unittest.TestCase):
         fact = Factory('geometry')
         fact.setModules(self._pm.getPlugins('factory','geometry'))
 
-        sph = fact.build('sphere')
-        self.assertTrue(sph.getTypeName(), 'sphere')
+        sph = fact.build('cone')
+        self.assertTrue(sph.getTypeName(), 'cone')
         cube = fact.build('cube')
         self.assertTrue(cube.getTypeName(), 'cube')

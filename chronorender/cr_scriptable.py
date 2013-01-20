@@ -41,8 +41,7 @@ class Scriptable(Renderable):
         self._modname = os.path.splitext(self.scriptname)[0]
         self._resolvedAssetPaths = True
 
-        # self._loadModule()
-        # self._loadFunction()
+        # initialize with a test
         self._loadFunction(self._loadModule())
 
         return [self.scriptpath]

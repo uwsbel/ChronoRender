@@ -20,6 +20,7 @@ class Display(Renderable):
         self.mode       = self.getMember('mode')
 
     def _initMembersDict(self):
+        super(Display, self)._initMembersDict()
         self._members['output']     = [str, 'default']
         self._members['outtype']    = [str, 'file']
         self._members['mode']       = [str, 'rgba']

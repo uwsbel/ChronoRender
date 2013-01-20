@@ -19,13 +19,15 @@ class Sphere(Geometry):
         return 'sphere'
 
     def _initMembersDict(self):
+        super(Sphere,self)._initMembersDict()
+
         self._members['radius']     = [float, 1.0]
         self._members['zmin']       = [float,-1.0]
         self._members['zmax']       = [float, 1.0]
         self._members['thetamax']   = [float, 360.0]
 
-    def render(self, ri, *args, **kwargs):
-        ri.RiSphere(self.radius, self.zmin, self.zmax, self.thetamax)
+    def render(self, rib, *args, **kwargs):
+        rib.RiSphere(self.radius, self.zmin, self.zmax, self.thetamax)
 
 def build(**kwargs):
     return Sphere(**kwargs)

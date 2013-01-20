@@ -30,6 +30,8 @@ class RenderObject(Movable):
         self.instanced  = self.getMember('instanced')
 
     def _initMembersDict(self):
+        super(RenderObject, self)._initMembersDict()
+
         self._members['motionblur']     = [bool, False]
         self._members['instanced']      = [bool, True]
         self._members['multiobject']    = [bool, False]

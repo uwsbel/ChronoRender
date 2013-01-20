@@ -12,5 +12,8 @@ class Lighting(Movable):
         self._resolvedAssetPaths = True
         return []
 
+    def _initMembersDict(self):
+        super(Lighting, self)._initMembersDict()
+
 def build(**kwargs):
     return Lighting(**kwargs)

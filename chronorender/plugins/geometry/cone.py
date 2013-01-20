@@ -15,6 +15,8 @@ class Cone(Geometry):
         self.thetamax = self.getMember('thetamax')
 
     def _initMembersDict(self):
+        super(Cone,self)._initMembersDict()
+
         self._members['height']     = [float, 0.5]
         self._members['radius']     = [float, 0.5]
         self._members['thetamax']   = [float, 360.0]
