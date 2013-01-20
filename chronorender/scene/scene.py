@@ -1,4 +1,5 @@
 from cr_object import Movable
+from cr_scriptable import Scriptable
 
 class Scene(Movable):
     @staticmethod
@@ -9,10 +10,12 @@ class Scene(Movable):
         super(Scene,self).__init__(*args, **kwargs)
 
         self.filename = self.getMember('filename')
+        self.script     = self.getMember(Scriptable.getTypeName())
 
     def _initMembersDict(self):
         super(Scene, self)._initMembersDict()
         self._members['filename']           = [str, 'default.rib']
+        self._members[Scriptable.getTypeName()] = [Scriptable, None]
 
     def resolveAssets(self, finder):
         self._resolvedAssetPaths = True
@@ -22,7 +25,8 @@ class Scene(Movable):
         return
 
     def render(self, rib, **kwargs):
-        return
+        if self.script:
+            self.script.render(rib, *args, **kwargs)
 
 
 def build(**kwargs):

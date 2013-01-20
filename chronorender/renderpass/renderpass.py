@@ -1,4 +1,5 @@
 from cr_object import Renderable
+from cr_scriptable import Scriptable
 
 import chronorender.scene as cscene
 import chronorender.lighting as clight
@@ -23,6 +24,7 @@ class RenderPass(Renderable):
         self.lighting       = self.getMember(clight.Lighting.getTypeName())
         self.scene          = self.getMember(cscene.Scene.getTypeName())
         self.renderables    = []
+        self.script     = self.getMember(Scriptable.getTypeName())
 
     def _initMembersDict(self):
         super(RenderPass, self)._initMembersDict()
@@ -31,6 +33,7 @@ class RenderPass(Renderable):
         self._members[cscene.Scene.getTypeName()]       = [cscene.Scene, []]
         self._members[clight.Lighting.getTypeName()]    = [clight.Lighting, []]
         self._members[csett.Settings.getTypeName()]     = [csett.Settings, []]
+        self._members[Scriptable.getTypeName()] = [Scriptable, None]
 
     def addRenderable(self, obj):
         if isinstance(obj, list):
@@ -49,22 +52,25 @@ class RenderPass(Renderable):
         return
 
     def render(self, rib, passnumber=0, framenumber=0, **kwargs):
-        rib.RiFrameBegin(passnumber)
-        for sett in self.rndrsettings:
-            sett.render(rib, **kwargs)
+        if self.script:
+            self.script.render(rib, *args, **kwargs)
+        else:
+            rib.RiFrameBegin(passnumber)
+            for sett in self.rndrsettings:
+                sett.render(rib, **kwargs)
 
-        self._renderInstanceDecls(rib, framenumber=framenumber, **kwargs)
+            self._renderInstanceDecls(rib, framenumber=framenumber, **kwargs)
 
-        rib.RiWorldBegin()
-        for light in self.lighting:
-            light.render(rib, **kwargs)
-        for scene in self.scene:
-            scene.render(rib, **kwargs)
-        for obj in self.renderables:
-            obj.render(rib, framenumber=framenumber, **kwargs)
-        rib.RiWorldEnd()
+            rib.RiWorldBegin()
+            for light in self.lighting:
+                light.render(rib, **kwargs)
+            for scene in self.scene:
+                scene.render(rib, **kwargs)
+            for obj in self.renderables:
+                obj.render(rib, framenumber=framenumber, **kwargs)
+            rib.RiWorldEnd()
 
-        rib.RiFrameEnd()
+            rib.RiFrameEnd()
 
     def _renderInstanceDecls(self, rib, **kwargs):
         for obj in self.renderables:

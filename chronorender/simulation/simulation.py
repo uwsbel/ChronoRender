@@ -1,4 +1,5 @@
 from cr_object import Movable
+from cr_scriptable import Scriptable
 
 import chronorender.data as dat
 import chronorender.renderobject as cro
@@ -15,17 +16,22 @@ class Simulation(Movable):
         self._name = self.getMember('name')
         self._robjs = self.getMember(cro.RenderObject.getTypeName())
         self.instanced = False
+        self.script     = self.getMember(Scriptable.getTypeName())
 
     def _initMembersDict(self):
         super(Simulation, self)._initMembersDict()
         self._members[dat.DataObject.getTypeName()] = [dat.DataObject, None]
         self._members['name']   = [str, 'sim']
         self._members[cro.RenderObject.getTypeName()] = [cro.RenderObject, []]
+        self._members[Scriptable.getTypeName()] = [Scriptable, None]
 
     def render(self, ri, framenumber=0, *args, **kwargs):
-        for robj in self._robjs:
-            data = self._data.getData(framenumber, robj.condition)
-            robj.render(ri, data, *args, **kwargs)
+        if self.script:
+            self.script.render(rib, *args, **kwargs)
+        else:
+            for robj in self._robjs:
+                data = self._data.getData(framenumber, robj.condition)
+                robj.render(ri, data, *args, **kwargs)
 
     def resolveAssets(self, finder):
         out = []
