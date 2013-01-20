@@ -5,6 +5,9 @@ chronorender:
         framerange: 2 2
     camera:
         filename: "gorb_cam.rib"
+        script:
+            file: "camera_script.py"
+            function: "render"
     renderpass:
         - name: "gorb"
           scene: "default_scene.rib"
