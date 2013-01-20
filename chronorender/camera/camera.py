@@ -1,4 +1,4 @@
-from cr_object import Movable
+from cr_movable import Movable
 from cr_scriptable import Scriptable
 
 class Camera(Movable):

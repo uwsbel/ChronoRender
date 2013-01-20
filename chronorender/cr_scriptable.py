@@ -1,4 +1,4 @@
-from cr_object import Renderable
+from cr_renderable import Renderable
 import imp, sys, os
 
 class ScriptableException(Exception):

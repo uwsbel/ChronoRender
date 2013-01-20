@@ -1,7 +1,7 @@
 # contains all assests needed to start a render job
 import glob, re, os
 
-from cr_object import Object, Renderable
+from cr_object import Object
 from finder import Finder, AssetNotFoundException
 
 from chronorender.renderobject import RenderObject

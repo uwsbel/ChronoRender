@@ -1,8 +1,8 @@
-from cr_object import Movable
+from cr_renderable import Renderable
 from cr_scriptable import Scriptable
 import chronorender.shader as cs
-
-class Lighting(Movable):
+               
+class Lighting(Renderable):
     @staticmethod
     def getTypeName():
         return "lighting"

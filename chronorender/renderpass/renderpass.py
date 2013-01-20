@@ -1,4 +1,4 @@
-from cr_object import Renderable
+from cr_renderable import Renderable
 from cr_scriptable import Scriptable
 
 import chronorender.scene as cscene

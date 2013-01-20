@@ -1,4 +1,4 @@
-from cr_object import Renderable
+from cr_renderable import Renderable
 
 class DisplayException(Exception):
     def __init__(self, value):

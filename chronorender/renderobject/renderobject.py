@@ -1,5 +1,5 @@
 # import weakref
-from cr_object import Movable
+from cr_movable import Movable
 from cr_scriptable import Scriptable
 import cr_enums as cre
 from itertools import izip

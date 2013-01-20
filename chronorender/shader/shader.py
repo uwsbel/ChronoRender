@@ -1,4 +1,4 @@
-from cr_object import Renderable, RenderableException
+from cr_renderable import Renderable, RenderableException
 import slparams
 import os
 import finder as mfind

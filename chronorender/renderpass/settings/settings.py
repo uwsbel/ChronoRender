@@ -1,4 +1,4 @@
-from cr_object import Renderable
+from cr_renderable import Renderable
 
 import renderpass.display as disp
 from cr_types import floatlist, intlist
