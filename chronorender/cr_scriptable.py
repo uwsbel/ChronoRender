@@ -41,8 +41,9 @@ class Scriptable(Renderable):
         self._modname = os.path.splitext(self.scriptname)[0]
         self._resolvedAssetPaths = True
 
-        self._loadModule()
-        self._loadFunction()
+        # self._loadModule()
+        # self._loadFunction()
+        self._loadFunction(self._loadModule())
 
         return [self.scriptpath]
 
@@ -50,8 +51,11 @@ class Scriptable(Renderable):
         return
 
     def render(self, rib, *args, **kwargs):
-        if self._func:
-            self._func(rib, *args, **kwargs)
+        func = self._loadFunction(self._loadModule())
+        if func:
+            func(rib, *args, **kwargs)
+        # if self._func:
+            # self._func(rib, *args, **kwargs)
 
     def _verifyScriptName(self):
         # if Scriptable.getTypeName() not in self.scriptname:
@@ -66,13 +70,17 @@ class Scriptable(Renderable):
             pass
 
         try:
-            self._mod = imp.load_source(self._modname, self.scriptpath)
+            # self._mod = imp.load_source(self._modname, self.scriptpath)
+            return imp.load_source(self._modname, self.scriptpath)
         except ImportError as error:
             print error
             raise ScriptableException('could not load module: ' + self._modname)
+            return none
 
-    def _loadFunction(self):
-        if not hasattr(self._mod, self.funcname):
-            raise ScriptableException('function \"' + self.funcname + '\" not found in script')
+    def _loadFunction(self, mod):
+        # if not hasattr(self._mod, self.funcname):
+        if not hasattr(mod, self.funcname):
+            raise ScriptableException('function \"' + self.funcname + '\" not found in script: ' + self.scriptpath)
 
-        self._func = getattr(self._mod, self.funcname)
+        # self._func = getattr(self._mod, self.funcname)
+        return getattr(mod, self.funcname)
