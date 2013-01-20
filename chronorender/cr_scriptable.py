@@ -83,3 +83,6 @@ class Scriptable(Renderable):
 
         # self._func = getattr(self._mod, self.funcname)
         return getattr(mod, self.funcname)
+
+def build(**kwargs):
+    return Scriptable(**kwargs)

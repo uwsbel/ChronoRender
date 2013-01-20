@@ -20,6 +20,7 @@ from chronorender.scene import Scene
 from chronorender.simulation import Simulation
 from chronorender.shader import Shader
 from chronorender.visualizer import Visualizer
+from cr_scriptable import Scriptable
 
 class ChronoRender():
     def __init__(self):
@@ -57,6 +58,7 @@ class ChronoRender():
 
         self._createFactory(RenderSettings)
         self._createFactory(Scene)
+        self._createFactory(Scriptable)
         self._createFactory(Simulation)
         self._createFactory(Shader)
         self._createFactory(Visualizer)
