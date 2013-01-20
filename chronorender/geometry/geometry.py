@@ -15,7 +15,6 @@ class Geometry(Movable):
 
     def __init__(self, *args, **kwargs):
         super(Geometry,self).__init__(*args, **kwargs)
-
         self.script     = self.getMember(Scriptable.getTypeName())
 
     def _initMembersDict(self):

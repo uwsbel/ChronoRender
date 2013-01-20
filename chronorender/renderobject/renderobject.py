@@ -1,5 +1,6 @@
 # import weakref
 from cr_object import Movable
+from cr_scriptable import Scriptable
 import cr_enums as cre
 from itertools import izip
 
@@ -28,6 +29,7 @@ class RenderObject(Movable):
         self.condition  = self.getMember('condition')
         self.color      = self.getMember('color')
         self.instanced  = self.getMember('instanced')
+        self.script     = self.getMember(Scriptable.getTypeName())
 
     def _initMembersDict(self):
         super(RenderObject, self)._initMembersDict()
@@ -40,6 +42,7 @@ class RenderObject(Movable):
         self._members[cg.Geometry.getTypeName()] = [cg.Geometry, []]
         self._members[cs.Shader.getTypeName()] = [cs.Shader, []]
         self._members['condition']      = [str, '']
+        self._members[Scriptable.getTypeName()] = [Scriptable, None]
 
     def parseData(self, entry):
         if len(entry) < len(self.data):
@@ -70,8 +73,11 @@ class RenderObject(Movable):
             shdr.setAsset(assetname, obj)
 
     def render(self, rib, data=[], *args, **kwargs):
-        for entry in data:
-            self._renderSingleObject(rib, record=entry, **kwargs)
+        if self.script:
+            self.script.render(rib, *args, **kwargs)
+        else:
+            for entry in data:
+                self._renderSingleObject(rib, record=entry, **kwargs)
 
     def _renderSingleObject(self, rib, record={}, **kwargs):
         rib.RiAttributeBegin()
