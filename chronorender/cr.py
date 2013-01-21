@@ -92,9 +92,9 @@ class ChronoRender():
         defaultscene = cr_utils.getAbsPathRelativeToModule(ChronoRender, './assets/default_scene.rib')
         defaultcam = cr_utils.getAbsPathRelativeToModule(ChronoRender, './assets/default_camera.rib')
         defaultlighting = cr_utils.getAbsPathRelativeToModule(ChronoRender, './assets/default_lighting.rib')
-        job._copyAssetToDirectory(defaultscene)
-        job._copyAssetToDirectory(defaultcam)
-        job._copyAssetToDirectory(defaultlighting)
+        job.copyAssetToDirectory(defaultscene)
+        job.copyAssetToDirectory(defaultcam)
+        job.copyAssetToDirectory(defaultlighting)
         shutil.copy2(defaultmd, outpath)
 
     def updateJobAssets(self, mdfile):

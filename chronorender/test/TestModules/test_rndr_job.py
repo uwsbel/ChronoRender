@@ -19,7 +19,7 @@ class RndrJobTestCase(unittest.TestCase):
         job = cr.RndrJob(self.infile, self._cr._factories)
         try:
             job.run()                           
-        except:
+        finally:
             os.chdir(currdir)
 
     def test_instantiateOnDisk(self):

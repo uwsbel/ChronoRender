@@ -8,8 +8,6 @@ from chronorender.finder import AssetNotFoundException
 from chronorender.renderobject import RenderObject
 from chronorender.renderpass import RenderPass
 from chronorender.rendersettings import RenderSettings
-from chronorender.shader import Shader
-from chronorender.geometry import Geometry
 
 class RndrDocException(Exception):
     def __init__(self, value):
@@ -20,15 +18,9 @@ class RndrDocException(Exception):
 class RndrDoc():
 
     def __init__(self, factories, md, *args, **kwargs):
-        self.settings       = None
-        self.rndrobjs       = []
-        self.rndrpasses     = []
-        self.shaders        = []
-        self.geometry       = []
-        self.lighting       = []
-        self.scene          = []
         self.md             = md
-
+        self.settings       = None
+        self.rndrpasses     = []
         self.renderables    = []
         self.assetpaths     = []
         self.outdir         = ""
@@ -46,7 +38,6 @@ class RndrDoc():
     def initFromMetadata(self, factories, md):
         self.md = md
         self.settings   = RenderSettings(factories=factories,**md.singleFromType(RenderSettings))
-
         if not self.settings:
             raise RndrDocException('no ' + RenderSettings.getTypeName() 
                     + ' found in metadata')

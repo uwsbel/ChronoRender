@@ -1,10 +1,10 @@
-import datetime, os, logging, shutil, imghdr
+import datetime, os, logging
 
 import chronorender.metadata as md
 import rndr_doc as rd
 import ribgenerator as ribgen
 import ri_stream as ri
-from chronorender.finder import FinderFactory, AssetNotFoundException
+from rndr_job_assetmanager import RndrJobAssetManager
 
 # represent a render job
 class RndrJobException(Exception):
@@ -20,56 +20,23 @@ class RndrJob():
         self._ribgen        = ribgen.RIBGenerator(factories, self._metadata)
         self._timecreated   = datetime.datetime.now()
         self._frames        = self._rndrdoc.getFrameRange()
-        self._outputpath    = os.path.abspath(os.path.split(infile)[0])
-        self._outputdirs    = { 'output': 'OUTPUT', 
-                                'shader': 'SHADERS', 
-                                'script': 'SCRIPTS', 
-                                'archive': 'ARCHIVES', 
-                                'log':'LOG',
-                                'texture': 'TEXTURES' }
-        self._relative       = True
+        self._assetman      = RndrJobAssetManager(os.path.abspath(os.path.split(self._metadata.filename)[0]))
 
-        self._logfilename   = os.path.join(os.path.join(self._outputpath, 'LOG'), 'log_' + str(self._timecreated) + '.log')
-        self._logger        = None
+        # self._logfilename   = os.path.join(os.path.join(self._outputpath, 'LOG'), 'log_' + str(self._timecreated) + '.log')
+        # self._logger        = None
 
         self._renderer      = None
 
-    def setOutputPath(self, path):
-        self._outputpath = path
-
-    def getSpecificOutputPath(self, typename=""):
-        if typename == "":
-            return self._outputpath
-        else: 
-            return os.path.join(self._outputpath, self._outputdirs[typename])
-
-    def createOutDirs(self):
-        log_msg = ""
-        if not os.path.exists(self._outputpath): 
-            os.makedirs(self._outputpath)
-            # log_msg = 'created dir: ' + path + '\n'
-            # self._writeToLog(log_msg)
-
-        dirs = []
-        for key, val in self._outputdirs.iteritems():
-            dirs.append(os.path.join(self._outputpath,val))
-        for di in dirs:
-            if not os.path.exists(di):
-                log_msg += di + '\n'
-                os.makedirs(di)
-                # log_msg = 'created dir: ' + di + '\n'
-                # self._writeToLog(log_msg)
-
     def run(self):
-        self.createOutDirs()
+        self._assetman.createOutDirs()
         # self._openLogFile()
         prevdir = os.getcwd()
-        os.chdir(self._outputpath)
-        self._rndrdoc.resolveAssets(self._createAssetFinder())
-        self._rndrdoc.outdir = self._outputdirs['output'] if self._relative \
-                else self.getSpecificOutputPath('output')
-        self._outputpath
+        os.chdir(self._assetman.outputpath)
+        self._rndrdoc.resolveAssets(self._assetman.createAssetFinder(self._rndrdoc))
+        self._rndrdoc.outdir = self._assetman.getOutPathFor('output')
+
         self._startRenderer()
+        self._renderOptions()
         for i in range(self._frames[0], self._frames[1]+1):
             name = self._rndrdoc.getOutputFilePath(i)
             # self._writeToLog('starting render ' + name + ' at: ' + str(datetime.datetime.now()))
@@ -78,50 +45,41 @@ class RndrJob():
         # self._closeLogFile()
         os.chdir(prevdir)
 
+    def _renderOptions(self):
+        self._renderer.RiOption("searchpath", "shader",
+                self._assetman.getOutPathFor("shader"))
+        self._renderer.RiOption("searchpath", "procedural",
+                self._assetman.getOutPathFor("script"))
+        self._renderer.RiOption("searchpath", "texture",
+                self._assetman.getOutPathFor("texture"))
+        self._renderer.RiOption("searchpath", "archive",
+                self._assetman.getOutPathFor("archive"))
+
+    def setOutputPath(self, path):
+        self._assetman.outputpath = path
+
+    def createOutDirs(self):
+        self._assetman.createOutDirs()
+
+    def makeAssetsRelative(self):
+        self.updateAssets()
+
     def updateAssets(self):
-        prevdir = os.getcwd()
-        os.chdir(self._outputpath)
-        paths = self._rndrdoc.resolveAssets(self._createAssetFinder())
-        currassets = self._getCurrentAssets()
-        for path in paths:
-            if path not in currassets:
-                self._copyAssetToDirectory(path)
-        os.chdir(prevdir)
+        self._assetman.updateAssets(self._rndrdoc)
 
-    def _copyAssetToDirectory(self, asset):
-        filename, ext = os.path.splitext(asset)
-        try:
-            if ext == ".sl":
-                shutil.copy2(asset, self.getSpecificOutputPath('shader'))
-            elif ext == ".py":
-                shutil.copy2(asset, self.getSpecificOutputPath('script'))
-            elif ext == ".rib":
-                shutil.copy2(asset, self.getSpecificOutputPath('archive'))
-            elif imghdr.what(asset) != none:
-                shutil.copy2(asset, self.getSpecificOutputPath('texture'))
-        except:
-            pass
+    def copyAssetToDirectory(self, asset):
+        self._assetman._copyAssetToDirectory(asset)
 
-    def _getCurrentAssets(self):
-        out = []
-        out.extend(self._dirWalkToList(self.getSpecificOutputPath('shader')))
-        out.extend(self._dirWalkToList(self.getSpecificOutputPath('script')))
-        out.extend(self._dirWalkToList(self.getSpecificOutputPath('archive')))
-        out.extend(self._dirWalkToList(self.getSpecificOutputPath('texture')))
-        return out
+    def _startRenderer(self, outstream=''):
+        # self._writeToLog('starting renderer')
+        self._renderer = ri.RiStream(outstream)
 
-    def _dirWalkToList(self, path):
-        out = []
-        for root, dirs, files in os.walk(path):
-            out.extend([os.path.join(root,f) for f in files])
-        return out
-
-    def _writeToLog(self, content):
+    # def _writeToLog(self, content):
         # self._logger.info('starting render ' + name + ' at: ' + str(datetime.datetime.now()))
-        self._logger.write(content+'\n')   
+        # self._logger.write(content+'\n')   
 
-    def _openLogFile(self):
-        self._logger= open(self._logfilename, 'a')
+    # def _openLogFile(self):    
+        # self._logger= open(self._logfilename, 'a')
 
         # self._logger = logging.getLogger('')
         # hdlr = logging.FileHandler(self._logfilename)
@@ -130,15 +88,5 @@ class RndrJob():
         # self._logger.addHandler(hdlr)
         # self._logger.setLevel(logging.INFO)
 
-    def _closeLogFile(self):
-        self._logger.close()
-
-    def _createAssetFinder(self):
-        if self._relative:
-            return FinderFactory.build(self._rndrdoc.getSearchPaths(), os.path.split(self._metadata.filename)[0])
-        return FinderFactory.build(self._rndrdoc.getSearchPaths())
-
-    def _startRenderer(self, outstream=''):
-        # self._writeToLog('starting renderer')
-        self._renderer = ri.RiStream(outstream)
-
+    # def _closeLogFile(self):
+        # self._logger.close()
