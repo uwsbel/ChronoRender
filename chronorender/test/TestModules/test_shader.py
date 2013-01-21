@@ -1,12 +1,12 @@
 import unittest
 import chronorender as cr
 
-import chronorender.finder as finder
+from chronorender.finder import FinderFactory
 
 class ShaderTestCase(unittest.TestCase):
     def setUp(self):
         self.sdr = cr.Shader(name='plastic.sl')
-        fine = finder.Finder(['./input/shaders'])
+        fine = FinderFactory.build(['./input/shaders'])
         self.sdr.resolveAssets(fine)
 
     def tearDown(self):

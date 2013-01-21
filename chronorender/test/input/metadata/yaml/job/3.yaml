@@ -1,6 +1,6 @@
 chronorender:
     rendersettings:
-        searchpaths: "../../../../../assets:./:../../../"
+        searchpaths: "./:../../../../../assets:./:../../../"
         framerange: 2 2
     camera:
         script:
@@ -25,7 +25,7 @@ chronorender:
         data:
             datasource:
                 - type: "csv"
-                  resource: "./input/data/stationary/*.dat"
+                  resource: "../../../data/stationary/*.dat"
                   name: "gorbdata"
                   fields: [["id", integer],
                             ["pos_x", float], 

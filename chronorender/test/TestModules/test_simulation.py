@@ -5,6 +5,7 @@ import chronorender.simulation as sim
 import chronorender.metadata as md
 import chronorender.data as dat
 import chronorender.renderobject as cro
+from chronorender.finder import FinderFactory
 
 class SimulationTestCase(unittest.TestCase):
     def setUp(self):
@@ -12,7 +13,8 @@ class SimulationTestCase(unittest.TestCase):
         meta = md.MetaData('./input/metadata/yaml/simulation.yaml')
         data = meta.singleFromType(sim.Simulation)
         self._sim = sim.Simulation(factories=self._cr._factories, **data)
-
+        finder = FinderFactory.build(['./input'])
+        self._sim.resolveAssets(finder)
 
     def tearDown(self):
         del self._cr

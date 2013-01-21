@@ -22,8 +22,7 @@ class Scene(Movable):
         if self.script:
             out.extend(self.script.resolveAssets(finder))
         elif self.filename != '':
-            self.filename = finder.find(self.filename)
-            out.append(self.filename)
+            out.append(finder.find(self.filename))
         self._resolvedAssetPaths = True
         return out
 

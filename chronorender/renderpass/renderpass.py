@@ -80,7 +80,7 @@ class RenderPass(Renderable):
                 sett.render(rib, **kwargs)
 
             for d in self.displays:
-                d.render(rib, **kwargs)
+                d.render(rib, outpath,**kwargs)
 
             self.renderAttributes(rib)
 

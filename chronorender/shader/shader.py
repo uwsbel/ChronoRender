@@ -1,7 +1,7 @@
 from cr_renderable import Renderable, RenderableException
 import slparams
 import os
-import finder as mfind
+from chronorender.finder import FinderFactory
 
 class ShaderException(Exception):
     def __init__(self, value):
@@ -30,7 +30,7 @@ class Shader(Renderable):
             if not os.path.isfile(shdrpath):
                 raise ShaderException(shdrpath + " is not a shader file")
             path, self._filename = os.path.split(shdrpath)
-            self.resolveAssets(mfind.Finder([path]))
+            self.resolveAssets(FinderFactory.build([path]))
 
     def _initMembersDict(self):
         super(Shader, self)._initMembersDict()

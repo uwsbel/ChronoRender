@@ -4,6 +4,7 @@ import chronorender.metadata as md
 import rndr_doc as rd
 import ribgenerator as ribgen
 import ri_stream as ri
+from chronorender.finder import FinderFactory, AssetNotFoundException
 
 # represent a render job
 class RndrJobException(Exception):
@@ -19,7 +20,7 @@ class RndrJob():
         self._ribgen        = ribgen.RIBGenerator(factories, self._metadata)
         self._timecreated   = datetime.datetime.now()
         self._frames        = self._rndrdoc.getFrameRange()
-        self._outputpath    = self._rndrdoc.getOutputFileDir()
+        self._outputpath    = os.path.abspath(os.path.split(infile)[0])
         self._outputdirs    = { 'output': 'OUTPUT', 
                                 'shader': 'SHADERS', 
                                 'script': 'SCRIPTS', 
@@ -27,6 +28,7 @@ class RndrJob():
                                 'log':  'LOG',
                                 'texture' : 'TEXTURES'
                                 }
+        self.assetfinder    = FinderFactory.build(self._rndrdoc.getSearchPaths(), os.path.split(self._metadata.filename)[0])
 
         self._logfilename   = os.path.join(os.path.join(self._outputpath, 'LOG'), 'log_' + str(self._timecreated) + '.log')
         self._logger        = None
@@ -59,40 +61,53 @@ class RndrJob():
                 # log_msg = 'created dir: ' + di + '\n'
                 # self._writeToLog(log_msg)
 
+    def run(self):
+        self.createOutDirs()
+        # self._openLogFile()
+        prevdir = os.getcwd()
+        os.chdir(self._outputpath)
+        self._rndrdoc.resolveAssets(self.assetfinder)
+        self._rndrdoc.outdir = self._outputdirs['output']
+        self._startRenderer()
+        for i in range(self._frames[0], self._frames[1]+1):
+            name = self._rndrdoc.getOutputFilePath(i)
+            # self._writeToLog('starting render ' + name + ' at: ' + str(datetime.datetime.now()))
+            self._rndrdoc.render(self._renderer, i)
+            # self._writeToLog('finished render ' + name + ' at: ' + str(datetime.datetime.now()))
+        # self._closeLogFile()
+        os.chdir(prevdir)
+
     def makeAssetsRelative(self):
-        currassets = self._getCurrentAssets()
-        for asset in self._rndrdoc.assetpaths:
-            if asset not in currassets:
-                self._copyAssetToDirectory(asset)
+        self.updateAssets()
+        # currassets = self._getCurrentAssets()
+        # for asset in self._rndrdoc.assetpaths:
+            # if asset not in currassets:
+                # self._copyAssetToDirectory(asset)
 
     def updateAssets(self):
-        paths = self._rndrdoc.resolveAssets()
+        prevdir = os.getcwd()
+        os.chdir(self._outputpath)
+        paths = self._rndrdoc.resolveAssets(self.assetfinder)
         currassets = self._getCurrentAssets()
         for path in paths:
             if path not in currassets:
                 self._copyAssetToDirectory(path)
-
-    def run(self):
-        self.createOutDirs()
-        self._openLogFile()
-        self._startRenderer()
-        for i in range(self._frames[0], self._frames[1]+1):
-            name = self._rndrdoc.getOutputFilePath(i)
-            self._writeToLog('starting render ' + name + ' at: ' + str(datetime.datetime.now()))
-            self._rndrdoc.render(self._renderer, i)
-            self._writeToLog('finished render ' + name + ' at: ' + str(datetime.datetime.now()))
-        self._closeLogFile()
+        os.chdir(prevdir)
 
     def _copyAssetToDirectory(self, asset):
         filename, ext = os.path.splitext(asset)
-        if ext == ".sl":
-            shutil.copy2(asset, self.getSpecificOutputPath('shader'))
-        elif ext == ".py":
-            shutil.copy2(asset, self.getSpecificOutputPath('script'))
-        elif ext == ".rib":
-            shutil.copy2(asset, self.getSpecificOutputPath('archive'))
-        elif imghdr.what(asset) != none:
-            shutil.copy2(asset, self.getSpecificOutputPath('texture'))
+
+        try:
+            if ext == ".sl":
+                shutil.copy2(asset, self.getSpecificOutputPath('shader'))
+            elif ext == ".py":
+                shutil.copy2(asset, self.getSpecificOutputPath('script'))
+            elif ext == ".rib":
+                shutil.copy2(asset, self.getSpecificOutputPath('archive'))
+            elif imghdr.what(asset) != none:
+                shutil.copy2(asset, self.getSpecificOutputPath('texture'))
+        except:
+            pass
 
     def _getCurrentAssets(self):
         out = []
@@ -126,6 +141,6 @@ class RndrJob():
         self._logger.close()
 
     def _startRenderer(self, outstream=''):
-        self._writeToLog('starting renderer')
+        # self._writeToLog('starting renderer')
         self._renderer = ri.RiStream(outstream)
 

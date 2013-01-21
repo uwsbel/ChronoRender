@@ -1,6 +1,6 @@
 from data.ds.base import DataSource
 import cr_object
-import glob
+import glob, os
 # Should implement:
 # * fields
 # * prepare()
@@ -32,7 +32,8 @@ class DataSource(DataSource, cr_object.Object):
         return
 
     def getInputResources(self):
-        return glob.glob(self.resource)
+        path = os.path.abspath(self.resource)
+        return glob.glob(path)
 
     def initialize(self):
         return

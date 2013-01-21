@@ -35,8 +35,8 @@ class Display(Renderable):
     def setAsset(self, assetname, obj):
         return
 
-    def render(self, rib, **kwargs):
-        rib.RiDisplay(self.output, self.outtype,self.mode)
+    def render(self, rib, outprefix, **kwargs):
+        rib.RiDisplay(outprefix+self.output, self.outtype,self.mode)
 
 
 def build(**kwargs):

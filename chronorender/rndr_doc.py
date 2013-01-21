@@ -3,7 +3,7 @@ import glob, re, os
 
 from cr_object import Object
 import cr_utils
-from finder import Finder, AssetNotFoundException
+from chronorender.finder import AssetNotFoundException
 
 from chronorender.renderobject import RenderObject
 from chronorender.renderpass import RenderPass
@@ -27,11 +27,11 @@ class RndrDoc():
         self.geometry       = []
         self.lighting       = []
         self.scene          = []
-        self.assetfinder    = None
         self.md             = md
 
         self.renderables    = []
         self.assetpaths     = []
+        self.outdir         = ""
         
         self.initFromMetadata(factories, md)
 
@@ -50,11 +50,8 @@ class RndrDoc():
         if not self.settings:
             raise RndrDocException('no ' + RenderSettings.getTypeName() 
                     + ' found in metadata')
-        self.assetfinder = Finder(self.settings.searchpaths, 
-                relative=os.path.split(md.filename)[0])
 
         self._initRenderables(factories, md)
-        self.resolveAssets()
         self._addRenderablesToRenderPasses()
 
     def _initRenderables(self, factories, md):
@@ -72,10 +69,10 @@ class RndrDoc():
             for robj in self.renderables:
                 rpass.addRenderable(robj)
 
-    def resolveAssets(self):
+    def resolveAssets(self, finder):
         try:
             for obj in self.renderables:
-                self.assetpaths.extend(obj.resolveAssets(self.assetfinder))
+                self.assetpaths.extend(obj.resolveAssets(finder))
         except AssetNotFoundException as err:
             print err
 
@@ -86,14 +83,17 @@ class RndrDoc():
     def getFrameRange(self):
         return self.settings.framerange
 
-    def getOutputFileDir(self):
-        return cr_utils.getAbsPathRelativeTo(self.settings.out, self.md.filename)
+    def getSearchPaths(self):
+        return self.settings.searchpaths
+
+    # def getOutputFileDir(self):
+        # return cr_utils.getAbsPathRelativeTo(self.settings.out, self.md.filename)
 
     def getOutputFilePath(self, framenumber):
         frame = str(framenumber)
         while len(frame) < self.settings.padding:
             frame = '0' + frame
-        out = os.path.join(self.getOutputFileDir(), 'out.')
+        out = os.path.join(self.outdir, 'out.')
         return out + frame + '.'
 
     def writeToFile(self, f):

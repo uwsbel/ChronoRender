@@ -5,7 +5,7 @@ import data
 import datasource as ds
 import dataprocess as dp
 import datatarget as dt
-import copy
+import copy, os
 
 class DataObjectException(Exception):
     def __init__(self, value):
@@ -27,6 +27,8 @@ class DataObject(Object):
         self._currindex     = 0
         self._maxindex      = 0
 
+
+    def resolveSources(self):
         self._initMultipleSourceResources()
         self._initCrossSrcFields()
  
@@ -39,6 +41,9 @@ class DataObject(Object):
             src = self._datasrcs[i]
 
             resources = src.getInputResources()
+            if len(resources) <= 0:
+                raise DataObjectException('no data found at: '
+                        + str(src.resource))
             resources = cr_utils.natural_sort(resources)
             tmp_srcs = []
             for resource in resources:

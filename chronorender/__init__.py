@@ -31,7 +31,7 @@ for path in paths:
         sys.path.insert(0, path)
 
 import cri_stream
-from finder import *
+import finder
 import metadata
 from rndr_job import *
 from rndr_doc import *
