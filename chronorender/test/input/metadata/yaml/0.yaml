@@ -1,7 +1,7 @@
 chronorender:
     rendersettings:
         out: "./output/xml_0/out_####.tif"
-        searchpaths: "./:./input:./input/shaders"
+        searchpaths: "../../../../assets:./"
         framerange: 0 1
     shader:
         - name: "plastic.sl"

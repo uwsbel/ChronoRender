@@ -19,5 +19,5 @@ class RenderPassTestCase(unittest.TestCase):
     def test_render(self):
         ri = cr.RiStream('str')
         for rpass in self.rpasses:
-            rpass.render(ri)
+            rpass.render(ri, 0, 0, './')
         print ri.getText()

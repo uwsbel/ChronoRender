@@ -4,6 +4,7 @@ from cr_scriptable import Scriptable
 import chronorender.scene as cscene
 import chronorender.lighting as clight
 import settings as csett
+import display as disp
 import chronorender.camera as ccam
 
 class RenderPassException(Exception):
@@ -25,8 +26,9 @@ class RenderPass(Renderable):
         self.lighting       = self.getMember(clight.Lighting.getTypeName())
         self.camera         = self.getMember(ccam.Camera.getTypeName())
         self.scene          = self.getMember(cscene.Scene.getTypeName())
-        self.renderables    = []
+        self.displays   = self.getMember('display')
         self.script     = self.getMember(Scriptable.getTypeName())
+        self.renderables    = []
 
     def _initMembersDict(self):
         super(RenderPass, self)._initMembersDict()
@@ -36,6 +38,7 @@ class RenderPass(Renderable):
         self._members[clight.Lighting.getTypeName()]    = [clight.Lighting, []]
         self._members[ccam.Camera.getTypeName()]        = [ccam.Camera, []]
         self._members[csett.Settings.getTypeName()]     = [csett.Settings, []]
+        self._members[disp.Display.getTypeName()]       = [disp.Display, []]
         self._members[Scriptable.getTypeName()] = [Scriptable, None]
 
 
@@ -51,8 +54,14 @@ class RenderPass(Renderable):
         else:
             self.renderables.append(obj)
 
-    def getOutput(self):
-        return "out"
+    def getOutputs(self):
+        out = []
+        for d in self.displays:
+            out.extend(d.getOutputs())
+        return out
+
+    def getName(self):
+        return self.rndrsettings.name
 
     def resolveAssets(self, finder):
         self._resolvedAssetPaths = True
@@ -61,7 +70,7 @@ class RenderPass(Renderable):
     def setAsset(self, assetname, obj):
         return
 
-    def render(self, rib, passnumber=0, framenumber=0, *args, **kwargs):
+    def render(self, rib, passnumber, framenumber, outpath, *args, **kwargs):
         super(RenderPass, self).render(rib, **kwargs)
         if self.script:
             self.script.render(rib, *args, **kwargs)
@@ -69,6 +78,9 @@ class RenderPass(Renderable):
             rib.RiFrameBegin(passnumber)
             for sett in self.rndrsettings:
                 sett.render(rib, **kwargs)
+
+            for d in self.displays:
+                d.render(rib, **kwargs)
 
             self.renderAttributes(rib)
 

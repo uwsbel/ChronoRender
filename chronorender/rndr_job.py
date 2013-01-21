@@ -60,8 +60,10 @@ class RndrJob():
                 # self._writeToLog(log_msg)
 
     def makeAssetsRelative(self):
+        currassets = self._getCurrentAssets()
         for asset in self._rndrdoc.assetpaths:
-            self._copyAssetToDirectory(asset)
+            if asset not in currassets:
+                self._copyAssetToDirectory(asset)
 
     def updateAssets(self):
         paths = self._rndrdoc.resolveAssets()
@@ -69,6 +71,17 @@ class RndrJob():
         for path in paths:
             if path not in currassets:
                 self._copyAssetToDirectory(path)
+
+    def run(self):
+        self.createOutDirs()
+        self._openLogFile()
+        self._startRenderer()
+        for i in range(self._frames[0], self._frames[1]+1):
+            name = self._rndrdoc.getOutputFilePath(i)
+            self._writeToLog('starting render ' + name + ' at: ' + str(datetime.datetime.now()))
+            self._rndrdoc.render(self._renderer, i)
+            self._writeToLog('finished render ' + name + ' at: ' + str(datetime.datetime.now()))
+        self._closeLogFile()
 
     def _copyAssetToDirectory(self, asset):
         filename, ext = os.path.splitext(asset)
@@ -94,17 +107,6 @@ class RndrJob():
         for root, dirs, files in os.walk(path):
             out.extend([os.path.join(root,f) for f in files])
         return out
-
-    def run(self):
-        self.createOutDirs()
-        self._openLogFile()
-        self._startRenderer()
-        for i in range(self._frames[0], self._frames[1]+1):
-            name = self._rndrdoc.getOutputDataFilePath(i)
-            self._writeToLog('starting render ' + name + ' at: ' + str(datetime.datetime.now()))
-            self._rndrdoc.render(self._renderer, framenumber=i)
-            self._writeToLog('finished render ' + name + ' at: ' + str(datetime.datetime.now()))
-        self._closeLogFile()
 
     def _writeToLog(self, content):
         # self._logger.info('starting render ' + name + ' at: ' + str(datetime.datetime.now()))

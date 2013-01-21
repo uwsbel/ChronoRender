@@ -2,6 +2,7 @@
 import glob, re, os
 
 from cr_object import Object
+import cr_utils
 from finder import Finder, AssetNotFoundException
 
 from chronorender.renderobject import RenderObject
@@ -49,7 +50,7 @@ class RndrDoc():
         if not self.settings:
             raise RndrDocException('no ' + RenderSettings.getTypeName() 
                     + ' found in metadata')
-        self.assetfinder = Finder(self.settings._searchpaths, 
+        self.assetfinder = Finder(self.settings.searchpaths, 
                 relative=os.path.split(md.filename)[0])
 
         self._initRenderables(factories, md)
@@ -66,6 +67,11 @@ class RndrDoc():
                     else:
                         self.renderables.append(obj)
 
+    def _addRenderablesToRenderPasses(self):
+        for rpass in self.rndrpasses:
+            for robj in self.renderables:
+                rpass.addRenderable(robj)
+
     def resolveAssets(self):
         try:
             for obj in self.renderables:
@@ -77,36 +83,28 @@ class RndrDoc():
         self.assetpaths = list(set(self.assetpaths))
         return self.assetpaths
 
-    def _addRenderablesToRenderPasses(self):
-        for rpass in self.rndrpasses:
-            for robj in self.renderables:
-                rpass.addRenderable(robj)
-
     def getFrameRange(self):
-        return [int(x) for x in self.settings._framerange]
+        return self.settings.framerange
 
     def getOutputFileDir(self):
-        return os.path.abspath(os.path.split(self.settings._out)[0])
+        return cr_utils.getAbsPathRelativeTo(self.settings.out, self.md.filename)
 
-    def getOutputDataFilePath(self, framenumber):
-        padd = self.settings._padding
-
+    def getOutputFilePath(self, framenumber):
         frame = str(framenumber)
-        while len(frame) < padd:
+        while len(frame) < self.settings.padding:
             frame = '0' + frame
-        outfile = self.settings._out
-        return re.sub('#+', frame, outfile)
-
-    def getOutputFileNameForFrameNumber(self, frame):
-        return '' 
-
-    def makeDocRelative(self):
-        return
+        out = os.path.join(self.getOutputFileDir(), 'out.')
+        return out + frame + '.'
 
     def writeToFile(self, f):
         return
 
-    def render(self, rib, *args, **kwargs):
+    def render(self, rib, framenumber, *args, **kwargs):
+        out = []
+        outpath = self.getOutputFilePath(framenumber)
         for i in range(0, len(self.rndrpasses)):
             rpass = self.rndrpasses[i]
-            rpass.render(rib, passnumber=i, **kwargs)
+            rpass.render(rib, i, framenumber, outpath, **kwargs)
+            for f in rpass.getOutputs():
+                out.append(outpath+f)
+        return out

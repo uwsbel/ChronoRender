@@ -24,7 +24,7 @@ def main():
     elif args['action'] == 'submit':
         startDistributedJob(args)
     elif args['action'] == 'update':
-        updateJobResources(args)
+        updateJobAssets(args)
 
 def initNewRenderJob(args):
     path = args['outpath'] if args['outpath'] else os.getcwd()
@@ -34,13 +34,14 @@ def initNewRenderJob(args):
 
 def startLocalRenderJob(args):
     md = verifyMetadata(args)
+    cr = chronorender.cr.ChronoRender()
+    cr.createAndRunRenderJob(md)
 
 def startDistributedJob(args):
     md = verifyMetadata(args)
 
-def updateJobResources(args):
+def updateJobAssets(args):
     md = verifyMetadata(args)
-
     cr = chronorender.cr.ChronoRender()
     cr.updateJobAssets(md)
 
@@ -54,6 +55,7 @@ def verifyMetadata(args):
 def printErrorAndExit(msg):
     print "ERROR:", msg
     exit()
+
 
 if __name__ == '__main__':
     main()

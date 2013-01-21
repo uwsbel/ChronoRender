@@ -25,6 +25,9 @@ class Display(Renderable):
         self._members['outtype']    = [str, 'file']
         self._members['mode']       = [str, 'rgba']
 
+    def getOutputs(self):
+        return [self.output]
+
     def resolveAssets(self, finder):
         self._resolvedAssetPaths = True
         return []

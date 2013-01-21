@@ -10,6 +10,9 @@ def getAbsPathRelativeToModule(cls, path):
     return getAbsPathRelativeTo(path, modpath)
 
 def getAbsPathRelativeTo(path, relative):
+    if not os.path.isdir(relative):
+        relative = os.path.split(relative)[0]
+
     prevdir = os.getcwd()
     os.chdir(relative)
     abspath = os.path.abspath(path)

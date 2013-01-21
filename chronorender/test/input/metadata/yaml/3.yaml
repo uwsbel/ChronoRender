@@ -1,7 +1,6 @@
 chronorender:
     rendersettings:
-        out: "./output/xml_0/out_####.tif"
-        searchpaths: "./:./input:./input/shaders:./input/scripts"
+        searchpaths: "../../../../assets:../../:./"
         framerange: 2 2
     camera:
         script:
@@ -12,13 +11,13 @@ chronorender:
             - name: "arealight.sl"
             - name: "pointlight.sl"
     scene:
-        - filename: "test.rib"
+        - filename: "default_scene.rib"
     renderpass:
         - name: "gorb"
           settings: 
             resolution: 640 480
-            display:
-                output: "gorb.tif"
+          display:
+            output: "gorb.tif"
           attribute:
             - name: "visibility"
               int diffuse: 1

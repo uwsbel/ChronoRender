@@ -3,7 +3,7 @@
 <ChronoRender> 
     <rendersettings>
         <out>./output/xml_0/out_####.tif</out>
-        <searchpaths>./:./input:./input/shaders</searchpaths>
+        <searchpaths>../../../../assets:./</searchpaths>
         <framerange>0 0</framerange>
     </rendersettings>
     <shader>

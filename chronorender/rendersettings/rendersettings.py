@@ -18,53 +18,38 @@ class RenderSettings(Object):
     def __init__(self, *args, **kwargs):
         super(RenderSettings,self).__init__(*args, **kwargs)
 
-        self._padding       = 1
-        self._out           = './out_####.tif'
-        self._fileformat    = 'tif'
-        self._searchpaths   = './'
-        self._framerange    = [0, 0]
+        self.padding       = self.getMember('padding')
+        self.out           = self.getMember('out')
+        self.fileformat    = self.getMember('fileformat')
+        self.searchpaths   = self.getMember('searchpaths')
+        self.framerange    = self.getMember('framerange')
 
 
-        self._setMembers()
-        self._resolveIOPath('out', False)
         self._resolveOutputFormat()
         self._resolvePadding()
 
     def _initMembersDict(self):
         super(RenderSettings, self)._initMembersDict()
         self._members['padding']        = [int, 1]
-        self._members['out']            = [str, './out_####.tif']
+        self._members['out']            = [str, './']
         self._members['fileformat']     = [str, 'tif']
         self._members['searchpaths']    = [strlist, ['./']]
         self._members['framerange']     = [intlist, [0, 0]]
 
-    def _setMembers(self):
-        self._padding       = self.getMember('padding')
-        self._out           = self.getMember('out')
-        self._fileformat    = self.getMember('fileformat')
-        self._searchpaths   = self.getMember('searchpaths')
-        self._framerange    = self.getMember('framerange')
-
-    def _resolveIOPath(self, membername, bRequired=True):
-        data_re = self.getMember(membername)
-        dpath, dre = os.path.split(data_re)
-        abspath = os.path.abspath(dpath)
-        if not os.path.exists(abspath):
-            if bRequired:
-                raise RenderSettingsException('path DNE for ' + membername + ': ' + abspath)
-        outpath = os.path.join(abspath, dre)
-        self.setMember(membername, outpath)
-        if membername == 'out':
-            self._out = outpath
+    # def _resolveOutputPath():
+        # dpath, dre = os.path.split(self._out)
+        # abspath = os.path.abspath(dpath)
+        # outpath = os.path.join(abspath, dre)
+        # self._out = outpath
 
     def _resolveOutputFormat(self):
         self._fileformat =  os.path.splitext(self.getMember('out'))[1]
-        self.setMember('fileformat', self._fileformat)
 
     def _resolvePadding(self):
-        filename = os.path.split(self.getMember('out'))[1]
-        self._padding = len(re.findall('#+', filename)[-1])
-        self.setMember('padding', self._padding)
+        if self.padding < len(str(self.framerange[1])):
+            self.padding = len(str(self.framerange[1]))
+        # filename = os.path.split(self._out)[1]
+        # self._padding = len(re.findall('#+', filename)[-1])
 
     def resolveAssets(self, finder):
         self._resolvedAssetPaths = True

@@ -4,8 +4,7 @@ import chronorender as cr
 class RndrJobTestCase(unittest.TestCase):
     def setUp(self):
         self._cr = cr.ChronoRender()
-        # self.infile = './input/metadata/xml/0.xml'
-        self.infile = './input/metadata/yaml/3.yaml'
+        self.infile = './input/metadata/yaml/job/3.yaml'
 
     def tearDown(self):
         del self._cr

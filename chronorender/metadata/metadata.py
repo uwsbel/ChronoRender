@@ -1,6 +1,6 @@
 import pprint
 
-from itertools import groupby
+import os
 from mdreader_factory import MDReaderFactory
 
 class MetaDataException(Exception):
@@ -11,7 +11,7 @@ class MetaDataException(Exception):
 
 class MetaData():
     def __init__(self, infile=''):
-        self.filename = infile
+        self.filename = os.path.abspath(infile)
         self._mdreader = MDReaderFactory.build(infile)
 
     def __str__(self):

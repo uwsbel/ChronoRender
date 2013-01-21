@@ -40,7 +40,7 @@ class Renderable(Object):
 
 
     def render(self, rib, *args, **kwargs):
-        self.renderAttributes(rib, *args, **kwargs)
+        self.renderAttributes(rib)
 
     def renderAttributes(self, rib):
         for attr in self.attributes:
