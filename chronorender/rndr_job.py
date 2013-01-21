@@ -25,9 +25,8 @@ class RndrJob():
                                 'shader': 'SHADERS', 
                                 'script': 'SCRIPTS', 
                                 'archive': 'ARCHIVES', 
-                                'log':  'LOG',
-                                'texture' : 'TEXTURES'
-                                }
+                                'log':'LOG',
+                                'texture': 'TEXTURES' }
         self._relative       = True
 
         self._logfilename   = os.path.join(os.path.join(self._outputpath, 'LOG'), 'log_' + str(self._timecreated) + '.log')
@@ -78,13 +77,6 @@ class RndrJob():
             # self._writeToLog('finished render ' + name + ' at: ' + str(datetime.datetime.now()))
         # self._closeLogFile()
         os.chdir(prevdir)
-
-    def makeAssetsRelative(self):
-        self.updateAssets()
-        # currassets = self._getCurrentAssets()
-        # for asset in self._rndrdoc.assetpaths:
-            # if asset not in currassets:
-                # self._copyAssetToDirectory(asset)
 
     def updateAssets(self):
         prevdir = os.getcwd()
