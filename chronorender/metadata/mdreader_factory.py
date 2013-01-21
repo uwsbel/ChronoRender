@@ -11,5 +11,5 @@ class MDReaderFactory():
         ext = os.path.splitext(infile)[1]
         if ext == '.xml':
             return _MDXML(infile)
-        elif ext == '.yaml':
+        elif ext == '.yaml' or ext == ".yml":
             return _MDYAML(infile)

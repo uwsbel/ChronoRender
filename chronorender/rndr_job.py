@@ -1,4 +1,4 @@
-import datetime, os, logging
+import datetime, os, logging, shutil, imghdr
 
 import chronorender.metadata as md
 import rndr_doc as rd
@@ -20,15 +20,61 @@ class RndrJob():
         self._timecreated   = datetime.datetime.now()
         self._frames        = self._rndrdoc.getFrameRange()
         self._outputpath    = self._rndrdoc.getOutputFileDir()
-        self._outputdirs    = ['OUTPUT', 'SHADERS', 'SCRIPTS', 'ASSETS', 'LOG']
+        self._outputdirs    = { 'output': 'OUTPUT', 
+                                'shader': 'SHADERS', 
+                                'script': 'SCRIPTS', 
+                                'archive': 'ARCHIVES', 
+                                'log':  'LOG',
+                                'texture' : 'TEXTURES'
+                                }
 
         self._logfilename   = os.path.join(os.path.join(self._outputpath, 'LOG'), 'log_' + str(self._timecreated) + '.log')
         self._logger        = None
 
         self._renderer      = None
 
+    def setOutputPath(self, path):
+        self._outputpath = path
+
+    def getOutputPath(self, typename=""):
+        if typename == "":
+            return self._outputpath
+        else: 
+            return os.path.join(self._outputpath, self._outputdirs[typename])
+
+    def createOutDirs(self):
+        log_msg = ""
+        if not os.path.exists(self._outputpath): 
+            os.makedirs(self._outputpath)
+            # log_msg = 'created dir: ' + path + '\n'
+            # self._writeToLog(log_msg)
+
+        dirs = []
+        for key, val in self._outputdirs.iteritems():
+            dirs.append(os.path.join(self._outputpath,val))
+        for di in dirs:
+            if not os.path.exists(di):
+                log_msg += di + '\n'
+                os.makedirs(di)
+                # log_msg = 'created dir: ' + di + '\n'
+                # self._writeToLog(log_msg)
+
+    def makeAssetsRelative(self):
+        for asset in self._rndrdoc.assetpaths:
+            filename, ext = os.path.splitext(asset)
+
+            if ext == ".sl":
+                shutil.copy2(asset, self.getOutputPath('shader'))
+            elif ext == ".py":
+                shutil.copy2(asset, self.getOutputPath('script'))
+            elif ext == ".rib":
+                shutil.copy2(asset, self.getOutputPath('archive'))
+            elif imghdr.what(asset) != none:
+                shutil.copy2(asset, self.getOutputPath('texture'))
+        return
+
     def run(self):
-        self._createOutDirs()
+        self.createOutDirs()
         self._openLogFile()
         self._startRenderer()
         for i in range(self._frames[0], self._frames[1]+1):
@@ -59,17 +105,3 @@ class RndrJob():
         self._writeToLog('starting renderer')
         self._renderer = ri.RiStream(outstream)
 
-    def _createOutDirs(self):
-        log_msg = ""
-        if not os.path.exists(self._outputpath): 
-            os.makedirs(self._outputpath)
-            log_msg = 'created dir: ' + self._outputpath + '\n'
-            self._writeToLog(log_msg)
-
-        dirs = [os.path.join(self._outputpath, d) for d in self._outputdirs]
-        for di in dirs:
-            if not os.path.exists(di):
-                log_msg += di + '\n'
-                os.makedirs(di)
-                log_msg = 'created dir: ' + di + '\n'
-                self._writeToLog(log_msg)

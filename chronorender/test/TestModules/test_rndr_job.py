@@ -16,4 +16,9 @@ class RndrJobTestCase(unittest.TestCase):
 
     def test_runJob(self):
         job = cr.RndrJob(self.infile, self._cr._factories)
-        job.run()
+        # job.run()                           
+
+    def test_instantiateOnDisk(self):
+        job = cr.RndrJob(self.infile, self._cr._factories)
+        job.createOutDirs()
+        job.makeAssetsRelative()

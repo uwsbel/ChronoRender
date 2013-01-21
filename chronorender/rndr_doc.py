@@ -34,6 +34,14 @@ class RndrDoc():
         
         self.initFromMetadata(factories, md)
 
+    def __str__(self):
+        out = str(self.settings)
+        for rpass in self.rndrpasses:
+            out += str(rpass)
+        for rndr in self.renderables:
+            out += str(rndr)
+        return out
+
     def initFromMetadata(self, factories, md):
         self.md = md
         self.settings   = RenderSettings(factories=factories,**md.singleFromType(RenderSettings))

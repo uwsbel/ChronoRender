@@ -81,6 +81,7 @@ class RenderObject(Movable):
 
     def _renderSingleObject(self, rib, record={}, **kwargs):
         rib.RiAttributeBegin()
+        self.renderAttributes(rib)
         self._renderTransformData(rib, record, **kwargs)
         
         if self.instanced:

@@ -23,6 +23,20 @@ class Object(object):
     def getTypeName():
         return "object"
 
+    @staticmethod
+    def _evalSerialParam(obj):
+        if hasattr(obj, 'getSerialized'):
+            return obj.getSerialized()
+        elif isinstance(obj, list):
+            if len(obj) <= 0: return obj
+
+            out = []
+            for v in obj:
+                out.append(Object._evalSerialParam(v))
+            return out
+        else:
+            return str(obj)
+
     def _buildFromFactory(self, basename, typename, **kwargs):
         fact = self._factories.getFactory(basename)
         return fact.build(typename, **kwargs)
@@ -55,9 +69,7 @@ class Object(object):
         return object.__new__(cls, *args, **kwargs)
 
     def __str__(self):
-        string = pprint.pformat(self._members)
-        string += pprint.pformat(self._params)
-        return string
+        return pprint.pformat(self.getSerialized())
 
     def _initMembersDict(self):
         self._members['recurse'] = [bool, False]
@@ -102,6 +114,16 @@ class Object(object):
             out = vtype(val)
         return out
 
+    def getSerialized(self):
+        objdict = {}
+        for key, val in self._members.iteritems():
+            if key == 'recurse':
+                continue
+            objdict[key] = Object._evalSerialParam(val[1])
+        for key, val in self._params.iteritems():
+            objdict[key] = Object._evalSerialParam(val)
+        return {self.getTypeName() : objdict}
+
     def getMember(self, name):
         if name in self._members:
             return self._members[name][1]
@@ -117,11 +139,3 @@ class Object(object):
             self._params[name] = val
         else:
             raise ObjectException('no member ' + name + ' in ' + str(type(self)))
-
-
-    def pprint(self):
-        print 'Name: ' + self.getTypeName()
-        print 'Data: '
-        Object._pprinter.pprint(self._members)
-        print 'Params: '
-        Object._pprinter.pprint(self._params)

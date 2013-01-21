@@ -38,6 +38,7 @@ class RenderPass(Renderable):
         self._members[csett.Settings.getTypeName()]     = [csett.Settings, []]
         self._members[Scriptable.getTypeName()] = [Scriptable, None]
 
+
     def addRenderable(self, obj):
         if isinstance(obj, list):
             self.renderables.extend(obj)
