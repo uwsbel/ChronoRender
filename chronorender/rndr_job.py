@@ -2,7 +2,6 @@ import datetime, os, logging
 
 import chronorender.metadata as md
 import rndr_doc as rd
-import ribgenerator as ribgen
 import chronorender.ri as ri
 from rndr_job_assetmanager import RndrJobAssetManager
 
@@ -17,7 +16,6 @@ class RndrJob():
     def __init__(self, infile, factories):
         self._metadata      = md.MetaData(infile)
         self._rndrdoc       = rd.RndrDoc(factories, self._metadata)
-        self._ribgen        = ribgen.RIBGenerator(factories, self._metadata)
         self._timecreated   = datetime.datetime.now()
         self._frames        = self._rndrdoc.getFrameRange()
         self._assetman      = RndrJobAssetManager(os.path.abspath(os.path.split(self._metadata.filename)[0]))

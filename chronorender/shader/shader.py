@@ -1,5 +1,6 @@
-from cr_renderable import Renderable, RenderableException
 import os
+
+from cr_renderable import Renderable, RenderableException
 from chronorender.finder import FinderFactory
 import chronorender.rsl as rsl
 
