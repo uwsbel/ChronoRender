@@ -462,7 +462,7 @@ def preprocess(cpp, file, cpperrstream=sys.stderr, defines=None, includedirs=Non
 
 # Setup local namespace for convertdefault()
 _local_namespace = {}
-exec "from cgkit.sl import *" in _local_namespace
+exec "from chronorender.rsl import *" in _local_namespace
 
 def _splitlistargs(args):
     res = []
