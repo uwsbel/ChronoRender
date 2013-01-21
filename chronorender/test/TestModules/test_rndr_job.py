@@ -1,5 +1,6 @@
 import unittest
 import chronorender as cr
+import os
 
 class RndrJobTestCase(unittest.TestCase):
     def setUp(self):
@@ -14,8 +15,12 @@ class RndrJobTestCase(unittest.TestCase):
         job = cr.RndrJob(self.infile, self._cr._factories)
 
     def test_runJob(self):
+        currdir = os.getcwd()
         job = cr.RndrJob(self.infile, self._cr._factories)
-        job.run()                           
+        try:
+            job.run()                           
+        except:
+            os.chdir(currdir)
 
     def test_instantiateOnDisk(self):
         job = cr.RndrJob(self.infile, self._cr._factories)

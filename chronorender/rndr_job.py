@@ -28,7 +28,7 @@ class RndrJob():
                                 'log':  'LOG',
                                 'texture' : 'TEXTURES'
                                 }
-        self._relative       = False
+        self._relative       = True
 
         self._logfilename   = os.path.join(os.path.join(self._outputpath, 'LOG'), 'log_' + str(self._timecreated) + '.log')
         self._logger        = None

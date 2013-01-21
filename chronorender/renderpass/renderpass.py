@@ -4,7 +4,6 @@ from cr_scriptable import Scriptable
 import chronorender.scene as cscene
 import chronorender.lighting as clight
 import settings as csett
-import display as disp
 import chronorender.camera as ccam
 
 class RenderPassException(Exception):
@@ -26,7 +25,6 @@ class RenderPass(Renderable):
         self.lighting       = self.getMember(clight.Lighting.getTypeName())
         self.camera         = self.getMember(ccam.Camera.getTypeName())
         self.scene          = self.getMember(cscene.Scene.getTypeName())
-        self.displays   = self.getMember('display')
         self.script     = self.getMember(Scriptable.getTypeName())
         self.renderables    = []
 
@@ -38,7 +36,6 @@ class RenderPass(Renderable):
         self._members[clight.Lighting.getTypeName()]    = [clight.Lighting, []]
         self._members[ccam.Camera.getTypeName()]        = [ccam.Camera, []]
         self._members[csett.Settings.getTypeName()]     = [csett.Settings, []]
-        self._members[disp.Display.getTypeName()]       = [disp.Display, []]
         self._members[Scriptable.getTypeName()] = [Scriptable, None]
 
 
@@ -56,8 +53,9 @@ class RenderPass(Renderable):
 
     def getOutputs(self):
         out = []
-        for d in self.displays:
-            out.extend(d.getOutputs())
+        for sett in self.rndrsettings:
+            for d in sett.displays:
+                out.extend(d.getOutputs())
         return out
 
     def getName(self):
@@ -77,10 +75,7 @@ class RenderPass(Renderable):
         else:
             rib.RiFrameBegin(passnumber)
             for sett in self.rndrsettings:
-                sett.render(rib, **kwargs)
-
-            for d in self.displays:
-                d.render(rib, outpath,**kwargs)
+                sett.render(rib, outpath, **kwargs)
 
             self.renderAttributes(rib)
 

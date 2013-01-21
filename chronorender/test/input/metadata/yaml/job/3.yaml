@@ -16,8 +16,8 @@ chronorender:
         - name: "gorb"
           settings: 
             resolution: 640 480
-          display:
-            output: "gorb.tif"
+            display: 
+                output: "gorb.tif"
           attribute:
             - name: "visibility"
               int diffuse: 1
