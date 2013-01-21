@@ -3,7 +3,7 @@ import datetime, os, logging
 import chronorender.metadata as md
 import rndr_doc as rd
 import ribgenerator as ribgen
-import ri_stream as ri
+import chronorender.ri as ri
 from rndr_job_assetmanager import RndrJobAssetManager
 
 # represent a render job

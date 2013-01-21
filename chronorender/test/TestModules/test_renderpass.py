@@ -1,9 +1,8 @@
 import unittest, os
-import chronorender as cr
 
 from metadata import MetaData
-
 from renderpass import RenderPass
+from chronorender.ri import RiStream
 
 class RenderPassTestCase(unittest.TestCase):
     def setUp(self):
@@ -17,7 +16,7 @@ class RenderPassTestCase(unittest.TestCase):
                 print settings
 
     def test_render(self):
-        ri = cr.RiStream('str')
+        ri = RiStream('str')
         for rpass in self.rpasses:
             rpass.render(ri, 0, 0, './')
         print ri.getText()

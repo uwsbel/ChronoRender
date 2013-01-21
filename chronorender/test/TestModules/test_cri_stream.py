@@ -1,9 +1,9 @@
 import unittest
-import chronorender as cr
+import chronorender.ri as ri
 
 class CRiStreamTestCase(unittest.TestCase):
     def setUp(self):
-        self.ri = cr.cri_stream.loadRI("ri")
+        self.ri = ri.loadRI("ri")
 
     def tearDown(self):
         del self.ri

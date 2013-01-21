@@ -30,10 +30,9 @@ for path in paths:
     if path not in sys.path:
         sys.path.insert(0, path)
 
-import cri_stream
 import finder
 import metadata
 from rndr_job import *
 from rndr_doc import *
-from ri_stream import *
+import ri
 from cr import *

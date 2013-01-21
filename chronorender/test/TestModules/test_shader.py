@@ -2,6 +2,7 @@ import unittest
 import chronorender as cr
 
 from chronorender.finder import FinderFactory
+from chronorender.ri import RiStream
 
 class ShaderTestCase(unittest.TestCase):
     def setUp(self):
@@ -46,6 +47,6 @@ class ShaderTestCase(unittest.TestCase):
         self.assertEqual(newColor, check['specularcolor'])
 
     def test_render(self):
-        ri = cr.RiStream('str')
+        ri = RiStream('str')
         self.sdr.render(ri)
         print ri.getText()

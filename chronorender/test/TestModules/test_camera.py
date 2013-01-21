@@ -2,7 +2,7 @@ import unittest
 from camera import Camera
 from finder import FinderFactory
 from metadata import MetaData
-from ri_stream import RiStream
+from chronorender.ri import RiStream
 
 class CameraTestCase(unittest.TestCase):
     def test_create(self):

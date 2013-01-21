@@ -1,8 +1,9 @@
 import unittest, os
-import chronorender as cr
 
-from metadata import MetaData
+import chronorender as cr
+from chronorender.metadata import MetaData
 from chronorender.finder import FinderFactory
+from chronorender.ri import RiStream
 
 class RndrDocTestCase(unittest.TestCase):
     def setUp(self):
@@ -23,5 +24,5 @@ class RndrDocTestCase(unittest.TestCase):
 
     def test_render(self):
         self.doc.resolveAssets(self.finder)
-        ri = cr.RiStream('str')
+        ri = RiStream('str')
         self.doc.render(ri, 0)
