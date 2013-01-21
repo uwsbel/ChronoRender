@@ -21,6 +21,9 @@ class Camera(Movable):
         out = []
         if self.script:
             out.extend(self.script.resolveAssets(finder))
+        elif self.filename != '':
+            self.filename = finder.find(self.filename)
+            out.append(self.filename)
         self._resolvedAssetPaths = True
         return out
 

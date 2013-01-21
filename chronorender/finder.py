@@ -1,4 +1,5 @@
 import os
+import chronorender.cr_utils as cr_utils
 
 class AssetNotFoundException(Exception):
     def __init__(self, finder, value):
@@ -9,8 +10,8 @@ class AssetNotFoundException(Exception):
         return repr(msg)
 
 class Finder():
-    def __init__(self, paths):
-        self._searchpaths = self._resolveToAbsolutePaths(paths)
+    def __init__(self, paths, relative=None):
+        self._searchpaths = self._resolveToAbsolutePaths(paths, relative)
 
     def __str__(self):
         return str(self._searchpaths)
@@ -32,9 +33,10 @@ class Finder():
     def getSearchPaths(self):
         return self._searchpaths
 
-    def _resolveToAbsolutePaths(self, paths):
+    def _resolveToAbsolutePaths(self, paths, relativeto=None):
         resolved_paths = []
         for path in paths:
+            path = cr_utils.getAbsPathRelativeTo(path, relativeto) if relativeto else path
             if os.path.exists(path):
                 if not os.path.isdir(path):
                     path = os.path.split(path)[0]

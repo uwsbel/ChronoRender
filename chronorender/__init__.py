@@ -30,23 +30,10 @@ for path in paths:
     if path not in sys.path:
         sys.path.insert(0, path)
 
-from ribgenerator import *
-from main import *
+import cri_stream
+from finder import *
+import metadata
+from rndr_job import *
 from rndr_doc import *
 from ri_stream import *
 from cr import *
-import cri_stream
-from finder import *
-from rndr_job import *
-
-# subdirs
-# from geometry import *
-# from lighting import *
-# from renderobject import *
-# from renderpass import *
-# from rendersettings import *
-# from scene import *
-# from shader import *
-# from simulation import *
-# from visualizer import *
-

@@ -1,0 +1,9 @@
+syntax: glob
+*.pyc
+*.log
+*.swp
+*.orig
+*.tif
+
+syntax: regexp
+.*\#.*\#$

@@ -9,7 +9,7 @@ class Lighting(Renderable):
 
     def __init__(self, *args, **kwargs):
         super(Lighting,self).__init__(*args, **kwargs)
-        self.archive    = self.getMember('filename')
+        self.filename   = self.getMember('filename')
         self.shaders    = self.getMember(cs.Shader.getTypeName())
         self.script     = self.getMember(Scriptable.getTypeName())
 
@@ -23,16 +23,21 @@ class Lighting(Renderable):
         out = []
         for shdr in self.shaders:
             out.extend(shdr.resolveAssets(finder))
+
         if self.script:
             out.extend(self.script.resolveAssets(finder))
+        elif self.filename != '':
+            self.filename = finder.find(self.filename)
+            out.append(self.filename)
+
         self._resolvedAssetPaths = True
         return out
 
     def render(self, rib, *args, **kwargs):
         if self.script:
             self.script.render(rib, *args, **kwargs)
-        elif self.archive != '':
-            rib.RiReadArchive(self.archive)
+        elif self.filename != '':
+            rib.RiReadArchive(self.filename)
         else:
             for shdr in self.shaders: 
                 shdr.render(rib, **kwargs)

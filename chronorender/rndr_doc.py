@@ -49,7 +49,8 @@ class RndrDoc():
         if not self.settings:
             raise RndrDocException('no ' + RenderSettings.getTypeName() 
                     + ' found in metadata')
-        self.assetfinder = Finder(self.settings._searchpaths)
+        self.assetfinder = Finder(self.settings._searchpaths, 
+                relative=os.path.split(md.filename)[0])
 
         self._initRenderables(factories, md)
         self._resolveAssets()

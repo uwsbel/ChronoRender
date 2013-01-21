@@ -36,7 +36,7 @@ class RndrJob():
     def setOutputPath(self, path):
         self._outputpath = path
 
-    def getOutputPath(self, typename=""):
+    def getSpecificOutputPath(self, typename=""):
         if typename == "":
             return self._outputpath
         else: 
@@ -64,13 +64,13 @@ class RndrJob():
             filename, ext = os.path.splitext(asset)
 
             if ext == ".sl":
-                shutil.copy2(asset, self.getOutputPath('shader'))
+                shutil.copy2(asset, self.getSpecificOutputPath('shader'))
             elif ext == ".py":
-                shutil.copy2(asset, self.getOutputPath('script'))
+                shutil.copy2(asset, self.getSpecificOutputPath('script'))
             elif ext == ".rib":
-                shutil.copy2(asset, self.getOutputPath('archive'))
+                shutil.copy2(asset, self.getSpecificOutputPath('archive'))
             elif imghdr.what(asset) != none:
-                shutil.copy2(asset, self.getOutputPath('texture'))
+                shutil.copy2(asset, self.getSpecificOutputPath('texture'))
         return
 
     def run(self):

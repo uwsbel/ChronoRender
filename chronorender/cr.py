@@ -1,36 +1,38 @@
-import inspect
-import chronorender.plugins as pm
-import factory
-import rndr_job as rndrjob
-import factorydict as fdict
-import cr_object
+import inspect, os, shutil
 
-from ribgenerator import RIBGenerator
-from chronorender.camera import Camera
-from chronorender.data import DataObject
+import chronorender.plugins as pm
+import chronorender.factory as factory
+import chronorender.rndr_job as rndrjob
+import chronorender.factorydict as fdict
+import chronorender.cr_object as cr_object
 import chronorender.dataprocess as dp
 import chronorender.datasource as ds
-import geometry as geo
+import chronorender.geometry as geo
+import chronorender.renderpass as rp
+import chronorender.attribute as attr
+import chronorender.cr_utils as cr_utils
+
+from chronorender.camera import Camera
+from chronorender.data import DataObject
 from chronorender.lighting import Lighting
 from chronorender.renderobject import RenderObject
-
-import chronorender.renderpass as rp
 from chronorender.rendersettings import RenderSettings
 from chronorender.scene import Scene
 from chronorender.simulation import Simulation
 from chronorender.shader import Shader
 from chronorender.visualizer import Visualizer
 from cr_scriptable import Scriptable
-import chronorender.attribute as attr
 
 class ChronoRender():
-    def __init__(self):
-        self._plugins           = pm.PluginManager()
-        self._factories         = fdict.FactoryDict()
+    def __init__(self, plugins=True):
         self._jobs              = []
 
-        self._initPlugins()
-        self._initFactories()
+        if  plugins:
+            self._plugins           = pm.PluginManager()
+            self._factories         = fdict.FactoryDict()
+
+            self._initPlugins()
+            self._initFactories()
 
     def _initPlugins(self):
         self._plugins.loadPlugins()
@@ -77,6 +79,18 @@ class ChronoRender():
 
     def getFactories(self, typename):
         return self._factories.getFactory(typename)
+
+    def generateRenderJobToDisk(self, dest):
+        defaultmd = cr_utils.getAbsPathRelativeToModule(ChronoRender, './assets/default.yml')
+        job = self._createRenderJob(defaultmd)
+
+        outpath = os.path.join(dest, "RENDERMAN")
+
+        job.setOutputPath(outpath)
+        job.createOutDirs()
+        job.makeAssetsRelative()
+
+        shutil.copy2(defaultmd, outpath)
 
     def createAndRunRenderJob(self, inxml):
         job = self._createRenderJob(inxml)

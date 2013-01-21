@@ -82,6 +82,7 @@ class DataObject(Object):
 
     def _initCrossSrcFields(self):
         for srclist in self._datasrcs:
+            if len(srclist) <= 0: continue
             src = srclist[0]
             if hasattr(src, 'fields'):
                 for field in src.fields:
