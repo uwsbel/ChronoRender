@@ -92,16 +92,23 @@ class ChronoRender():
 
         shutil.copy2(defaultmd, outpath)
 
-    def createAndRunRenderJob(self, inxml):
-        job = self._createRenderJob(inxml)
+    def updateJobAssets(self, mdfile):
+        job = self._createRenderJob(mdfile)
+        dest = os.path.abspath(os.path.split(mdfile)[0])
+
+        job.setOutputPath(dest)
+        job.updateAssets()
+
+    def createAndRunRenderJob(self, mdfile):
+        job = self._createRenderJob(mdfile)
         job.run()
 
-    def createAndSubmitRenderJob(self, inxml):
-        job = self._createRenderJob(inxml)
+    def createAndSubmitRenderJob(self, mdfile):
+        job = self._createRenderJob(mdfile)
         self._submitRenderJob(job)
 
-    def _createRenderJob(self, inxml):
-        return rndrjob.RndrJob(inxml, self._factories)
+    def _createRenderJob(self, mdfile):
+        return rndrjob.RndrJob(mdfile, self._factories)
 
     def _submitRenderJob(self, job):
         return

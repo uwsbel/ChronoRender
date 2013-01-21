@@ -53,7 +53,7 @@ class RndrDoc():
                 relative=os.path.split(md.filename)[0])
 
         self._initRenderables(factories, md)
-        self._resolveAssets()
+        self.resolveAssets()
         self._addRenderablesToRenderPasses()
 
     def _initRenderables(self, factories, md):
@@ -66,7 +66,7 @@ class RndrDoc():
                     else:
                         self.renderables.append(obj)
 
-    def _resolveAssets(self):
+    def resolveAssets(self):
         try:
             for obj in self.renderables:
                 self.assetpaths.extend(obj.resolveAssets(self.assetfinder))
@@ -75,6 +75,7 @@ class RndrDoc():
 
         # get rid of duplicates
         self.assetpaths = list(set(self.assetpaths))
+        return self.assetpaths
 
     def _addRenderablesToRenderPasses(self):
         for rpass in self.rndrpasses:

@@ -61,17 +61,40 @@ class RndrJob():
 
     def makeAssetsRelative(self):
         for asset in self._rndrdoc.assetpaths:
-            filename, ext = os.path.splitext(asset)
+            if not os.path.exists(asset):
+                self._copyAssetToDirectory(asset)
 
-            if ext == ".sl":
-                shutil.copy2(asset, self.getSpecificOutputPath('shader'))
-            elif ext == ".py":
-                shutil.copy2(asset, self.getSpecificOutputPath('script'))
-            elif ext == ".rib":
-                shutil.copy2(asset, self.getSpecificOutputPath('archive'))
-            elif imghdr.what(asset) != none:
-                shutil.copy2(asset, self.getSpecificOutputPath('texture'))
-        return
+    def updateAssets(self):
+        paths = self._rndrdoc.resolveAssets()
+        currassets = self._getCurrentAssets()
+        for path in paths:
+            if path not in currassets:
+                self._copyAssetToDirectory(path)
+
+    def _copyAssetToDirectory(self, asset):
+        filename, ext = os.path.splitext(asset)
+        if ext == ".sl":
+            shutil.copy2(asset, self.getSpecificOutputPath('shader'))
+        elif ext == ".py":
+            shutil.copy2(asset, self.getSpecificOutputPath('script'))
+        elif ext == ".rib":
+            shutil.copy2(asset, self.getSpecificOutputPath('archive'))
+        elif imghdr.what(asset) != none:
+            shutil.copy2(asset, self.getSpecificOutputPath('texture'))
+
+    def _getCurrentAssets(self):
+        out = []
+        out.extend(self._dirWalkToList(self.getSpecificOutputPath('shader')))
+        out.extend(self._dirWalkToList(self.getSpecificOutputPath('script')))
+        out.extend(self._dirWalkToList(self.getSpecificOutputPath('archive')))
+        out.extend(self._dirWalkToList(self.getSpecificOutputPath('texture')))
+        return out
+
+    def _dirWalkToList(self, path):
+        out = []
+        for root, dirs, files in os.walk(path):
+            out.extend([os.path.join(root,f) for f in files])
+        return out
 
     def run(self):
         self.createOutDirs()
