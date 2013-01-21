@@ -61,8 +61,7 @@ class RndrJob():
 
     def makeAssetsRelative(self):
         for asset in self._rndrdoc.assetpaths:
-            if not os.path.exists(asset):
-                self._copyAssetToDirectory(asset)
+            self._copyAssetToDirectory(asset)
 
     def updateAssets(self):
         paths = self._rndrdoc.resolveAssets()
