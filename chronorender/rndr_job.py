@@ -28,7 +28,7 @@ class RndrJob():
                                 'log':  'LOG',
                                 'texture' : 'TEXTURES'
                                 }
-        self.assetfinder    = FinderFactory.build(self._rndrdoc.getSearchPaths(), os.path.split(self._metadata.filename)[0])
+        self._relative       = False
 
         self._logfilename   = os.path.join(os.path.join(self._outputpath, 'LOG'), 'log_' + str(self._timecreated) + '.log')
         self._logger        = None
@@ -66,8 +66,10 @@ class RndrJob():
         # self._openLogFile()
         prevdir = os.getcwd()
         os.chdir(self._outputpath)
-        self._rndrdoc.resolveAssets(self.assetfinder)
-        self._rndrdoc.outdir = self._outputdirs['output']
+        self._rndrdoc.resolveAssets(self._createAssetFinder())
+        self._rndrdoc.outdir = self._outputdirs['output'] if self._relative \
+                else self.getSpecificOutputPath('output')
+        self._outputpath
         self._startRenderer()
         for i in range(self._frames[0], self._frames[1]+1):
             name = self._rndrdoc.getOutputFilePath(i)
@@ -87,7 +89,7 @@ class RndrJob():
     def updateAssets(self):
         prevdir = os.getcwd()
         os.chdir(self._outputpath)
-        paths = self._rndrdoc.resolveAssets(self.assetfinder)
+        paths = self._rndrdoc.resolveAssets(self._createAssetFinder())
         currassets = self._getCurrentAssets()
         for path in paths:
             if path not in currassets:
@@ -96,7 +98,6 @@ class RndrJob():
 
     def _copyAssetToDirectory(self, asset):
         filename, ext = os.path.splitext(asset)
-
         try:
             if ext == ".sl":
                 shutil.copy2(asset, self.getSpecificOutputPath('shader'))
@@ -139,6 +140,11 @@ class RndrJob():
 
     def _closeLogFile(self):
         self._logger.close()
+
+    def _createAssetFinder(self):
+        if self._relative:
+            return FinderFactory.build(self._rndrdoc.getSearchPaths(), os.path.split(self._metadata.filename)[0])
+        return FinderFactory.build(self._rndrdoc.getSearchPaths())
 
     def _startRenderer(self, outstream=''):
         # self._writeToLog('starting renderer')
