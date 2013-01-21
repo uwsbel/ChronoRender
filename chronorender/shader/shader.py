@@ -1,7 +1,7 @@
 from cr_renderable import Renderable, RenderableException
-import slparams
 import os
 from chronorender.finder import FinderFactory
+import chronorender.rsl as rsl
 
 class ShaderException(Exception):
     def __init__(self, value):
@@ -44,7 +44,7 @@ class Shader(Renderable):
         self._constructParameterDict()
 
     def _parseShaderParameters(self):
-        self._shdrparams = slparams.slparams(self._shdrpath)
+        self._shdrparams = rsl.slparams(self._shdrpath)
         if len(self._shdrparams) <= 0:
             raise ShaderException('no shaders in source file: ' +
                     self.getMember('name'))
@@ -52,7 +52,7 @@ class Shader(Renderable):
     def _convertDefaultsToPythonTypes(self):
         for shader in self._shdrparams:
             for param in shader.params:
-                param.default = slparams.convertdefault(param)
+                param.default = rsl.convertdefault(param)
 
     def _initFirstShader(self):
         self._firstshdr = self._shdrparams[0]
