@@ -25,7 +25,7 @@ class RndrJob():
 
         self._renderer      = None
 
-    def run(self):
+    def run(self, stream=''):
         self._assetman.createOutDirs()
         # self._openLogFile()
         prevdir = os.getcwd()
@@ -34,7 +34,7 @@ class RndrJob():
                 self._assetman.getOutPathFor('output'))
         # self._rndrdoc.outdir = self._assetman.getOutPathFor('output')
 
-        self._startRenderer()
+        self._startRenderer(stream)
         self._renderOptions()
         for i in range(self._frames[0], self._frames[1]+1):
             name = self._rndrdoc.getOutputFilePath(i)
@@ -71,7 +71,7 @@ class RndrJob():
 
     def _startRenderer(self, outstream=''):
         # self._writeToLog('starting renderer')
-        self._renderer = ri.RiStream(outstream)
+        self._renderer = ri.loadRi(outstream)
         # self._renderer = ri.loadRI("ri")
 
     # def _writeToLog(self, content):

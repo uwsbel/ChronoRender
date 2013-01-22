@@ -105,9 +105,9 @@ class ChronoRender():
         job.setOutputPath(dest)
         job.updateAssets()
 
-    def createAndRunRenderJob(self, mdfile):
+    def createAndRunRenderJob(self, mdfile, stream=''):
         job = self._createRenderJob(mdfile)
-        job.run()
+        job.run(stream)
 
     def createAndSubmitRenderJob(self, mdfile):
         job = self._createRenderJob(mdfile)

@@ -12,6 +12,9 @@ def main():
     parser.add_argument('-m', '--metadata', help='the data file that contains the \
             render job info', required=False)
 
+    parser.add_argument('-r', '--renderer', help='which renderer to use, dumps\
+    to stdout by default',required=False)
+
     parser.add_argument('-o', '--outpath', help='used with init, where to \
             generate the render files; cwd if not set', required=False)
 
@@ -34,8 +37,11 @@ def initNewRenderJob(args):
 
 def startLocalRenderJob(args):
     md = verifyMetadata(args)
+
+    stream = args['renderer'] if 'renderer' in args else ''
+
     cr = chronorender.cr.ChronoRender()
-    cr.createAndRunRenderJob(md)
+    cr.createAndRunRenderJob(md, stream)
 
 def startDistributedJob(args):
     md = verifyMetadata(args)
