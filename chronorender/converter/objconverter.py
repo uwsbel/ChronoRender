@@ -5,7 +5,7 @@ try:
 except ImportError:
     import chronrender.thirdparty.cgkit as cgkit
 
-from cgkit.objimport import *
+from cgkit.objimport import OBJImporter
 
 class OBJConverter(CGKitConverter):
     def __init__(self, src):
