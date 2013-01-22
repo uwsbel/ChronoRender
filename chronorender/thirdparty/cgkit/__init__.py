@@ -129,7 +129,7 @@ if cgkitinfo.cgkit_light:
 ##from joints import HingeJoint
 
 ### Camera/light
-##from targetcamera import TargetCamera
+from targetcamera import TargetCamera
 ##from freecamera import FreeCamera
 ##from lookat import LookAt
 ##from glpointlight import GLPointLight

@@ -3,7 +3,9 @@ from converter import Converter
 try:
     import cgkit
 except ImportError:
-    import chronrender.thirdparty.cgkit as cgkit
+    import chronorender.thirdparty.cgkit
+    cgkit = chronorender.thirdparty.cgkit
+    print "cgkit", cgkit
 
 from cgkit.targetcamera import TargetCamera
 from cgkit.pluginmanager import *
