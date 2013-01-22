@@ -40,9 +40,11 @@ chronorender:
               condition: "id >= 0"
               color: "0.4 0.4 0.1"
               geometry:
-                  - type: "sphere"
-                    radius: 0.888
-                    dims: 0.5 7.7
+                    - type: "file"
+                      filename: "../../../files/goom.obj"
+                    - type: "sphere" 
+                      radius: 0.888
+                      dims: 0.5 7.7
               shader:
                   - name: "plastic.sl"
                     Kd: 999

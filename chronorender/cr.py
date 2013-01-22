@@ -53,6 +53,7 @@ class ChronoRender():
 
         self._createFactory(geo.Geometry)
         self._addFactoryModule(geo.Geometry, geo.Sphere)
+        self._addFactoryModule(geo.Geometry, geo.File)
 
         self._createFactory(Lighting)
         self._createFactory(RenderObject)

@@ -170,7 +170,8 @@ class CRenderRIBExporter(RIBExporter):
         if not os.path.exists(self.geom_path):
             os.mkdir(self.geom_path)
             
-        RiBegin(os.path.join(self.geom_path,filename))
+        outfile = os.path.join(self.geom_path, filename)
+        RiBegin(outfile)
 
         # RiOption("searchpath", "shader", "%s:&"%self.shader_path)
         # RiOption("searchpath", "archive", "%s:&"%self.geom_path)
@@ -201,7 +202,7 @@ class CRenderRIBExporter(RIBExporter):
             rpass._done = True
 
         RiEnd()
-        return self.geom_path
+        return outfile
 
     ## protected:
 ######################################################################
