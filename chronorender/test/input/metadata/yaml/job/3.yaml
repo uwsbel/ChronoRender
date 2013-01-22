@@ -18,9 +18,6 @@ chronorender:
             resolution: 640 480
             display: 
                 output: "gorb.tif"
-          attribute:
-            - name: "visibility"
-              int diffuse: 1
     simulation:
         data:
             datasource:
@@ -48,9 +45,6 @@ chronorender:
               shader:
                   - name: "plastic.sl"
                     Kd: 999
-              attribute:
-                  - name: "trace"
-                    float bias: 0.005
             - name: "gorb"
               condition: "id >= 0"
               color: "0.4 0.4 0.1"

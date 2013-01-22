@@ -72,6 +72,7 @@ class RndrJob():
     def _startRenderer(self, outstream=''):
         # self._writeToLog('starting renderer')
         self._renderer = ri.RiStream(outstream)
+        # self._renderer = ri.loadRI("ri")
 
     # def _writeToLog(self, content):
         # self._logger.info('starting render ' + name + ' at: ' + str(datetime.datetime.now()))
