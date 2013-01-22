@@ -5,9 +5,9 @@ try:
 except ImportError:
     import chronrender.thirdparty.cgkit as cgkit
 
-from cgkit.objimport import *
+from cgkit.dddsimport import *
 
-class OBJConverter(CGKitConverter):
+class DDDSConverter(CGKitConverter):
     def __init__(self, src):
-        super(OBJConverter, self).__init__(src)
-        self._reader = OBJImporter()
+        super(DDSConverter, self).__init__(src)
+        self._reader = DDSImporter()

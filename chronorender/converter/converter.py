@@ -1,13 +1,8 @@
 
 class Converter(object):
-    def __init__(self):
+    def __init__(self, src):
+        self._src = src
         return
 
-    def convert(self, src, dest):
+    def convert(self, dest):
         return
-
-    def _importFile(self, filein):
-        return
-
-    def _exportFile(self, dest):
-        return ""

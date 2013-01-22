@@ -5,9 +5,9 @@ try:
 except ImportError:
     import chronrender.thirdparty.cgkit as cgkit
 
-from cgkit.objimport import *
+from cgkit.plyimport import *
 
-class OBJConverter(CGKitConverter):
+class PLYConverter(CGKitConverter):
     def __init__(self, src):
-        super(OBJConverter, self).__init__(src)
-        self._reader = OBJImporter()
+        super(PLYConverter, self).__init__(src)
+        self._reader = PLYImporter()
