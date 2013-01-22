@@ -30,8 +30,9 @@ class RndrJob():
         # self._openLogFile()
         prevdir = os.getcwd()
         os.chdir(self._assetman.outputpath)
-        self._rndrdoc.resolveAssets(self._assetman.createAssetFinder(self._rndrdoc))
-        self._rndrdoc.outdir = self._assetman.getOutPathFor('output')
+        self._rndrdoc.resolveAssets(self._assetman.createAssetFinder(self._rndrdoc), 
+                self._assetman.getOutPathFor('output'))
+        # self._rndrdoc.outdir = self._assetman.getOutPathFor('output')
 
         self._startRenderer()
         self._renderOptions()

@@ -201,6 +201,7 @@ class CRenderRIBExporter(RIBExporter):
             rpass._done = True
 
         RiEnd()
+        return self.geom_path
 
     ## protected:
 ######################################################################

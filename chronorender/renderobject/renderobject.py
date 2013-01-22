@@ -55,13 +55,13 @@ class RenderObject(Movable):
         idata = iter(self.data)
         return dict(izip(idata, ientry))
 
-    def resolveAssets(self, finder):
+    def resolveAssets(self, finder, outpath):
         # TODO anythin?
         out = []
         for geo in self.geometry:
-            out.extend(geo.resolveAssets(finder))
+            out.extend(geo.resolveAssets(finder, outpath))
         for shdr in self.shaders:
-            out.extend(shdr.resolveAssets(finder))
+            out.extend(shdr.resolveAssets(finder, outpath))
         self._resolvedAssetPaths = True
         return out
 

@@ -14,7 +14,7 @@ class SimulationTestCase(unittest.TestCase):
         data = meta.singleFromType(sim.Simulation)
         self._sim = sim.Simulation(factories=self._cr._factories, **data)
         finder = FinderFactory.build(['./input'])
-        self._sim.resolveAssets(finder)
+        self._sim.resolveAssets(finder, './output')
 
     def tearDown(self):
         del self._cr

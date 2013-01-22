@@ -11,7 +11,7 @@ class LightingTestCase(unittest.TestCase):
         meta = MetaData('./input/metadata/yaml/3.yaml')
         data = meta.singleFromType(Lighting)
         light = Lighting(**data)
-        light.resolveAssets(finder)
+        light.resolveAssets(finder, './output')
         ri = RiStream('str')
         light.render(ri)                   
         print ri.getText()

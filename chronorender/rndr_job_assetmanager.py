@@ -36,7 +36,7 @@ class RndrJobAssetManager(object):
     def updateAssets(self, rndrdoc):
         prevdir = os.getcwd()
         os.chdir(self.outputpath)
-        paths = rndrdoc.resolveAssets(self.createAssetFinder(rndrdoc))
+        paths = rndrdoc.resolveAssets(self.createAssetFinder(rndrdoc), self.outputpath)
         currassets = self._getCurrentAssets()
         for path in paths:
             if path not in currassets:

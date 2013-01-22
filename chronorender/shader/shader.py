@@ -31,7 +31,7 @@ class Shader(Renderable):
             if not os.path.isfile(shdrpath):
                 raise ShaderException(shdrpath + " is not a shader file")
             path, self._filename = os.path.split(shdrpath)
-            self.resolveAssets(FinderFactory.build([path]))
+            self.resolveAssets(FinderFactory.build([path]), shdrpath)
 
     def _initMembersDict(self):
         super(Shader, self)._initMembersDict()
@@ -79,7 +79,7 @@ class Shader(Renderable):
     def getParameters(self):
         return self._paramdict
 
-    def resolveAssets(self, finder):
+    def resolveAssets(self, finder, outpath):
         self._shdrpath = finder.find(self._filename)
         self._initShaderParameters()
         self._resolvedAssetPaths = True

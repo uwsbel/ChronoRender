@@ -17,10 +17,10 @@ class Scene(Movable):
         self._members['filename']           = [str, 'default.rib']
         self._members[Scriptable.getTypeName()] = [Scriptable, None]
 
-    def resolveAssets(self, finder):
+    def resolveAssets(self, finder, outpath):
         out = []
         if self.script:
-            out.extend(self.script.resolveAssets(finder))
+            out.extend(self.script.resolveAssets(finder, outpath))
         elif self.filename != '':
             out.append(finder.find(self.filename))
         self._resolvedAssetPaths = True

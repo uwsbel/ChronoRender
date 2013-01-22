@@ -8,7 +8,7 @@ class ShaderTestCase(unittest.TestCase):
     def setUp(self):
         self.sdr = cr.Shader(name='plastic.sl')
         fine = FinderFactory.build(['./input/shaders'])
-        self.sdr.resolveAssets(fine)
+        self.sdr.resolveAssets(fine, './output')
 
     def tearDown(self):
         del self.sdr

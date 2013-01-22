@@ -61,7 +61,7 @@ class RenderPass(Renderable):
     def getName(self):
         return self.rndrsettings.name
 
-    def resolveAssets(self, finder):
+    def resolveAssets(self, finder, outpath):
         self._resolvedAssetPaths = True
         return []
 

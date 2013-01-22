@@ -33,13 +33,13 @@ class Simulation(Movable):
                 data = self._data.getData(framenumber, robj.condition)
                 robj.render(ri, data, *args, **kwargs)
 
-    def resolveAssets(self, finder):
+    def resolveAssets(self, finder, outpath):
 
         self._data.resolveSources()
 
         out = []
         for robj in self._robjs:
-            out.extend(robj.resolveAssets(finder))
+            out.extend(robj.resolveAssets(finder, outpath))
         self._resolvedAssetPaths = True
         return out
 

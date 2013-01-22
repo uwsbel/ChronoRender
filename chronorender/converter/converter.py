@@ -5,4 +5,4 @@ class Converter(object):
         return
 
     def convert(self, dest):
-        return
+        return ""

@@ -60,10 +60,11 @@ class RndrDoc():
             for robj in self.renderables:
                 rpass.addRenderable(robj)
 
-    def resolveAssets(self, finder):
+    def resolveAssets(self, finder, outpath):
+        self.outdir = outpath
         try:
             for obj in self.renderables:
-                self.assetpaths.extend(obj.resolveAssets(finder))
+                self.assetpaths.extend(obj.resolveAssets(finder, outpath))
         except AssetNotFoundException as err:
             print err
 

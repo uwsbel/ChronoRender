@@ -23,6 +23,10 @@ class RndrJobTestCase(unittest.TestCase):
             os.chdir(currdir)
 
     def test_instantiateOnDisk(self):
+        currdir = os.getcwd()
         job = cr.RndrJob(self.infile, self._cr._factories)
-        job.createOutDirs()
-        job.makeAssetsRelative()
+        try:
+            job.createOutDirs()
+            job.makeAssetsRelative()
+        finally:
+            os.chdir(currdir)

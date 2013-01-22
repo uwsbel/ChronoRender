@@ -51,9 +51,5 @@ class RenderSettings(Object):
         # filename = os.path.split(self._out)[1]
         # self._padding = len(re.findall('#+', filename)[-1])
 
-    def resolveAssets(self, finder):
-        self._resolvedAssetPaths = True
-        return []
-
 def build(**kwargs):
     return RenderSettings(**kwargs)

@@ -20,9 +20,9 @@ class RndrDocTestCase(unittest.TestCase):
 
     # TODO
     def test_resolveAssets(self):
-        self.doc.resolveAssets(self.finder)
+        self.doc.resolveAssets(self.finder, './output')
 
     def test_render(self):
-        self.doc.resolveAssets(self.finder)
+        self.doc.resolveAssets(self.finder, './output')
         ri = RiStream('str')
         self.doc.render(ri, 0)

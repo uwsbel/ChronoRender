@@ -17,7 +17,12 @@ class CGKitConverter(Converter):
 
     def convert(self, dest):
         self._reader.importFile(self._src)
-        self._exporter.exportFile(dest)
+        out = self._exporter.exportFile(dest)
+
+        self._cleanup()
+        return out
+
+    def _cleanup(self):
         del self._reader
         del self._exporter
         del self._dummy

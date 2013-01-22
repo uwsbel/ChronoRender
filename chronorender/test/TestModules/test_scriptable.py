@@ -10,7 +10,7 @@ class ScriptableTestCase(unittest.TestCase):
         meta = MetaData('./input/metadata/yaml/3.yaml')
         data = meta.singleFromType(Camera)
         cam = Camera(**data)
-        cam.resolveAssets(finder)
+        cam.resolveAssets(finder, './output')
         cam.render(None)                   
 
     def test_script(self):
@@ -18,5 +18,5 @@ class ScriptableTestCase(unittest.TestCase):
         scry = Scriptable(file="camera_script.py", function="render")
         cam = Camera()
         cam.script = scry
-        cam.resolveAssets(finder)
+        cam.resolveAssets(finder, './output')
         cam.render(None)                   

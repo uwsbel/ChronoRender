@@ -31,7 +31,7 @@ class Renderable(Object):
     def getInstanceables(self):
         return []
 
-    def resolveAssets(self, searchpaths):
+    def resolveAssets(self, finder, outpath):
         self._resolvedAssetPaths = True
         return  []
 

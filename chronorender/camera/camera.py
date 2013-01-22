@@ -17,10 +17,10 @@ class Camera(Movable):
         self._members['filename']   = [str, '']
         self._members[Scriptable.getTypeName()] = [Scriptable, None]
 
-    def resolveAssets(self, finder):
+    def resolveAssets(self, finder, outpath):
         out = []
         if self.script:
-            out.extend(self.script.resolveAssets(finder))
+            out.extend(self.script.resolveAssets(finder, outpath))
         elif self.filename != '':
             self.filename = finder.find(self.filename)
             out.append(self.filename)

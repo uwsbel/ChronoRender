@@ -10,7 +10,7 @@ class CameraTestCase(unittest.TestCase):
         meta = MetaData('./input/metadata/yaml/3.yaml')
         data = meta.singleFromType(Camera)
         cam = Camera(**data)
-        cam.resolveAssets(finder)
+        cam.resolveAssets(finder, './output')
         ri = RiStream('str')
         cam.render(ri)                   
         print ri.getText()

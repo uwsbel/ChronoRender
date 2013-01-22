@@ -21,16 +21,16 @@ class Geometry(Movable):
         super(Geometry, self)._initMembersDict()
         self._members[Scriptable.getTypeName()] = [Scriptable, None]
 
+    def resolveAssets(self, finder, outpath):
+        out = []
+        if self.script:
+            out.extend(self.script.resolveAssets(finder, outpath))
+        self._resolvedAssetPaths = True
+        return out
+
     def render(self, rib, *args, **kwargs):
         if self.script:
             self.script.render(rib, *args, **kwargs)
-
-    def resolveAssets(self, finder):
-        out = []
-        if self.script:
-            out.extend(self.script.resolveAssets(finder))
-        self._resolvedAssetPaths = True
-        return out
 
 def build(**kwargs):
     return Geometry(**kwargs)
