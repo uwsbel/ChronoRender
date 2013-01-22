@@ -3,7 +3,7 @@
 
 import types, re
 import ri_utils
-# import ri
+import ri
 # from cgtypes import vec3
 try:
     import ctypes
