@@ -71,7 +71,8 @@ class RndrJob():
 
     def _startRenderer(self, outstream=''):
         # self._writeToLog('starting renderer')
-        self._renderer = ri.loadRi(outstream)
+        # self._renderer = ri.loadRi(outstream)
+        self._renderer = ri.RiStream('str')
         # self._renderer = ri.loadRI("ri")
 
     # def _writeToLog(self, content):

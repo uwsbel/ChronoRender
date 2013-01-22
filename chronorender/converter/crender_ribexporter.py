@@ -87,14 +87,16 @@ class CRenderRIBExporter(RIBExporter):
 
             # Check if the object is a light source
             try:
-                explgt = protocols.adapt(obj, ILightSource)
-                self.lights.append(obj)
+                # TODO NOT WORKING!!!
+                pass 
+                # explgt = protocols.adapt(obj, ILightSource)
+                # self.lights.append(obj)
                 # Create the RenderPass objects required for this light
-                lgtpasses = explgt.createPasses()
-                lgtpasses = self.makePassOutputUnique(lgtpasses)
-                if lgtpasses!=[]:
-                    self.light_passes[obj] = lgtpasses
-                    passes += lgtpasses
+                # lgtpasses = explgt.createPasses()
+                # lgtpasses = self.makePassOutputUnique(lgtpasses)
+                # if lgtpasses!=[]:
+                    # self.light_passes[obj] = lgtpasses
+                    # passes += lgtpasses
             except NotImplementedError:
                 # TODO: Use protocols instead of isinstance()
                 if isinstance(obj, lightsource.LightSource):

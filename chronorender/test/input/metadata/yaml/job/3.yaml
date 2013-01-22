@@ -1,6 +1,6 @@
 chronorender:
     rendersettings:
-        searchpaths: "./:../../../../../assets:./:../../../"
+        searchpaths: "./:../../../../../assets:../../../"
         framerange: 2 2
     camera:
         script:
