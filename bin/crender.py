@@ -40,6 +40,7 @@ def startLocalRenderJob(args):
 
     stream = args['renderer'] if 'renderer' in args else ''
 
+    print stream
     cr = chronorender.cr.ChronoRender()
     cr.createAndRunRenderJob(md, stream)
 
