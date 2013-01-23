@@ -1,4 +1,4 @@
-import datetime, os, logging
+import datetime, os, logging, subprocess, glob
 
 import chronorender.metadata as md
 import rndr_doc as rd
@@ -25,16 +25,17 @@ class RndrJob():
 
         self._renderer      = None
 
-    def run(self, stream=''):
+    def run(self, renderer=None):
         self._assetman.createOutDirs()
         # self._openLogFile()
         prevdir = os.getcwd()
         os.chdir(self._assetman.outputpath)
         self._rndrdoc.resolveAssets(self._assetman.createAssetFinder(self._rndrdoc), 
                 self._assetman.getOutPathFor('output'))
+        self.compileShaders(renderer)
         # self._rndrdoc.outdir = self._assetman.getOutPathFor('output')
 
-        self._startRenderer(stream)
+        self._startRenderer(ri.rmanlibutil.libFromRenderer(renderer))
         self._renderOptions()
         for i in range(self._frames[0], self._frames[1]+1):
             name = self._rndrdoc.getOutputFilePath(i)
@@ -43,6 +44,25 @@ class RndrJob():
             # self._writeToLog('finished render ' + name + ' at: ' + str(datetime.datetime.now()))
         # self._closeLogFile()
         os.chdir(prevdir)
+
+    def compileShaders(self, renderer=None):
+        if renderer == None:
+            return
+
+        sdrc = ri.rmanlibutil.sdrcFromRenderer(renderer)
+
+        if sdrc == None:
+            return
+
+        prevdir = os.getcwd()
+        try:
+            os.chdir(self._assetman.getOutPathFor('shader'))
+            shdrs = glob.glob('./*.sl')
+            prog = [sdrc]
+            prog.extend(shdrs)
+            subprocess.call(prog)
+        finally:
+            os.chdir(prevdir)
 
     def _renderOptions(self):
         self._renderer.RiOption("searchpath", "shader",
@@ -69,10 +89,9 @@ class RndrJob():
     def copyAssetToDirectory(self, asset):
         self._assetman._copyAssetToDirectory(asset)
 
-    def _startRenderer(self, outstream=''):
+    def _startRenderer(self, libName=None):
         # self._writeToLog('starting renderer')
-        self._renderer = ri.loadRI(outstream)
-        #self._renderer = ri.RiStream('str')
+        self._renderer = ri.loadRI(libName)
 
     # def _writeToLog(self, content):
         # self._logger.info('starting render ' + name + ' at: ' + str(datetime.datetime.now()))

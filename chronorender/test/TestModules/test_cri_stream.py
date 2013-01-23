@@ -3,7 +3,7 @@ import chronorender.ri as ri
 
 class CRiStreamTestCase(unittest.TestCase):
     def setUp(self):
-        self.ri = ri.loadRI("ri")
+        self.ri = ri.loadRI("aqsis_core")
 
     def tearDown(self):
         del self.ri

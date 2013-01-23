@@ -36,6 +36,7 @@
 
 import sys, os, os.path
 import ctypes.util
+from chronorender.cr_utils import which
 
 def resolveRManLib(libName, renderer=None):
     """Resolve the given library name.
@@ -82,6 +83,33 @@ def resolveRManLib(libName, renderer=None):
 
     # Nothing found, then just return the original name
     return libName
+
+def resolveRManShdrc(renderer):
+    shdrc = sdrcFromRenderer(renderer)
+    return which(sdrc)
+
+def sdrcFromRenderer(name):
+    if name in ["aqsis"]:
+        return "aqsl"
+    elif name in ["pixie"]:
+        return "sdr"
+    elif name in ["3delight"]:
+        return ""
+    elif name in ["prman"]:
+        return "shader"
+
+    return None
+
+def libFromRenderer(name):
+    if name in ["aqsis"]:
+        return "aqsis_core"
+    elif name in ["pixie"]:
+        return "ri"
+    elif name in ["3delight"]:
+        return "3delight"
+    elif name in ["prman"]:
+        return "prman"
+    return None
 
 def rendererFromLib(libName):
     """Return the renderer package name given a library name.

@@ -14,7 +14,24 @@ class RndrJobTestCase(unittest.TestCase):
     def test_initJob(self):
         job = cr.RndrJob(self.infile, self._cr._factories)
 
-    def test_runJob(self):
+    # def test_runJob(self):
+        # currdir = os.getcwd()
+        # job = cr.RndrJob(self.infile, self._cr._factories)
+        # try:
+            # job.run()                           
+        # finally:
+            # os.chdir(currdir)
+
+    # def test_instantiateOnDisk(self):
+        # currdir = os.getcwd()
+        # job = cr.RndrJob(self.infile, self._cr._factories)
+        # try:
+            # job.createOutDirs()
+            # job.makeAssetsRelative()
+        # finally:
+            # os.chdir(currdir)
+
+    def test_runCriJob(self):
         currdir = os.getcwd()
         job = cr.RndrJob(self.infile, self._cr._factories)
         try:
@@ -22,11 +39,3 @@ class RndrJobTestCase(unittest.TestCase):
         finally:
             os.chdir(currdir)
 
-    def test_instantiateOnDisk(self):
-        currdir = os.getcwd()
-        job = cr.RndrJob(self.infile, self._cr._factories)
-        try:
-            job.createOutDirs()
-            job.makeAssetsRelative()
-        finally:
-            os.chdir(currdir)
