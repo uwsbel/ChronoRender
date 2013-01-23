@@ -92,6 +92,10 @@ class RndrJob():
     def _startRenderer(self, libName=None):
         # self._writeToLog('starting renderer')
         self._renderer = ri.loadRI(libName)
+        self._renderer.RiBegin(ri.RI_NULL)
+
+    def _stopRenderer(self):
+        self._renderer.RiEnd()
 
     # def _writeToLog(self, content):
         # self._logger.info('starting render ' + name + ' at: ' + str(datetime.datetime.now()))

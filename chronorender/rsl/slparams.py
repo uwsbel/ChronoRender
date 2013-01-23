@@ -55,7 +55,7 @@ import math, sl, simplecpp
 import _slparser
 from _slreturntypes import _ShaderInfo, _ShaderParam
 
-from cr_types import floatlist
+from cr_types import floatlist, floatlist3
 
 try:
     import sloargs
@@ -519,7 +519,7 @@ def convertdefault(paramtuple):
         # are returned as mat4.
         if typ in ["color", "point", "vector", "normal"]:
             # retType = cgtypes.vec3
-            retType = floatlist
+            retType = floatlist3
         elif typ=="matrix":
             # retType = cgtypes.mat4
             retType = floatlist
@@ -554,7 +554,8 @@ def convertdefault(paramtuple):
     elif typ=="color" or typ=="point" or typ=="vector" or typ=="normal":
         try:
             # res = map(lambda x: cgtypes.vec3(x), rawres)
-            res = map(lambda x: floatlist(x), rawres)
+
+            res = map(lambda x: floatlist3(x), rawres)
             # res = _splitlistargs(rawres)
         except:
             return None

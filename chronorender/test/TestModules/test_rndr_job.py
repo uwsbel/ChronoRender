@@ -35,7 +35,7 @@ class RndrJobTestCase(unittest.TestCase):
         currdir = os.getcwd()
         job = cr.RndrJob(self.infile, self._cr._factories)
         try:
-            job.run()                           
+            job.run('aqsis')                           
         finally:
             os.chdir(currdir)
 
