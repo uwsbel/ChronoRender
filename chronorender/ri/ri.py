@@ -1787,9 +1787,13 @@ def RiObjectBegin(*paramlist, **keyparams):
 
     # Check if the user provided a handle id...
     if RI_HANDLEID in keyparams:
-        objhandle = str(keyparams[RI_HANDLEID])
+        # objhandle = str(keyparams[RI_HANDLEID])
+        objhandle = keyparams[RI_HANDLEID]
         del keyparams[RI_HANDLEID]
-        _ribout.write('ObjectBegin "%s"\n'%objhandle)
+        if type(objhandle) == str or type(objhandle)==unicode:
+            _ribout.write('ObjectBegin "%s"\n'%objhandle)
+        else:
+            _ribout.write('ObjectBegin %d\n'%objhandle)
     else:
         _objecthandle+=1
         objhandle = _objecthandle

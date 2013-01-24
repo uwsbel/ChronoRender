@@ -15,9 +15,9 @@ class Lighting(Renderable):
 
     def _initMembersDict(self):
         super(Lighting, self)._initMembersDict()
-        self._members['filename']                   = [str, '']
-        self._members[Scriptable.getTypeName()] = [Scriptable, None]
-        self._members[cs.Shader.getTypeName()] = [cs.Shader, []]
+        self._members['filename']                 = [str, '']
+        self._members[Scriptable.getTypeName()]   = [Scriptable, None]
+        self._members[cs.Shader.getTypeName()]    = [cs.Shader, []]
 
     def resolveAssets(self, finder, outpath):
         out = []
@@ -27,8 +27,8 @@ class Lighting(Renderable):
         if self.script:
             out.extend(self.script.resolveAssets(finder, outpath))
         elif self.filename != '':
-            self.filename = finder.find(self.filename)
-            out.append(self.filename)
+            # self.filename = finder.find(self.filename)
+            out.append(finder.find(self.filename))
 
         self._resolvedAssetPaths = True
         return out

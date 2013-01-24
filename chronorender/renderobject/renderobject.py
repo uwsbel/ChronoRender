@@ -35,7 +35,7 @@ class RenderObject(Movable):
         super(RenderObject, self)._initMembersDict()
 
         self._members['motionblur']     = [bool, False]
-        self._members['instanced']      = [bool, True]
+        self._members['instanced']      = [bool, False]
         self._members['multiobject']    = [bool, False]
         self._members['color']          = [floatlist, [1,0,0]]
         self._members['range']          = [intlist, [-1,-1]]

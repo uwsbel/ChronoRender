@@ -66,13 +66,13 @@ class RndrJob():
 
     def _renderOptions(self):
         self._renderer.RiOption("searchpath", "shader",
-                self._assetman.getOutPathFor("shader"))
+                self._assetman.getOutPathFor("shader") + ":@")
         self._renderer.RiOption("searchpath", "procedural",
-                self._assetman.getOutPathFor("script"))
+                self._assetman.getOutPathFor("script") + ":@")
         self._renderer.RiOption("searchpath", "texture",
-                self._assetman.getOutPathFor("texture"))
+                self._assetman.getOutPathFor("texture") + ":@")
         self._renderer.RiOption("searchpath", "archive",
-                self._assetman.getOutPathFor("archive"))
+                self._assetman.getOutPathFor("archive") + ":@")
 
     def setOutputPath(self, path):
         self._assetman.outputpath = path
