@@ -36,6 +36,7 @@ class RndrJobTestCase(unittest.TestCase):
         job = cr.RndrJob(infile, self._cr._factories)
         try:
             job.run('aqsis')                           
+            # job.run()                           
         finally:
             os.chdir(currdir)
 

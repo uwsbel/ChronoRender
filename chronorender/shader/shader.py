@@ -70,6 +70,13 @@ class Shader(Renderable):
 
             self._paramdict[param.name] = val
 
+    def _getDeclParameterDict(self):
+        d = {}
+        for param in self._firstshdr.params:
+            val = self._paramdict[param.name]
+            d[param.type + ' ' + param.name] = val
+        return d
+
     def getShaderType(self):
         return self._firstshdr.type
 
@@ -91,18 +98,19 @@ class Shader(Renderable):
             vtype = type(self._paramdict[assetname])
             self._paramdict[assetname] = vtype(obj)
 
-    def render(self, rib, *arTs, **kwargs):
+    def render(self, rib, *args, **kwargs):
         stype = self.getShaderType()
+        rdict = self._getDeclParameterDict()
         if stype == 'surface':
-            rib.RiSurface(self.getShaderName(), **self.getParameters())
+            rib.RiSurface(self.getShaderName(), **rdict)
         elif stype == 'displacement':
-            rib.RiDisplacement(self.getShaderName(), **self.getParameters())
+            rib.RiDisplacement(self.getShaderName(), **rdict)
         elif stype == 'volume':
-            rib.RiVolume(self.getShaderName(), **self.getParameters())
+            rib.RiVolume(self.getShaderName(), **rdict)
         elif stype == 'light':
-            rib.RiLightSource(self.getShaderName(), **self.getParameters())
+            rib.RiLightSource(self.getShaderName(), **rdict)
         elif stype == 'imager':
-            rib.RiImager(self.getShaderName(), **self.getParameters())
+            rib.RiImager(self.getShaderName(), **rdict)
 
 def build(**kwargs):
     return Shader(**kwargs)

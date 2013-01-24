@@ -66,6 +66,9 @@ class RndrDoc():
             for obj in self.renderables:
                 paths = obj.resolveAssets(assetman)
                 self.assetpaths.extend(paths)
+            for rpass in self.rndrpasses:
+                paths = rpass.resolveAssets(assetman)
+                self.assetpaths.extend(paths)
         except AssetNotFoundException as err:
             print err
 

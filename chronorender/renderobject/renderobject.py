@@ -90,7 +90,7 @@ class RenderObject(Movable):
             self.renderShape(rib, **kwargs)
         rib.RiAttributeEnd()
 
-    def _renderTransformData(self, rib, record={}):
+    def _renderTransformData(self, rib, record={}, **kwargs):
         pos_x = record[cre.POS_X] if cre.POS_X in record else 0.0
         pos_y = record[cre.POS_Y] if cre.POS_X in record else 0.0
         pos_z = record[cre.POS_Z] if cre.POS_X in record else 0.0
