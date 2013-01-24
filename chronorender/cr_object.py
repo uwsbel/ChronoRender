@@ -139,3 +139,6 @@ class Object(object):
             self._params[name] = val
         else:
             raise ObjectException('no member ' + name + ' in ' + str(type(self)))
+
+    def addParameter(self, name, val):
+        self._params[name] = val

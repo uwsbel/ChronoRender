@@ -38,7 +38,6 @@ class Renderable(Object):
     def setAsset(self, assetname, obj):
         return
 
-
     def render(self, rib, *args, **kwargs):
         self.renderAttributes(rib)
 
@@ -49,4 +48,8 @@ class Renderable(Object):
     def renderShape(self, rib, rendershaders=True, **kwargs):
         return
 
-
+    def addAttribute(self, name, paramsdict):
+        attr = Attribute(name)
+        for key, val in paramsdict.iteritems():
+          attr.addParameter(key, val)
+        self.attributes.append(attr)

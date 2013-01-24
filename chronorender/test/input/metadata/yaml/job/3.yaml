@@ -11,7 +11,8 @@ chronorender:
     scene:
         - filename: "default_scene.rib"
     renderpass:
-        - name: "gorb"
+        - type: "raytrace"
+          name: "gorb"
           settings: 
             resolution: 640 480
             display: 

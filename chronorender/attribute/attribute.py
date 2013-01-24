@@ -5,9 +5,9 @@ class Attribute(Object):
     def getTypeName():
         return "attribute"
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, name=None, *args, **kwargs):
         super(Attribute,self).__init__(*args, **kwargs)
-        self._name = self.getMember('name')
+        self._name = name if name != None else self.getMember('name')
 
     def _initMembersDict(self):
         super(Attribute, self)._initMembersDict()
