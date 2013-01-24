@@ -60,11 +60,12 @@ class RndrDoc():
             for robj in self.renderables:
                 rpass.addRenderable(robj)
 
-    def resolveAssets(self, finder, outpath):
-        self.outdir = outpath
+    def resolveAssets(self, assetman):
+        self.outdir = assetman.getOutPathFor('output')
         try:
             for obj in self.renderables:
-                self.assetpaths.extend(obj.resolveAssets(finder, outpath))
+                paths = obj.resolveAssets(assetman)
+                self.assetpaths.extend(paths)
         except AssetNotFoundException as err:
             print err
 
@@ -91,12 +92,12 @@ class RndrDoc():
     def writeToFile(self, f):
         return
 
-    def render(self, rib, framenumber, *args, **kwargs):
+    def render(self, rib, framenum, *args, **kwargs):
         out = []
-        outpath = self.getOutputFilePath(framenumber)
-        for i in range(0, len(self.rndrpasses)):
-            rpass = self.rndrpasses[i]
-            rpass.render(rib, i, framenumber, outpath, **kwargs)
+        outpath = self.getOutputFilePath(framenum)
+        for passnum in range(0, len(self.rndrpasses)):
+            rpass = self.rndrpasses[passnum]
+            rpass.render(rib, passnum, framenum, outpath, **kwargs)
             for f in rpass.getOutputs():
                 out.append(outpath+f)
         return out

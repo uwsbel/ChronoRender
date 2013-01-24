@@ -4,5 +4,5 @@ class Converter(object):
         self._src = src
         return
 
-    def convert(self, dest):
+    def convert(self, dest, **kwargs):
         return ""

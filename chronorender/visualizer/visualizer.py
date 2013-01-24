@@ -15,10 +15,6 @@ class Visualizer(Renderable):
         super(Visualizer, self)._initMembersDict()
         self._members[Scriptable.getTypeName()] = [Scriptable, None]
 
-    def resolveAssets(self, finder, outpath):
-        self._resolvedAssetPaths = True
-        return []
-
     def render(self, rib, *args, **kwargs):
         if self.script:
             self.script.render(rib, *args, **kwargs)

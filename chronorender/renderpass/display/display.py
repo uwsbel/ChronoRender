@@ -28,13 +28,6 @@ class Display(Renderable):
     def getOutputs(self):
         return [self.output]
 
-    def resolveAssets(self, finder):
-        self._resolvedAssetPaths = True
-        return []
-
-    def setAsset(self, assetname, obj):
-        return
-
     def render(self, rib, outprefix, **kwargs):
         rib.RiDisplay(outprefix+self.output, self.outtype,self.mode)
 

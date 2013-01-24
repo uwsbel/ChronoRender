@@ -18,9 +18,9 @@ class CGKitConverter(Converter):
         self._exporter = CGKitConverter._linkRIBExporter()
         self._dummy = TargetCamera( pos = (3,2,2), target = (0,0,0))
 
-    def convert(self, dest):
+    def convert(self, dest, **kwargs):
         self._reader.importFile(self._src)
-        out = self._exporter.exportFile(dest)
+        out = self._exporter.exportFile(dest, **kwargs)
 
         self._cleanup()
         return out

@@ -19,16 +19,16 @@ class Lighting(Renderable):
         self._members[Scriptable.getTypeName()]   = [Scriptable, None]
         self._members[cs.Shader.getTypeName()]    = [cs.Shader, []]
 
-    def resolveAssets(self, finder, outpath):
+    def resolveAssets(self, assetman):
         out = []
         for shdr in self.shaders:
-            out.extend(shdr.resolveAssets(finder, outpath))
+            out.extend(shdr.resolveAssets(assetman))
 
         if self.script:
-            out.extend(self.script.resolveAssets(finder, outpath))
+            out.extend(self.script.resolveAssets(assetman))
         elif self.filename != '':
             # self.filename = finder.find(self.filename)
-            out.append(finder.find(self.filename))
+            out.append(assetman.find(self.filename))
 
         self._resolvedAssetPaths = True
         return out

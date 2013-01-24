@@ -32,8 +32,8 @@ class Scriptable(Renderable):
         self._members['file']     = [str, '']
         self._members['function']   = [str, '']
 
-    def resolveAssets(self, finder, outpath):
-        self.scriptpath = finder.find(self.scriptname)
+    def resolveAssets(self, assetman):
+        self.scriptpath = assetman.find(self.scriptname)
         self.scriptname = os.path.split(self.scriptpath)[1]
 
         self._verifyScriptName()

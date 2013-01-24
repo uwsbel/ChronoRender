@@ -5,6 +5,9 @@ from cgkit.pluginmanager import *
 class CRenderRIBExporter(RIBExporter):
     def exportFile(self,
                    filename,
+                   shader_outpath = "",
+                   texture_outpath = "",
+                   archive_outpath = "",
                    camera = None,
                    output = None,
                    output_framebuffer = True,
@@ -66,14 +69,14 @@ class CRenderRIBExporter(RIBExporter):
         self.geom_names = {}
 
         # Directory names
-        self.shader_path = "SHADERS"
-        self.map_path = "TEXTURES"
-        self.geom_path = "ARCHIVES"
+        self.shader_path = shader_outpath
+        self.map_path = texture_outpath
+        self.geom_path = archive_outpath
 
         filepath, filename = os.path.split(filename)
-        self.geom_path= os.path.join(filepath, self.geom_path)
-        self.shader_path= os.path.join(filepath, self.shader_path)
-        self.map_path= os.path.join(filepath, self.map_path)
+        # self.geom_path= os.path.join(filepath, self.geom_path)
+        # self.shader_path= os.path.join(filepath, self.shader_path)
+        # self.map_path= os.path.join(filepath, self.map_path)
 
         # The list with render passes
         passes = []

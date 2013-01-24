@@ -16,15 +16,24 @@ class File(Geometry):
         super(File,self)._initMembersDict()
         self._members['filename'] = [str, '']
 
-    def resolveAssets(self, finder, outpath):
-        out = super(File, self).resolveAssets(finder, outpath)
-        outname = self._getNewFilename(outpath)
+    def resolveAssets(self, assetman):
+        out = super(File, self).resolveAssets(assetman)
+
+        inputfile = assetman.find(self.filename)
+        outname = self._getNewFilename()
 
         try:
-            self.filename = finder.find(outname)
+            # already exists?
+            self.filename = assetman.find(outname)
         except Exception:
-            conv = ConverterFactory.build(self.filename)
-            self.filename = conv.convert(outname)
+            conv = ConverterFactory.build(inputfile)
+            outpath = assetman.getOutPathFor('archive')
+            outfile = path.join(outpath, outname)
+            self.filename = conv.convert(outfile,
+                    shader_outpath = assetman.getOutPathFor('shader'),
+                    texture_outpath = assetman.getOutPathFor('texture'),
+                    archive_outpath = assetman.getOutPathFor('archive')
+                    )
 
         self._resolvedAssetPaths = True
         return out
@@ -32,11 +41,11 @@ class File(Geometry):
     def render(self, rib, *args, **kwargs):
         rib.RiReadArchive(self.filename)
 
-    def _getNewFilename(self, outpath):
+    def _getNewFilename(self):
         filedir, filename = path.split(self.filename)
         filename, ext = path.splitext(filename)
         filename = filename + '.rib'
-        return path.join(outpath, filename)
+        return filename
 
 def build(**kwargs):
     return File(**kwargs)

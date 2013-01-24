@@ -16,9 +16,10 @@ class RndrJob():
     def __init__(self, infile, factories):
         self._metadata      = md.MetaData(infile)
         self._rndrdoc       = rd.RndrDoc(factories, self._metadata)
+        self._rootdir       = os.path.abspath(os.path.split(self._metadata.filename)[0])
         self._timecreated   = datetime.datetime.now()
         self._frames        = self._rndrdoc.getFrameRange()
-        self._assetman      = RndrJobAssetManager(os.path.abspath(os.path.split(self._metadata.filename)[0]))
+        self._assetman      = RndrJobAssetManager(self._rootdir, self._rndrdoc)
 
         # self._logfilename   = os.path.join(os.path.join(self._outputpath, 'LOG'), 'log_' + str(self._timecreated) + '.log')
         # self._logger        = None
@@ -29,40 +30,23 @@ class RndrJob():
         self._assetman.createOutDirs()
         # self._openLogFile()
         prevdir = os.getcwd()
-        os.chdir(self._assetman.outputpath)
-        self._rndrdoc.resolveAssets(self._assetman.createAssetFinder(self._rndrdoc), 
-                self._assetman.getOutPathFor('output'))
-        self.compileShaders(renderer)
-        # self._rndrdoc.outdir = self._assetman.getOutPathFor('output')
-
-        self._startRenderer(ri.rmanlibutil.libFromRenderer(renderer))
-        self._renderOptions()
-        for i in range(self._frames[0], self._frames[1]+1):
-            name = self._rndrdoc.getOutputFilePath(i)
-            # self._writeToLog('starting render ' + name + ' at: ' + str(datetime.datetime.now()))
-            self._rndrdoc.render(self._renderer, i)
-            # self._writeToLog('finished render ' + name + ' at: ' + str(datetime.datetime.now()))
-        # self._closeLogFile()
-        os.chdir(prevdir)
-
-    def compileShaders(self, renderer=None):
-        if renderer == None:
-            return
-
-        sdrc = ri.rmanlibutil.sdrcFromRenderer(renderer)
-
-        if sdrc == None:
-            return
-
-        prevdir = os.getcwd()
         try:
-            os.chdir(self._assetman.getOutPathFor('shader'))
-            shdrs = glob.glob('./*.sl')
-            prog = [sdrc]
-            prog.extend(shdrs)
-            subprocess.call(prog)
+            os.chdir(self._rootdir)
+            self._assetman.updateAssets()
+            self._assetman.compileShaders(renderer)
+            # self._rndrdoc.outdir = self._assetman.getOutPathFor('output')
+
+            self._startRenderer(ri.rmanlibutil.libFromRenderer(renderer))
+            self._renderOptions()
+            for framenum in range(self._frames[0], self._frames[1]+1):
+                # name = self._rndrdoc.getOutputFilePath(framenum)
+                # self._writeToLog('starting render ' + name + ' at: ' + str(datetime.datetime.now()))
+                self._rndrdoc.render(self._renderer, framenum)
+                # self._writeToLog('finished render ' + name + ' at: ' + str(datetime.datetime.now()))
+            # self._closeLogFile()
         finally:
             os.chdir(prevdir)
+
 
     def _renderOptions(self):
         self._renderer.RiOption("searchpath", "shader",
@@ -84,7 +68,7 @@ class RndrJob():
         self.updateAssets()
 
     def updateAssets(self):
-        self._assetman.updateAssets(self._rndrdoc)
+        self._assetman.updateAssets()
 
     def copyAssetToDirectory(self, asset):
         self._assetman._copyAssetToDirectory(asset)

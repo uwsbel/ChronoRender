@@ -34,13 +34,6 @@ class Settings(Renderable):
         self._members['pixelsamples']   = [intlist, [4, 4]]
         self._members['display']        = [disp.Display, []]
 
-    def resolveAssets(self, finder):
-        self._resolvedAssetPaths = True
-        return []
-
-    def setAsset(self, assetname, obj):
-        return
-
     def render(self, rib, outpath, **kwargs):
         rib.RiFormat(self.resolution[0], self.resolution[1], 1)
         rib.RiPixelSamples(self.samples[0],self.samples[1])
