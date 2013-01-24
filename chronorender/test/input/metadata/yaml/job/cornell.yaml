@@ -1,0 +1,16 @@
+chronorender:
+    rendersettings:
+        searchpaths: "./:../../../scenes/cornellbox"
+        framerange: 0 0
+    camera:
+        - filename: "beautycam.rib"
+    lighting:
+        - filename: "lights.rib"
+    scene:
+        - filename: "geometry.rib"
+    renderpass:
+        - name: "gorb"
+          settings: 
+            resolution: 640 480
+            display: 
+                output: "gorb.tif"

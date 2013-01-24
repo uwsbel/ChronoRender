@@ -5,14 +5,13 @@ import os
 class RndrJobTestCase(unittest.TestCase):
     def setUp(self):
         self._cr = cr.ChronoRender()
-        self.infile = './input/metadata/yaml/job/3.yaml'
 
     def tearDown(self):
         del self._cr
-        del self.infile
 
     def test_initJob(self):
-        job = cr.RndrJob(self.infile, self._cr._factories)
+        infile = './input/metadata/yaml/job/3.yaml'
+        job = cr.RndrJob(infile, self._cr._factories)
 
     # def test_runJob(self):
         # currdir = os.getcwd()
@@ -32,8 +31,9 @@ class RndrJobTestCase(unittest.TestCase):
             # os.chdir(currdir)
 
     def test_runCriJob(self):
+        infile = './input/metadata/yaml/job/cornell.yaml'
         currdir = os.getcwd()
-        job = cr.RndrJob(self.infile, self._cr._factories)
+        job = cr.RndrJob(infile, self._cr._factories)
         try:
             job.run('aqsis')                           
         finally:
