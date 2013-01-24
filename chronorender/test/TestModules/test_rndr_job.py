@@ -5,7 +5,8 @@ import os
 class RndrJobTestCase(unittest.TestCase):
     def setUp(self):
         self._cr = cr.ChronoRender()
-        self.infile = './input/metadata/yaml/job/3.yaml'
+        # self.infile = './input/metadata/yaml/job/3.yaml'
+        self.infile = './input/metadata/yaml/job/cornell.yaml'
 
     def tearDown(self):
         del self._cr
@@ -35,7 +36,8 @@ class RndrJobTestCase(unittest.TestCase):
         currdir = os.getcwd()
         job = cr.RndrJob(self.infile, self._cr._factories)
         try:
-            job.run('prman')                           
+            # job.run('prman')                           
+            job.run()                           
         finally:
             os.chdir(currdir)
 
