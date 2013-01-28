@@ -1,6 +1,5 @@
 import unittest, os
 
-import chronorender as cr
 from chronorender.finder import FinderFactory
 
 class FinderTestCase(unittest.TestCase):

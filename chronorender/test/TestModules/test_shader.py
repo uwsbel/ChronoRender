@@ -1,7 +1,6 @@
 import unittest, os.path
 import chronorender as cr
 
-from chronorender.finder import FinderFactory
 from chronorender.ri import RiStream
 
 class ShaderTestCase(unittest.TestCase):
