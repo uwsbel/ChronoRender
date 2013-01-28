@@ -19,17 +19,17 @@ class GeometryTestCase(unittest.TestCase):
         self.assertEqual(sph.getTypeName(), Sphere.getTypeName())
 
     def test_geoFile(self):
-        expected_dir = './output/ARCHIVES'
-        expected_out = os.path.join(expected_dir, 'goom.rib')
+        expected_dir = './output'
+        out_arc = os.path.join(expected_dir, 'ARCHIVES')
+        out_sdr = os.path.join(expected_dir, 'SHADERS')
+        out_tex = os.path.join(expected_dir, 'TEXTURES')
+        expected_out = os.path.join(out_arc, 'goom.rib')
+
         geo = File()
-        geo.filename = './input/files/goom.obj'
-        finder = FinderFactory.build(['./input'])
-
-        geo.resolveAssets(finder, './output')
-
-        # rib = RiStream('str')
-        # geo.render(rib)
-        # print rib.getText()
+        geo.filename = 'goom.obj'
+        geo.filepath = os.path.abspath('./input/files/goom.obj')
+        geo._generateRIBArchive(geo.filepath, geo._getNewFilename(),
+                out_arc, out_sdr, out_tex)
 
         self.assertTrue(os.path.exists(expected_dir))
         self.assertTrue(os.path.exists(expected_out))

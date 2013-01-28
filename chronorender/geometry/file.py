@@ -11,6 +11,7 @@ class File(Geometry):
     def __init__(self, *args, **kwargs):
         super(File,self).__init__(*args, **kwargs)
         self.filename = self.getMember('filename')
+        self.filepath = ""
 
     def _initMembersDict(self):
         super(File,self)._initMembersDict()
@@ -19,27 +20,35 @@ class File(Geometry):
     def resolveAssets(self, assetman):
         out = super(File, self).resolveAssets(assetman)
 
-        inputfile = assetman.find(self.filename)
+        self.filepath = assetman.find(self.filename)
         outname = self._getNewFilename()
 
         try:
             # already exists?
             self.filename = assetman.find(outname)
+            out = self.filename
         except Exception:
-            conv = ConverterFactory.build(inputfile)
-            outpath = assetman.getOutPathFor('archive')
-            outfile = path.join(outpath, outname)
-            self.filename = conv.convert(outfile,
-                    shader_outpath = assetman.getOutPathFor('shader'),
-                    texture_outpath = assetman.getOutPathFor('texture'),
-                    archive_outpath = assetman.getOutPathFor('archive')
-                    )
+            out = self._generateRIBArchive(self.filepath, 
+                    assetman.getOutPathFor('archive'),
+                    assetman.getOutPathFor('shader'), 
+                    assetman.getOutPathFor('texture'))
 
         self._resolvedAssetPaths = True
         return out
 
     def render(self, rib, *args, **kwargs):
         rib.RiReadArchive(self.filename)
+
+    def _generateRIBArchive(self, inputfile, outname,
+            outpath_arc, outpath_sdr, outpath_tex):
+        conv = ConverterFactory.build(inputfile)
+        outpath = outpath_arc
+        outfile = path.join(outpath, outname)
+        self.filename = conv.convert(outfile,
+                shader_outpath = outpath_sdr,
+                texture_outpath = outpath_tex,
+                archive_outpath = outpath_arc)
+        return outfile
 
     def _getNewFilename(self):
         filedir, filename = path.split(self.filename)
