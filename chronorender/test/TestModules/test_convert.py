@@ -26,4 +26,8 @@ class ImporterTestCase(unittest.TestCase):
         self.assertTrue(os.path.exists(out_arc))
         self.assertTrue(os.path.exists(expected_out))
 
-        shutil.rmtree(expected_dir)
+        shutil.rmtree(out_arc)
+        if os.path.exists(out_sdr):
+            shutil.rmtree(out_sdr)
+        if os.path.exists(out_tex):
+            shutil.rmtree(out_tex)
