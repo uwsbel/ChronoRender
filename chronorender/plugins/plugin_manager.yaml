@@ -9,6 +9,8 @@ factory:
         paths: "geometry"
     lighting:
         paths: "lighting"
+    movie:
+        paths: "movie"
     renderobject:
         paths: "renderobject"
     renderpass:

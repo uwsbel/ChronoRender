@@ -18,6 +18,11 @@ def main():
     parser.add_argument('-o', '--outpath', help='used with init, where to \
             generate the render files; cwd if not set', required=False)
 
+    parser.add_argument('-j', '--jobmanager', 
+            choices=['torque'],
+            help='specify the distrbuted job manager you are using; default=torque', 
+            required=False)
+
     args = vars(parser.parse_args())
 
     if args['action'] == 'init':
@@ -37,7 +42,6 @@ def initNewRenderJob(args):
 
 def startLocalRenderJob(args):
     md = verifyMetadata(args)
-
     stream = args['renderer'] if 'renderer' in args else ''
 
     cr = chronorender.cr.ChronoRender()
@@ -45,6 +49,10 @@ def startLocalRenderJob(args):
 
 def startDistributedJob(args):
     md = verifyMetadata(args)
+    stream = args['renderer'] if 'renderer' in args else ''
+
+    #cr = chronorender.cr.ChronoRender()
+    #cr.createAndSubmitRenderJob(md, stream)
 
 def updateJobAssets(args):
     md = verifyMetadata(args)

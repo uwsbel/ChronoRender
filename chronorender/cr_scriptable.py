@@ -27,6 +27,8 @@ class Scriptable(Renderable):
         self._mod       = None
         self._func      = None
 
+        self._parseModInformation()
+
     def _initMembersDict(self):
         super(Scriptable,self)._initMembersDict()
         self._members['file']     = [str, '']
@@ -34,16 +36,8 @@ class Scriptable(Renderable):
 
     def resolveAssets(self, assetman):
         self.scriptpath = assetman.find(self.scriptname)
-        self.scriptname = os.path.split(self.scriptpath)[1]
-
-        self._verifyScriptName()
-        # Scriptable._exportDirToSysPath(self.scriptpath)
-
-        self._modname = os.path.splitext(self.scriptname)[0]
+        self._parseModInformation()
         self._resolvedAssetPaths = True
-
-        # initialize with a test
-        self._loadFunction(self._loadModule())
 
         return [self.scriptpath]
 
@@ -57,11 +51,10 @@ class Scriptable(Renderable):
         # if self._func:
             # self._func(rib, *args, **kwargs)
 
-    def _verifyScriptName(self):
-        # if Scriptable.getTypeName() not in self.scriptname:
-            # msg = 'words \"' + Scriptable.getTypeName() + '\" not in script filename'
-            # raise ScriptableException(msg)
-        return
+    def _parseModInformation(self):
+        self.scriptname = os.path.split(self.scriptpath)[1]
+        self._modname = os.path.splitext(self.scriptname)[0]
+
 
     def _loadModule(self):
         try:

@@ -68,14 +68,15 @@ class RenderPass(Renderable):
     def setAsset(self, assetname, obj):
         return
 
-    def render(self, rib, passnumber, framenumber, outpath, *args, **kwargs):
+    def render(self, rib, passnumber, framenumber, 
+            outpath='', outpostfix='', *args, **kwargs):
         super(RenderPass, self).render(rib, **kwargs)
         if self.script:
             self.script.render(rib, *args, **kwargs)
         else:
             rib.RiFrameBegin(passnumber)
             for sett in self.rndrsettings:
-                sett.render(rib, outpath, **kwargs)
+                sett.render(rib, outpath, outpostfix, **kwargs)
 
             self.renderAttributes(rib)
 

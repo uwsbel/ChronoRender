@@ -6,11 +6,6 @@ from chronorender.ri import RiStream
 
 class CameraTestCase(unittest.TestCase):
     def test_create(self):
-        finder = FinderFactory.build(['./input/scripts'])
-        meta = MetaData('./input/metadata/yaml/3.yaml')
-        data = meta.singleFromType(Camera)
-        cam = Camera(**data)
-        cam.resolveAssets(finder, './output')
-        ri = RiStream('str')
-        cam.render(ri)                   
-        print ri.getText()
+        filen = "default_camera.rib"
+        cam = Camera(filename=filen)
+        self.assertEqual(cam.filename, filen)

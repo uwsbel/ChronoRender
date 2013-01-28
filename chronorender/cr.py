@@ -5,12 +5,14 @@ import chronorender.factory as factory
 import chronorender.rndr_job as rndrjob
 import chronorender.factorydict as fdict
 import chronorender.cr_object as cr_object
+import chronorender.cr_utils as cr_utils
+
+import chronorender.attribute as attr
 import chronorender.dataprocess as dp
 import chronorender.datasource as ds
 import chronorender.geometry as geo
+import chronorender.movie as mov
 import chronorender.renderpass as rp
-import chronorender.attribute as attr
-import chronorender.cr_utils as cr_utils
 
 from chronorender.camera import Camera
 from chronorender.data import DataObject
@@ -57,6 +59,9 @@ class ChronoRender():
 
         self._createFactory(Lighting)
         self._createFactory(RenderObject)
+
+        self._createFactory(mov.Movie)
+        self._addFactoryModule(mov.Movie, mov.FFMPEG)
 
         self._createFactory(rp.RenderPass)
         self._addFactoryModule(rp.RenderPass, rp.RayTracePass)
@@ -110,7 +115,7 @@ class ChronoRender():
         job = self._createRenderJob(mdfile)
         job.run(stream)
 
-    def createAndSubmitRenderJob(self, mdfile):
+    def createAndSubmitRenderJob(self, mdfile, stream=''):
         job = self._createRenderJob(mdfile)
         self._submitRenderJob(job)
 
