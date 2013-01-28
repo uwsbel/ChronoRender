@@ -10,19 +10,6 @@ class RndrDocTestCase(unittest.TestCase):
         self._cr = cr.ChronoRender()
         md = MetaData('./input/metadata/yaml/3.yaml')
         self.doc = cr.RndrDoc(self._cr._factories, md)
-        self.finder = FinderFactory.build(['./', './input'])
 
     def tearDown(self):
         del self.doc
-
-    def test_initFromMetadata(self):
-        return
-
-    # TODO
-    def test_resolveAssets(self):
-        self.doc.resolveAssets(self.finder, './output')
-
-    def test_render(self):
-        self.doc.resolveAssets(self.finder, './output')
-        ri = RiStream('str')
-        self.doc.render(ri, 0)

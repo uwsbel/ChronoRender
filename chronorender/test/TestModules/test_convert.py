@@ -10,13 +10,20 @@ class ImporterTestCase(unittest.TestCase):
         return
 
     def test_OBJConvert(self):
-        src = './input/files/goom.obj'
-        expected_dir = './output/ARCHIVES'
-        expected_out = os.path.join(expected_dir, 'goob.rib')
-        objimp = conv.ConverterFactory.build(src)
-        objimp.convert('./output/goob.rib')
+        expected_dir = './output'
+        out_arc = os.path.join(expected_dir, 'ARCHIVES')
+        out_sdr = os.path.join(expected_dir, 'SHADERS')
+        out_tex = os.path.join(expected_dir, 'TEXTURES')
+        expected_out = os.path.join(out_arc, 'goob.rib')
+        src = os.path.abspath('./input/files/goom.obj')
 
-        self.assertTrue(os.path.exists(expected_dir))
+        objimp = conv.ConverterFactory.build(src)
+        objimp.convert('./output/goob.rib',
+                archive_outpath = out_arc,
+                shader_outpath = out_sdr,
+                texture_outpath = out_tex)
+
+        self.assertTrue(os.path.exists(out_arc))
         self.assertTrue(os.path.exists(expected_out))
 
         shutil.rmtree(expected_dir)
