@@ -3,7 +3,6 @@ syntax: glob
 *.log
 *.swp
 *.orig
-*.tif
 
 syntax: regexp
 .*\#.*\#$

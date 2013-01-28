@@ -142,3 +142,9 @@ class Object(object):
 
     def addParameter(self, name, val):
         self._params[name] = val
+
+    def getVar(self, varname, kwargs):
+        if varname in kwargs:
+            return kwargs[varname]
+        else:
+            return self.getMember(varname)
