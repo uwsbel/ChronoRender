@@ -1,4 +1,4 @@
-import unittest
+import unittest, os.path
 import chronorender as cr
 
 from chronorender.finder import FinderFactory
@@ -7,8 +7,8 @@ from chronorender.ri import RiStream
 class ShaderTestCase(unittest.TestCase):
     def setUp(self):
         self.sdr = cr.Shader(name='plastic.sl')
-        fine = FinderFactory.build(['./input/shaders'])
-        self.sdr.resolveAssets(fine, './output')
+        self.sdr._shdrpath = os.path.abspath('./input/shaders/plastic.sl')
+        self.sdr._initShaderParameters()
 
     def tearDown(self):
         del self.sdr
