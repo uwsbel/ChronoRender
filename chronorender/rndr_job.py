@@ -1,9 +1,11 @@
-import datetime, os, logging, subprocess, glob
+import datetime, os, logging, glob, multiprocessing
 
 import chronorender.metadata as md
-import rndr_doc as rd
+import chronorender.rndr_doc as rd
 import chronorender.ri as ri
-from rndr_job_assetmanager import RndrJobAssetManager
+from chronorender.rndr_job_assetmanager import RndrJobAssetManager
+
+workerpool = multiprocessing.Pool()
 
 class RndrJobException(Exception):
     def __init__(self, value):
@@ -21,18 +23,18 @@ class RndrJob():
         self._assetman      = RndrJobAssetManager(self._rootdir, self._rndrdoc)
         self._renderer      = None
 
-    def run(self, renderer=None):
+    def run(self, renderer=None, framerange=None):
         self._assetman.createOutDirs()
         prevdir = os.getcwd()
         try:
             os.chdir(self._rootdir)
             self._assetman.updateAssets()
             self._assetman.compileShaders(renderer)
-            self._render()
+            self._render(renderer)
         finally:
             os.chdir(prevdir)
 
-    def _render(self):
+    def _render(self, renderer=None):
         self._startRenderer(ri.rmanlibutil.libFromRenderer(renderer))
         self._renderOptions()
         self._renderFrames()
