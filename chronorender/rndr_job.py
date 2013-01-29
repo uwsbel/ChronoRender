@@ -5,7 +5,6 @@ import rndr_doc as rd
 import chronorender.ri as ri
 from rndr_job_assetmanager import RndrJobAssetManager
 
-# represent a render job
 class RndrJobException(Exception):
     def __init__(self, value):
         self.value = value
@@ -20,33 +19,24 @@ class RndrJob():
         self._timecreated   = datetime.datetime.now()
         self._frames        = self._rndrdoc.getFrameRange()
         self._assetman      = RndrJobAssetManager(self._rootdir, self._rndrdoc)
-
-        # self._logfilename   = os.path.join(os.path.join(self._outputpath, 'LOG'), 'log_' + str(self._timecreated) + '.log')
-        # self._logger        = None
-
         self._renderer      = None
 
     def run(self, renderer=None):
         self._assetman.createOutDirs()
-        # self._openLogFile()
         prevdir = os.getcwd()
         try:
             os.chdir(self._rootdir)
             self._assetman.updateAssets()
             self._assetman.compileShaders(renderer)
-            # self._rndrdoc.outdir = self._assetman.getOutPathFor('output')
-
-            self._startRenderer(ri.rmanlibutil.libFromRenderer(renderer))
-            self._renderOptions()
-            for framenum in range(self._frames[0], self._frames[1]+1):
-                # name = self._rndrdoc.getOutputFilePath(framenum)
-                # self._writeToLog('starting render ' + name + ' at: ' + str(datetime.datetime.now()))
-                self._rndrdoc.render(self._renderer, framenum)
-                # self._writeToLog('finished render ' + name + ' at: ' + str(datetime.datetime.now()))
-            # self._closeLogFile()
+            self._render()
         finally:
             os.chdir(prevdir)
 
+    def _render(self):
+        self._startRenderer(ri.rmanlibutil.libFromRenderer(renderer))
+        self._renderOptions()
+        self._renderFrames()
+        self._stopRenderer()
 
     def _renderOptions(self):
         self._renderer.RiOption("searchpath", "shader",
@@ -57,6 +47,10 @@ class RndrJob():
                 self._assetman.getOutPathFor("texture") + ":@")
         self._renderer.RiOption("searchpath", "archive",
                 self._assetman.getOutPathFor("archive") + ":@")
+
+    def _renderFrames(self):
+        for framenum in range(self._frames[0], self._frames[1]+1):
+            self._rndrdoc.render(self._renderer, framenum)
 
     def setOutputPath(self, path):
         self._assetman.outputpath = path
@@ -74,26 +68,8 @@ class RndrJob():
         self._assetman._copyAssetToDirectory(asset)
 
     def _startRenderer(self, libName=None):
-        # self._writeToLog('starting renderer')
         self._renderer = ri.loadRI(libName)
         self._renderer.RiBegin(ri.RI_NULL)
 
     def _stopRenderer(self):
         self._renderer.RiEnd()
-
-    # def _writeToLog(self, content):
-        # self._logger.info('starting render ' + name + ' at: ' + str(datetime.datetime.now()))
-        # self._logger.write(content+'\n')   
-
-    # def _openLogFile(self):    
-        # self._logger= open(self._logfilename, 'a')
-
-        # self._logger = logging.getLogger('')
-        # hdlr = logging.FileHandler(self._logfilename)
-        # formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-        # hdlr.setFormatter(formatter)
-        # self._logger.addHandler(hdlr)
-        # self._logger.setLevel(logging.INFO)
-
-    # def _closeLogFile(self):
-        # self._logger.close()
