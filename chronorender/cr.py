@@ -26,6 +26,7 @@ from chronorender.visualizer import Visualizer
 from cr_scriptable import Scriptable
 
 class ChronoRender():
+
     def __init__(self, plugins=True):
         self._jobs              = []
 
@@ -111,9 +112,9 @@ class ChronoRender():
         job.setOutputPath(dest)
         job.updateAssets()
 
-    def createAndRunRenderJob(self, mdfile, stream=''):
+    def createAndRunRenderJob(self, mdfile, stream='', framerange=None):
         job = self._createRenderJob(mdfile)
-        job.run(stream)
+        job.run(stream, framerange)
 
     def createAndSubmitRenderJob(self, mdfile, stream=''):
         job = self._createRenderJob(mdfile)

@@ -2,7 +2,7 @@ import argparse, os
 import script_utils as su
 su.addCRToPath()
 
-import chronorender
+from chronorender import ChronoRender
 
 def main():
     parser = argparse.ArgumentParser()
@@ -12,8 +12,10 @@ def main():
     parser.add_argument('-m', '--metadata', help='the data file that contains the \
             render job info', required=False)
 
-    parser.add_argument('-r', '--renderer', help='which renderer to use, dumps\
-    to stdout by default',required=False)
+    parser.add_argument('-r', '--renderer', 
+            help='which renderer to use, dumps to stdout by default', 
+            default='',
+            required=False)
 
     parser.add_argument('-o', '--outpath', help='used with init, where to \
             generate the render files; cwd if not set', required=False)
@@ -22,6 +24,14 @@ def main():
             choices=['torque'],
             help='specify the distrbuted job manager you are using; default=torque', 
             required=False)
+
+    parser.add_argument('-f', '--framerange',
+            nargs=2,
+            help='render the specified framerange; by default renders all frames',
+            default=None,
+            type=int,
+            required=False)
+
 
     args = vars(parser.parse_args())
 
@@ -37,26 +47,27 @@ def main():
 def initNewRenderJob(args):
     path = args['outpath'] if args['outpath'] else os.getcwd()
 
-    cr = chronorender.cr.ChronoRender()
+    cr = ChronoRender()
     cr.generateRenderJobToDisk(path)
 
 def startLocalRenderJob(args):
     md = verifyMetadata(args)
-    stream = args['renderer'] if 'renderer' in args else ''
+    stream = args['renderer']
+    frange = args['framerange']
 
-    cr = chronorender.cr.ChronoRender()
-    cr.createAndRunRenderJob(md, stream)
+    cr = ChronoRender()
+    cr.createAndRunRenderJob(md, stream, frange)
 
 def startDistributedJob(args):
     md = verifyMetadata(args)
     stream = args['renderer'] if 'renderer' in args else ''
 
-    #cr = chronorender.cr.ChronoRender()
+    #cr = ChronoRender()
     #cr.createAndSubmitRenderJob(md, stream)
 
 def updateJobAssets(args):
     md = verifyMetadata(args)
-    cr = chronorender.cr.ChronoRender()
+    cr = ChronoRender()
     cr.updateJobAssets(md)
 
 def verifyMetadata(args):
