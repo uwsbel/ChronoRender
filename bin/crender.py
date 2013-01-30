@@ -14,7 +14,7 @@ def main():
 
     parser.add_argument('-r', '--renderer', 
             help='which renderer to use, dumps to stdout by default', 
-            default='',
+            default='stdout',
             required=False)
 
     parser.add_argument('-o', '--outpath', help='used with init, where to \
@@ -60,7 +60,7 @@ def startLocalRenderJob(args):
 
 def startDistributedJob(args):
     md = verifyMetadata(args)
-    stream = args['renderer'] if 'renderer' in args else ''
+    stream = args['renderer']
 
     #cr = ChronoRender()
     #cr.createAndSubmitRenderJob(md, stream)

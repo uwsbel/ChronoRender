@@ -9,7 +9,7 @@ class Cube(Geometry):
         super(Cube,self)._initMembersDict()
 
     def render(self, ri, *args, **kwargs):
-        ri.RiSphere(1,-1,1,360)
+        ri.Sphere(1,-1,1,360)
 
 def build(**kwargs):
     return Cube(**kwargs)

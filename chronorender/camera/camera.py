@@ -33,7 +33,7 @@ class Camera(Movable):
         if self.script:
             self.script.render(rib, *args, **kwargs)
         elif self.filename != '':
-            rib.RiReadArchive(self.filename)
+            rib.ReadArchive(self.filename)
 
 def build(**kwargs):
     return Camera(**kwargs)

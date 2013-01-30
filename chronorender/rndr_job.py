@@ -56,13 +56,13 @@ class RndrJob():
         cr_paths = crutils.getCRAssetPaths()
         cr_pathsstr = reduce(lambda x, y: str(x) + ":" + str(y), cr_paths)
         cr_pathsstr += ":"
-        self._renderer.RiOption("searchpath", "shader",
+        self._renderer.Option("searchpath", "shader",
                 cr_pathsstr + self._assetman.getOutPathFor("shader") + ":@")
-        self._renderer.RiOption("searchpath", "procedural",
+        self._renderer.Option("searchpath", "procedural",
                 cr_pathsstr + self._assetman.getOutPathFor("script") + ":@")
-        self._renderer.RiOption("searchpath", "texture",
+        self._renderer.Option("searchpath", "texture",
                 cr_pathsstr + self._assetman.getOutPathFor("texture") + ":@")
-        self._renderer.RiOption("searchpath", "archive",
+        self._renderer.Option("searchpath", "archive",
                 cr_pathsstr + self._assetman.getOutPathFor("archive") + ":@")
 
     def _renderFrames(self):

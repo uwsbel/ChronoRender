@@ -24,8 +24,10 @@ class Renderer(object):
         # the renderer's namespace
         if hasattr(self._rihook, name):
             return self._rihook.__dict__[name]
-        else:
+        elif hasattr(self, name):
             return self.name
+        else:
+            raise AttributeError("render does not have symbol", name)
 
     def getRI(self):
         return self._rihook
@@ -50,13 +52,13 @@ class Renderer(object):
 
     def startRenderContext(self, mode=None):
         if not mode:
-            self._rihook.RiBegin(self._rendermodes[Renderer.RENDER])
+            self._rihook.Begin(self._rendermodes[Renderer.RENDER])
             return
 
         if mode in self._rendermodes:
-            self._rihook.RiBegin(self._rendermodes[mode])
+            self._rihook.Begin(self._rendermodes[mode])
         else:
-            self._rihook.RiBegin(mode)
+            self._rihook.Begin(mode)
 
     def stopRenderContext(self):
-        self._rihook.RiEnd()
+        self._rihook.End()

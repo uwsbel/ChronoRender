@@ -80,31 +80,31 @@ class RenderObject(Movable):
                 self._renderSingleObject(rib, record=entry, **kwargs)
 
     def _renderSingleObject(self, rib, record={}, **kwargs):
-        rib.RiAttributeBegin()
+        rib.AttributeBegin()
         self.renderAttributes(rib)
         self._renderTransformData(rib, record, **kwargs)
         
         if self.instanced:
-            rib.RiObjectInstance(self.getInstanceID())
+            rib.ObjectInstance(self.getInstanceID())
         else:
             self.renderShape(rib, **kwargs)
-        rib.RiAttributeEnd()
+        rib.AttributeEnd()
 
     def _renderTransformData(self, rib, record={}, **kwargs):
         pos_x = record[cre.POS_X] if cre.POS_X in record else 0.0
         pos_y = record[cre.POS_Y] if cre.POS_X in record else 0.0
         pos_z = record[cre.POS_Z] if cre.POS_X in record else 0.0
-        rib.RiTranslate(pos_x, pos_y, pos_z)
+        rib.Translate(pos_x, pos_y, pos_z)
 
         if cre.EULER_X in record and record[cre.EULER_X] > 0.0:
-            rib.RiRotate(record[cre.EULER_X], 1, 0, 0)
+            rib.Rotate(record[cre.EULER_X], 1, 0, 0)
         if cre.EULER_Y in record and record[cre.EULER_Y] > 0.0:
-            rib.RiRotate(record[cre.EULER_Y], 0, 1, 0)
+            rib.Rotate(record[cre.EULER_Y], 0, 1, 0)
         if cre.EULER_Z in record and record[cre.EULER_Z] > 0.0:
-            rib.RiRotate(record[cre.EULER_Z], 0, 0, 1)
+            rib.Rotate(record[cre.EULER_Z], 0, 0, 1)
 
     def renderShape(self, rib, rendershaders=True, **kwargs):
-        rib.RiColor(self.color)
+        rib.Color(self.color)
         
         if rendershaders:
             for shdr in self.shaders: 

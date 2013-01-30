@@ -28,7 +28,7 @@ class AOPass(RenderPass):
                                     # outpath, *args, **kwargs)
 
 
-        rib.RiFrameBegin(passnumber)
+        rib.FrameBegin(passnumber)
         for sett in self.rndrsettings:
             sett.render(rib, outpath, **kwargs)
 
@@ -41,16 +41,16 @@ class AOPass(RenderPass):
 
         self._renderLighting(rib, **kwargs)
 
-        rib.RiWorldBegin()
+        rib.WorldBegin()
         bRenderShdrs = False if self.occshader.getShaderType() == 'surface' else True
         self.occshader.render(rib, **kwargs)
         for obj in self.renderables:
             obj.render(rib, framenumber=framenumber, rendershaders=bRenderShdrs, **kwargs)
         for scene in self.scene:
             scene.render(rib, **kwargs)
-        rib.RiWorldEnd()
+        rib.WorldEnd()
 
-        rib.RiFrameEnd()
+        rib.FrameEnd()
 
     def resolveAssets(self, assetman):
         out = self.occshader.resolveAssets(assetman)

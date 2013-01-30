@@ -22,7 +22,7 @@ class Cone(Geometry):
         self._members['thetamax']   = [float, 360.0]
 
     def render(self, ri, *args, **kwargs):
-        ri.RiCone(self.height, self.radius, self.thetamax)
+        ri.Cone(self.height, self.radius, self.thetamax)
 
 def build(**kwargs):
     return Cone(**kwargs)

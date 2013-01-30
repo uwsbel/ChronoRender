@@ -1,7 +1,7 @@
 import unittest, os.path
 import chronorender as cr
 
-from chronorender.ri import RiStream
+from chronorender.renderer import RendererFactory
 
 class ShaderTestCase(unittest.TestCase):
     def setUp(self):
@@ -46,6 +46,8 @@ class ShaderTestCase(unittest.TestCase):
         self.assertEqual(newColor, check['specularcolor'])
 
     def test_render(self):
-        ri = RiStream('str')
+        fact = RendererFactory()
+        ri = fact.build('stdout')
+        ri.init()
         self.sdr.render(ri)
-        print ri.getText()
+        ri.cleanup()

@@ -33,7 +33,7 @@ class Scene(Movable):
         if self.script:
             self.script.render(rib, *args, **kwargs)
         else:
-            rib.RiReadArchive(self.filename)
+            rib.ReadArchive(self.filename)
 
 
 def build(**kwargs):

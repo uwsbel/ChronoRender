@@ -72,7 +72,7 @@ class RenderPass(Renderable):
         if self.script:
             self.script.render(rib, *args, **kwargs)
         else:
-            rib.RiFrameBegin(passnumber)
+            rib.FrameBegin(passnumber)
             self._renderSettings(rib, outpath, outpostfix, **kwargs)
 
             self.renderAttributes(rib)
@@ -81,13 +81,13 @@ class RenderPass(Renderable):
 
             self._renderCamera(rib, **kwargs)
 
-            rib.RiWorldBegin()
+            rib.WorldBegin()
             self._renderLighting(rib, **kwargs)
             self._renderRenderables(rib, **kwargs)
             self._renderScene(rib, **kwargs)
-            rib.RiWorldEnd()
+            rib.WorldEnd()
 
-            rib.RiFrameEnd()
+            rib.FrameEnd()
 
     def _renderSettings(self, rib, outpath, outpostfix, **kwargs):
         for sett in self.rndrsettings:
@@ -98,9 +98,9 @@ class RenderPass(Renderable):
             for inst in obj.getInstanceables():
                 if not inst.instanced: continue
 
-                rib.RiObjectBegin(__handleid=inst.getInstanceID())
+                rib.ObjectBegin(__handleid=inst.getInstanceID())
                 inst.renderShape(rib, rendershaders=True)
-                rib.RiObjectEnd()
+                rib.ObjectEnd()
 
     def _renderCamera(self, rib, **kwargs):
         for cam in self.camera:

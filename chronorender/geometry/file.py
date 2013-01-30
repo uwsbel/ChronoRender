@@ -37,7 +37,7 @@ class File(Geometry):
         return out
 
     def render(self, rib, *args, **kwargs):
-        rib.RiReadArchive(self.filename)
+        rib.ReadArchive(self.filename)
 
     def _generateRIBArchive(self, inputfile, outname,
             outpath_arc, outpath_sdr, outpath_tex):

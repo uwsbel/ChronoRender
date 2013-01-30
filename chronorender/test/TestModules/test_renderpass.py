@@ -2,7 +2,7 @@ import unittest, os
 
 from metadata import MetaData
 from renderpass import RenderPass
-from chronorender.ri import RiStream
+from chronorender.renderer import RendererFactory
 
 class RenderPassTestCase(unittest.TestCase):
     def setUp(self):
@@ -16,7 +16,9 @@ class RenderPassTestCase(unittest.TestCase):
                 print settings
 
     def test_render(self):
-        ri = RiStream('str')
+        fact = RendererFactory()
+        ri = fact.build('stdout')
+        ri.init()
         for rpass in self.rpasses:
             rpass.render(ri, 0, 0, './')
-        print ri.getText()
+        ri.cleanup()

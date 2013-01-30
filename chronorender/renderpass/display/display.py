@@ -33,7 +33,7 @@ class Display(Renderable):
 
     def render(self, rib, outpath='', postfix='', **kwargs):
         self._fileout = self._evalOutName(outpath, postfix)
-        rib.RiDisplay(self._fileout, self.outtype, self.mode)
+        rib.Display(self._fileout, self.outtype, self.mode)
 
     def _evalOutName(self, outpath, postfix):
         vals = self.output.split('.')

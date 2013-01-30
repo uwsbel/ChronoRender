@@ -35,10 +35,10 @@ class Settings(Renderable):
         self._members['display']        = [disp.Display, []]
 
     def render(self, rib, outpath='', postfix='', **kwargs):
-        rib.RiFormat(self.resolution[0], self.resolution[1], 1)
-        rib.RiPixelSamples(self.samples[0],self.samples[1])
-        rib.RiShadingRate(self.rate)
-        rib.RiShadingInterpolation(self.interp)
+        rib.Format(self.resolution[0], self.resolution[1], 1)
+        rib.PixelSamples(self.samples[0],self.samples[1])
+        rib.ShadingRate(self.rate)
+        rib.ShadingInterpolation(self.interp)
 
         for d in self.displays:
             d.render(rib, outpath, postfix, **kwargs)

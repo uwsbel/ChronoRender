@@ -11,7 +11,8 @@ class Stdout(Renderer):
         self._libname = None
 
     def init(self):
-        self._rihook = cri.ri
+        self._rihook = cri.ri_noprefix
+        #self._rihook = cri.ri
         self._initRenderModes()
 
     def _initRenderModes(self):

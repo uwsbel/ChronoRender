@@ -1,7 +1,6 @@
 import unittest, os, shutil
 from chronorender.cr import ChronoRender
 from chronorender.geometry import Geometry, Sphere, File
-# from chronorender.ri import RiStream
 
 class GeometryTestCase(unittest.TestCase):
     def test_geoSphere(self):

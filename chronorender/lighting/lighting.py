@@ -37,7 +37,7 @@ class Lighting(Renderable):
         if self.script:
             self.script.render(rib, *args, **kwargs)
         elif self.filename != '':
-            rib.RiReadArchive(self.filename)
+            rib.ReadArchive(self.filename)
         else:
             for shdr in self.shaders: 
                 shdr.render(rib, **kwargs)

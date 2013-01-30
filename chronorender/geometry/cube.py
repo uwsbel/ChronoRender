@@ -12,7 +12,7 @@ class Cube(Geometry):
         super(Cube, self)._initMembersDict()
 
     def render(self, rib, *args, **kwargs):
-        rib.RiSphere(1,-1,1,360)
+        rib.Sphere(1,-1,1,360)
 
 def build(**kwargs):
     return Cube(**kwargs)
