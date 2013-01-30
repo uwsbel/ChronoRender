@@ -32,16 +32,20 @@ def setCWDToTestDir():
     os.chdir(os.path.dirname(testpath))
 
 if __name__ == '__main__':
-    _stdout = sys.stdout
-    null = open(os.devnull, 'wb')
-    sys.stdout = null
-
     setCWDToTestDir()   # do this for the sake of relative paths used in tests
 
     parser = argparse.ArgumentParser(description='run tests')
     parser.add_argument('modules', metavar='N', type=str, nargs='*', help='list of test modules to run')
+    parser.add_argument('-s', help="suppress test output",
+            action="store_true")
 
     args = parser.parse_args()
+
+    _stdout = sys.stdout
+    if args.s:
+        null = open(os.devnull, 'wb')
+        sys.stdout = null
+
     alltests = getTestSuites(args.modules)
     for suite in alltests:
         unittest.TextTestRunner(verbosity=2).run(suite)
