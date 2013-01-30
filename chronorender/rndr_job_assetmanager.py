@@ -91,6 +91,12 @@ class RndrJobAssetManager(object):
         finally:
             os.chdir(prevdir)
 
+    def convertTextures(self, renderer):
+        if renderer == None:
+            return
+
+        txmk = riutil.txmkFromRenderer(renderer)
+
     def getFrameRange(self):
         return self.rndrdoc.getFrameRange()
 

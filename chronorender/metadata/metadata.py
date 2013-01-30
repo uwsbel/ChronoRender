@@ -9,7 +9,7 @@ class MetaDataException(Exception):
     def __str__(self):
         return repr(self.value)
 
-class MetaData():
+class MetaData(object):
     def __init__(self, infile=''):
         self.filename = os.path.abspath(infile)
         self._mdreader = MDReaderFactory.build(infile)
