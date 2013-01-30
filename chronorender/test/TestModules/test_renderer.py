@@ -32,12 +32,14 @@ class RendererTestCase(unittest.TestCase):
             return
 
         target = 'output/prman.rib'
+        # target = '-'
         prman = self.fact.build('prman')
         prman.init()
         prman.startRenderContext(target)
+        prman.Attribute("searchpath", {"shader" : "./"})
         prman.FrameBegin(666)
         prman.WorldBegin()
-        for i in range(0, 10):
+        for i in range(0, 1):
           prman.Sphere(1 ,-1, 1, 360)
         prman.WorldEnd()
         prman.FrameEnd()

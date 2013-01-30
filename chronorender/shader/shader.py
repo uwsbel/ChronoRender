@@ -102,15 +102,15 @@ class Shader(Renderable):
         stype = self.getShaderType()
         rdict = self._getDeclParameterDict()
         if stype == 'surface':
-            rib.Surface(self.getShaderName(), **rdict)
+            rib.Surface(self.getShaderName(), rdict)
         elif stype == 'displacement':
-            rib.Displacement(self.getShaderName(), **rdict)
+            rib.Displacement(self.getShaderName(), rdict)
         elif stype == 'volume':
-            rib.Volume(self.getShaderName(), **rdict)
+            rib.Volume(self.getShaderName(), rdict)
         elif stype == 'light':
-            rib.LightSource(self.getShaderName(), **rdict)
+            rib.LightSource(self.getShaderName(), rdict)
         elif stype == 'imager':
-            rib.Imager(self.getShaderName(), **rdict)
+            rib.Imager(self.getShaderName(), rdict)
 
 def build(**kwargs):
     return Shader(**kwargs)

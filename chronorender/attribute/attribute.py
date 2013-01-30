@@ -14,7 +14,8 @@ class Attribute(Object):
         self._members['name']   = [str, '']
 
     def render(self, rib):
-        rib.Attribute(self._name, **self._params)
+        # rib.Attribute(self._name, **self._params)
+        rib.Attribute(self._name, self._params)
 
 def build(**kwargs):
     return Attribute(**kwargs)
