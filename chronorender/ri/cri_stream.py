@@ -122,8 +122,11 @@ class _RenderManAPI:
         self._ri = rimod
         
         # Regular expression to parse declarations
+        #self._declRe = re.compile(r"^\s*(?:(constant|uniform|varying|vertex) )?\s*"
+                                   #"(float|integer|string|color|point|vector|normal|matrix|hpoint)\s*"
+                                   #"(?:\[\s*([0-9]+)\s*\])?\s*(\w+)$")
         self._declRe = re.compile(r"^\s*(?:(constant|uniform|varying|vertex) )?\s*"
-                                   "(float|integer|string|color|point|vector|normal|matrix|hpoint)\s*"
+                                   "(float|int|integer|string|color|point|vector|normal|matrix|hpoint)\s*"
                                    "(?:\[\s*([0-9]+)\s*\])?\s*(\w+)$")
         
         # Copy the RI_ and Rt attributes...
