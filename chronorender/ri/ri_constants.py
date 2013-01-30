@@ -1,6 +1,7 @@
 ########################### Constants #############################
 
 RI_NULL         = None
+RI_RENDER       = "Ri:render"
 
 RI_TRUE         = 1
 RI_FALSE        = 0

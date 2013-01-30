@@ -9,3 +9,6 @@ class RendererException(Exception):
 class Renderer(object)
     def __init__(self):
         return
+
+    def startRenderer(self, mode):
+        return

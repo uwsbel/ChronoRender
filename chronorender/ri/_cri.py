@@ -288,6 +288,7 @@ def _createRiTokens(ri):
               ("RI_WIDTH", "width"),
               ("RI_WORLD", "world"),
               ("RI_Z", "z"),
+              ("RI_RENDER", "Ri:render")
               ]
     
     for tokSpec in tokens:

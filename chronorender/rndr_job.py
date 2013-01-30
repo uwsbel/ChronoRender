@@ -95,6 +95,9 @@ class RndrJob():
     def _startRenderer(self, libName=None):
         self._renderer = ri.loadRI(libName)
         self._renderer.RiBegin(ri.RI_NULL)
+        # self._renderer.RiBegin(ri.RI_RENDER)
+        # self._renderer.RiBegin("prman")
+        # self._renderer.RiBegin("launch:prman? -ctrl $ctrlin $ctrlout -dspy $dspyin $dspyout -xcpt $xcptin")
 
     def _stopRenderer(self):
         self._renderer.RiEnd()
