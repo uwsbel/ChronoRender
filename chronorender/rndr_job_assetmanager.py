@@ -8,13 +8,31 @@ class RndrJobAssetManager(object):
         self.rndrdoc    = rndrdoc
         self.relative   = relative
         self.finder     = self._createAssetFinder()
-        self.outputdirs    = {  'root' : '',
-                                'output': 'OUTPUT', 
-                                'shader': 'SHADERS', 
-                                'script': 'SCRIPTS', 
-                                'archive': 'ARCHIVES', 
-                                'log':'LOG',
-                                'texture': 'TEXTURES' }
+        self.outputdirs = { 'root' : '',
+                            'output': 'OUTPUT', 
+                            'shader': 'SHADERS', 
+                            'script': 'SCRIPTS', 
+                            'archive': 'ARCHIVES', 
+                            'log':'LOG',
+                            'texture': 'TEXTURES' }
+
+        self._assets    = { 'shader':  [],
+                            'script':  [],
+                            'archive': [],
+                            'texture': [] }
+
+    @staticmethod
+    def _getFileType(asset):
+        filename, ext = os.path.splitext(asset)
+        if ext == ".sl":
+            return 'shader'
+        elif ext == ".py":
+            return 'script'
+        elif ext == ".rib":
+            return 'archive'
+        elif imghdr.what(asset) != None:
+            return 'texture'
+        return ''
 
     class Helper(object):
         def __init__(self, findfunc, outfunc, outpath):
@@ -28,6 +46,9 @@ class RndrJobAssetManager(object):
         def getOutPathFor(self, filetype):
             return self.outfunc(filetype)
 
+        def convertTextureName(self, name):
+            return os.path.splitext(name)[0] + '.tex'
+
 
     def find(self, filename):
         return self.finder.find(filename)
@@ -37,7 +58,10 @@ class RndrJobAssetManager(object):
             return self.outputdirs[typename]
         else: 
             return os.path.join(self.outputpath, self.outputdirs[typename])
-        
+
+    def getFrameRange(self):
+        return self.rndrdoc.getFrameRange()
+
     def createOutDirs(self):
         if not os.path.exists(self.outputpath): 
             os.makedirs(self.outputpath)
@@ -57,17 +81,13 @@ class RndrJobAssetManager(object):
 
         try:
             os.chdir(self.outputpath)
-
             helper = RndrJobAssetManager.Helper(
                     self.finder.find, 
                     self.getOutPathFor,
                     self.outputpath)
-            # paths = self.rndrdoc.resolveAssets(self._createAssetFinder(), self.outputpath)
             paths = self.rndrdoc.resolveAssets(helper)
-            currassets = self._getCurrentAssets()
-            for path in paths:
-                if path not in currassets:
-                    self._copyAssetToDirectory(path)
+            self._initManagerAssetsDict(paths)
+            self._copyAssetsToJobDir(paths)
         finally:
             os.chdir(prevdir)
 
@@ -93,12 +113,28 @@ class RndrJobAssetManager(object):
     def convertTextures(self, renderer):
         if renderer == None:
             return
+
         txmk = riutil.txmkFromRenderer(renderer)
         if not txmk:
             return
 
-    def getFrameRange(self):
-        return self.rndrdoc.getFrameRange()
+        prevdir = os.getcwd()
+        try:
+            os.chdir(self.outputpath)
+            os.chdir(self.getOutPathFor('texture'))
+            texs = glob.glob('./*')
+            intexs = []
+            for tex in texs:
+                path, f = os.path.split(tex)
+                name, ext = os.path.splitext(f)
+                if ext != '.tex':
+                    intexs.append([tex, name + '.tex'])
+            for tex in intexs:
+                exe = [txmk]
+                exe.extend(tex)
+                subprocess.call(exe)
+        finally:
+            os.chdir(prevdir)
 
     def _createAssetFinder(self):
         if self.relative:
@@ -108,14 +144,9 @@ class RndrJobAssetManager(object):
     def _copyAssetToDirectory(self, asset):
         filename, ext = os.path.splitext(asset)
         try:
-            if ext == ".sl":
-                shutil.copy2(asset, self.getOutPathFor('shader'))
-            elif ext == ".py":
-                shutil.copy2(asset, self.getOutPathFor('script'))
-            elif ext == ".rib":
-                shutil.copy2(asset, self.getOutPathFor('archive'))
-            elif imghdr.what(asset) != None:
-                shutil.copy2(asset, self.getOutPathFor('texture'))
+            atype = RndrJobAssetManager._getFileType(asset)
+            path = self.getOutPathFor(atype)
+            shutil.copy2(asset, path)
         except:
             pass
 
@@ -132,3 +163,19 @@ class RndrJobAssetManager(object):
         for root, dirs, files in os.walk(path):
             out.extend([os.path.join(root,f) for f in files])
         return out
+
+    def _copyAssetsToJobDir(self, paths):
+        currassets = self._getCurrentAssets()
+        for path in paths:
+            if path not in currassets:
+                self._copyAssetToDirectory(path)
+
+    def _initManagerAssetsDict(self, paths):
+        self._clearManagerAssetsDict()
+        for asset in paths:
+            atype = RndrJobAssetManager._getFileType(asset)
+            self._assets[atype].append(asset)
+
+    def _clearManagerAssetsDict(self):
+        for key, val in self._assets.iteritems():
+            del val[0:len(val)]

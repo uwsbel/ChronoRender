@@ -1,3 +1,4 @@
+import os.path 
 from chronorender.renderpass.renderpass import RenderPassException
 from chronorender.renderpass.raytrace_pass import RayTracePass
 import chronorender.shader as cs
@@ -28,10 +29,11 @@ class EnvLightPass(RayTracePass):
         if len(self.envmap) <= 0:
             raise RenderPassException('no value given to parameter \'envmap\' for ' + EnvLightPass.getTypeName() + ' pass')
 
-        assetman.find(self.envmap)
+        out = [assetman.find(self.envmap)]
+        self.envmap = assetman.convertTextureName(self.envmap)
 
         # resolve shader
-        out = self.env.resolveAssets(assetman)
+        out.extend(self.env.resolveAssets(assetman))
         self.env.setAsset('envmap', self.envmap)
         params = self.env.getParameters()
         if 'envmap' not in params:

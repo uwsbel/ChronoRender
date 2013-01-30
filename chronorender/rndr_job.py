@@ -38,6 +38,7 @@ class RndrJob():
     def _resolveAssets(self, framerange=None):
         self._assetman.updateAssets()
         self._assetman.compileShaders(self.stream)
+        self._assetman.convertTextures(self.stream)
         self._verifyFrameRange(framerange)
 
     def _render(self):
