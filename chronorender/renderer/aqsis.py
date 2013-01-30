@@ -9,7 +9,6 @@ class Aqsis(Renderer):
     def __init__(self):
         super(Aqsis, self).__init__()
         self._libname = cri.rmanlibutil.libFromRenderer(Aqsis.getName())
-        self.ri = self._rihook
 
     def init(self):
         self._rihook = cri.loadRI(self._libname)

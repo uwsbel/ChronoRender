@@ -48,7 +48,11 @@ class Renderer(object):
     def cleanup(self):
         return
 
-    def startRenderContext(self, mode):
+    def startRenderContext(self, mode=None):
+        if not mode:
+            self._rihook.RiBegin(self._rendermodes[Renderer.RENDER])
+            return
+
         if mode in self._rendermodes:
             self._rihook.RiBegin(self._rendermodes[mode])
         else:

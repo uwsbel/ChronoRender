@@ -3,6 +3,7 @@ import datetime, os, logging, glob
 import chronorender.cr_utils as crutils
 import chronorender.metadata as md
 import chronorender.rndr_doc as rd
+import chronorender.renderer as cr
 import chronorender.ri as ri
 from chronorender.rndr_job_assetmanager import RndrJobAssetManager
 
@@ -13,6 +14,8 @@ class RndrJobException(Exception):
         return repr(self.value)
 
 class RndrJob():
+    _RendererFactory = cr.RendererFactory()
+
     def __init__(self, infile, factories):
         self.stream         = None
         self._metadata      = md.MetaData(infile)
@@ -42,7 +45,9 @@ class RndrJob():
         self._verifyFrameRange(framerange)
 
     def _render(self):
-        self._startRenderer(ri.rmanlibutil.libFromRenderer(self.stream))
+        #self._startRenderer(ri.rmanlibutil.libFromRenderer(self.stream))
+        self._renderer = RndrJob._RendererFactory.build(self.stream)
+        self._startRenderer()
         self._renderOptions()
         self._renderFrames()
         self._stopRenderer()
@@ -92,12 +97,10 @@ class RndrJob():
     def copyAssetToDirectory(self, asset):
         self._assetman._copyAssetToDirectory(asset)
 
-    def _startRenderer(self, libName=None):
-        self._renderer = ri.loadRI(libName)
-        self._renderer.RiBegin(ri.RI_NULL)
-        # self._renderer.RiBegin(ri.RI_RENDER)
-        # self._renderer.RiBegin("prman")
-        # self._renderer.RiBegin("launch:prman? -ctrl $ctrlin $ctrlout -dspy $dspyin $dspyout -xcpt $xcptin")
+    def _startRenderer(self):
+        self._renderer.init()
+        self._renderer.startRenderContext()
 
     def _stopRenderer(self):
-        self._renderer.RiEnd()
+        self._renderer.stopRenderContext()
+        self._renderer.cleanup()
