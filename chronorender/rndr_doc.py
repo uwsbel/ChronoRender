@@ -3,7 +3,6 @@ import glob, re, os
 
 from cr_object import Object
 import cr_utils
-from chronorender.finder import AssetNotFoundException
 
 from chronorender.renderobject import RenderObject
 from chronorender.renderpass import RenderPass
@@ -63,15 +62,12 @@ class RndrDoc():
 
     def resolveAssets(self, assetman):
         self.outdir = assetman.getOutPathFor('output')
-        try:
-            for obj in self.renderables:
-                paths = obj.resolveAssets(assetman)
-                self.assetpaths.extend(paths)
-            for rpass in self.rndrpasses:
-                paths = rpass.resolveAssets(assetman)
-                self.assetpaths.extend(paths)
-        except AssetNotFoundException as err:
-            print err
+        for obj in self.renderables:
+            paths = obj.resolveAssets(assetman)
+            self.assetpaths.extend(paths)
+        for rpass in self.rndrpasses:
+            paths = rpass.resolveAssets(assetman)
+            self.assetpaths.extend(paths)
 
         # get rid of duplicates
         self.assetpaths = list(set(self.assetpaths))

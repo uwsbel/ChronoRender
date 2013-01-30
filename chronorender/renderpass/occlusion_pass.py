@@ -17,11 +17,6 @@ class OcclusionPass(RayTracePass):
 
     def _initMembersDict(self):
         super(OcclusionPass, self)._initMembersDict()
-        self._members[cs.Shader.getTypeName()] = [cs.Shader, None]
-
-    def _renderLighting(self, rib, **kwargs):
-        for light in self.lighting:
-            light.render(rib, **kwargs)
 
     def resolveAssets(self, assetman):
         out = self.occ.resolveAssets(assetman)

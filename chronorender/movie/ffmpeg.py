@@ -59,6 +59,7 @@ class FFMPEG(Movie):
     def _getArgsList(self):
         args = [FFMPEG._ffmpeg]
 
+        args.extend(['-loglevel', 'panic'])
         args.extend(['-f', self.format])
         #args.extend(['-pattern_type', 'glob'])
         #args.extend(['-i', "\'" + self._fileexpr + "\'"])

@@ -16,3 +16,5 @@ class MovieTestCase(unittest.TestCase):
 
         expected_out = os.path.join(self.outdir, "default.mp4")
         self.assertTrue(os.path.exists(expected_out))
+
+        os.remove(expected_out)

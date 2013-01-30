@@ -10,15 +10,21 @@ normal shadingnormal(normal N) {
 }
 
 light
-occlusionlight(
+envlight(
     float samples = 64, maxvariation = 0.02;
+    string envmap = "";
     color filter = color(1);
     output float __nonspecular = 1;)
 {
   normal Ns = shadingnormal(N);
 
   illuminate (Ps + Ns) {
-    float occ = occlusion(Ps, Ns, samples, "maxvariation", 0.0); 
-    Cl = filter * (1 - occ);
+      color irrad = 0;
+      float occ = occlusion(Ps, Ns, samples, 
+              "maxvariation", 0.0,
+              "environmentmap", envmap,
+              "environmentcolor", irrad
+              ); 
+      Cl = filter * irrad;
   }
 }

@@ -121,6 +121,8 @@ class ChronoRender():
             job.run(framerange)
         except Exception as e:
             print e
+        finally:
+            exit()
 
     def createAndSubmitRenderJob(self, mdfile, stream=''):
         job = self._createRenderJob(mdfile)

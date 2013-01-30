@@ -1,5 +1,5 @@
 # load environment so can get chronorender
-import sys, inspect, os, glob, argparse
+import sys, inspect, os
 
 def setPythonPathForCRImport():
     script_file = inspect.getfile(inspect.currentframe())
@@ -12,8 +12,9 @@ def setPythonPathForCRImport():
 
 
 setPythonPathForCRImport()
-import unittest
+import unittest, argparse, glob
 import chronorender as cr
+
 
 
 def getTestSuites(modfilter):
@@ -31,6 +32,10 @@ def setCWDToTestDir():
     os.chdir(os.path.dirname(testpath))
 
 if __name__ == '__main__':
+    _stdout = sys.stdout
+    null = open(os.devnull, 'wb')
+    sys.stdout = null
+
     setCWDToTestDir()   # do this for the sake of relative paths used in tests
 
     parser = argparse.ArgumentParser(description='run tests')
@@ -41,4 +46,5 @@ if __name__ == '__main__':
     for suite in alltests:
         unittest.TextTestRunner(verbosity=2).run(suite)
 
+    sys.stdout = _stdout
     # unittest.main()      

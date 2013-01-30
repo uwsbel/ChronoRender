@@ -30,6 +30,8 @@ class RndrJob():
             os.chdir(self._rootdir)
             self._resolveAssets(framerange)
             self._render()
+        except Exception as err:
+            raise err
         finally:
             os.chdir(prevdir)
 
