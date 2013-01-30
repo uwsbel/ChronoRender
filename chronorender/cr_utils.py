@@ -1,4 +1,4 @@
-import re, inspect, os
+import re, inspect, os, sys
 
 def natural_sort(slist):
     convert = lambda text: int(text) if text.isdigit() else text.lower()
@@ -34,6 +34,26 @@ def which(program):
             if is_exe(exe_file):
                 return exe_file
 
+    return None
+
+def findModuleOnSysPath(module, path=None):
+    if path:
+        out = findFileOnPath(module, path)
+        if out:
+          out = os.path.split(out)[1]
+          out = os.path.splitext(out)[0]
+        return out
+
+    for p in sys.path:
+        out = findFileOnPath(module, p)
+        if out: return out
+
+    return None
+
+def findFileOnPath(fname, path):
+    for root, dirs, files in os.walk(path):
+        if fname in files:
+            return os.path.join(root,fname)
     return None
 
 def getCRAssetPaths():

@@ -28,4 +28,14 @@ class RendererTestCase(unittest.TestCase):
         if not which('render'):
             return
 
-
+        prman = self.fact.build('prman')
+        prman.init()
+        prman.startRenderContext('output/prman.rib')
+        prman.FrameBegin(666)
+        prman.WorldBegin()
+        for i in range(0, 10):
+          prman.Sphere(1 ,-1, 1, 360)
+        prman.WorldEnd()
+        prman.FrameEnd()
+        prman.stopRenderContext()
+        prman.cleanup()
