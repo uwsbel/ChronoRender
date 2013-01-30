@@ -27,7 +27,8 @@ class EnvLightPass(RayTracePass):
     def resolveAssets(self, assetman):
         # resolve envmap texture
         if len(self.envmap) <= 0:
-            raise RenderPassException('no value given to parameter \'envmap\' for ' + EnvLightPass.getTypeName() + ' pass')
+            raise RenderPassException('no value given to parameter \'envmap\'\ for ' + 
+                    EnvLightPass.getTypeName() + ' pass')
 
         out = [assetman.find(self.envmap)]
         self.envmap = assetman.convertTextureName(self.envmap)
@@ -37,7 +38,8 @@ class EnvLightPass(RayTracePass):
         self.env.setAsset('envmap', self.envmap)
         params = self.env.getParameters()
         if 'envmap' not in params:
-            raise RenderPassException('no parameter \'envmap\' in shader: ' + self.env.getShaderName())
+            raise RenderPassException('no parameter \'envmap\' in shader: ' + 
+                    self.env.getShaderName())
 
         self._resolvedAssetPaths = True
         return out
