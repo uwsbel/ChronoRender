@@ -17,7 +17,11 @@ _supported = {
 
         'prman' : {'lib' : 'prman', 
                    'shader' : 'shader', 
-                   'texture' : 'txmake'}
+                   'texture' : 'txmake'},
+
+        'stdout' : {'lib' : None, 
+                   'shader' : None, 
+                   'texture' : None}
         }
 
 def resolveRManLib(libName, renderer=None):
@@ -71,19 +75,21 @@ def resolveRManShdrc(renderer):
     return which(sdrc)
 
 def sdrcFromRenderer(name):
-    if name not in _supported:
-        return None
-    return _supported[name]['shader']
+    if rendererSupported(name):
+        return _supported[name]['shader']
 
 def txmkFromRenderer(name):
-    if name not in _supported:
-        return None
-    return _supported[name]['texture']
+    if rendererSupported(name):
+        return _supported[name]['texture']
 
 def libFromRenderer(name):
+    if rendererSupported(name):
+        return _supported[name]['lib']
+
+def rendererSupported(name):
     if name not in _supported:
-        return None
-    return _supported[name]['lib']
+        raise Exception('renderer: ' + str(name) + ' not supported')
+    return True
 
 def rendererFromLib(libName):
     """Return the renderer package name given a library name.

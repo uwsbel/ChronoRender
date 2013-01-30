@@ -76,8 +76,7 @@ class RndrJobAssetManager(object):
             return
 
         sdrc = riutil.sdrcFromRenderer(renderer)
-
-        if sdrc == None:
+        if not sdrc:
             return
 
         prevdir = os.getcwd()
@@ -94,8 +93,9 @@ class RndrJobAssetManager(object):
     def convertTextures(self, renderer):
         if renderer == None:
             return
-
         txmk = riutil.txmkFromRenderer(renderer)
+        if not txmk:
+            return
 
     def getFrameRange(self):
         return self.rndrdoc.getFrameRange()
