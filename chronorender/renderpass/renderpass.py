@@ -70,31 +70,29 @@ class RenderPass(Renderable):
 
     def render(self, rib, passnumber, framenumber, 
             outpath='', outpostfix='', *args, **kwargs):
-        super(RenderPass, self).render(rib, **kwargs)
         if self.script:
             self.script.render(rib, *args, **kwargs)
         else:
             rib.RiFrameBegin(passnumber)
-            for sett in self.rndrsettings:
-                sett.render(rib, outpath, outpostfix, **kwargs)
+            self._renderSettings(rib, outpath, outpostfix, **kwargs)
 
             self.renderAttributes(rib)
 
             self._renderInstanceDecls(rib, framenumber=framenumber, **kwargs)
 
-            for cam in self.camera:
-                cam.render(rib, **kwargs)
+            self._renderCamera(rib, **kwargs)
 
             rib.RiWorldBegin()
-            for light in self.lighting:
-                light.render(rib, **kwargs)
-            for obj in self.renderables:
-                obj.render(rib, framenumber=framenumber, **kwargs)
-            for scene in self.scene:
-                scene.render(rib, **kwargs)
+            self._renderLighting(rib, **kwargs)
+            self._renderRenderables(rib, **kwargs)
+            self._renderScene(rib, **kwargs)
             rib.RiWorldEnd()
 
             rib.RiFrameEnd()
+
+    def _renderSettings(self, rib, outpath, outpostfix, **kwargs):
+        for sett in self.rndrsettings:
+            sett.render(rib, outpath, outpostfix, **kwargs)
 
     def _renderInstanceDecls(self, rib, **kwargs):
         for obj in self.renderables:
@@ -104,6 +102,23 @@ class RenderPass(Renderable):
                 rib.RiObjectBegin(__handleid=inst.getInstanceID())
                 inst.renderShape(rib, rendershaders=True)
                 rib.RiObjectEnd()
+
+    def _renderCamera(self, rib, **kwargs):
+        for cam in self.camera:
+            cam.render(rib, **kwargs)
+
+    def _renderLighting(self, rib, **kwargs):
+        for light in self.lighting:
+            light.render(rib, **kwargs)
+
+    def _renderRenderables(self, rib, **kwargs):
+        for obj in self.renderables:
+            # obj.render(rib, framenumber=framenumber, **kwargs)
+            obj.render(rib, **kwargs)
+
+    def _renderScene(self, rib, **kwargs):
+        for scene in self.scene:
+            scene.render(rib, **kwargs)
 
 def build(**kwargs):
     return RenderPass(**kwargs)

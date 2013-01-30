@@ -66,6 +66,7 @@ class ChronoRender():
 
         self._createFactory(rp.RenderPass)
         self._addFactoryModule(rp.RenderPass, rp.RayTracePass)
+        self._addFactoryModule(rp.RenderPass, rp.OcclusionPass)
         self._createFactory(rp.settings.Settings)
         self._createFactory(rp.display.Display)
 
