@@ -46,6 +46,31 @@ class RendererTestCase(unittest.TestCase):
 
         self._verifyAndRemoveTarget(target)
 
+    def test_prman_directrender(self):
+        # only test if on system
+        if not which('render'):
+            return
+
+        target = 'output/prman.tif'
+        prman = self.fact.build('prman')
+        prman.init()
+        prman.startRenderContext()
+        prman.FrameBegin(666)
+        prman.Display(target, 'tiff', 'rgba')
+        prman.WorldBegin()
+        for i in range(0, 10):
+          prman.TransformBegin()
+          prman.Translate(0, i*0.1, i*0.5)
+          prman.Sphere(0.1 ,-0.1, 0.1, 360)
+          prman.TransformEnd()
+        prman.WorldEnd()
+        prman.FrameEnd()
+        prman.stopRenderContext()
+        prman.cleanup()
+
+        self._verifyAndRemoveTarget(target)
+        
+
     def _verifyAndRemoveTarget(self, target):
         self.assertTrue(os.path.exists(target))
         os.remove(target)
