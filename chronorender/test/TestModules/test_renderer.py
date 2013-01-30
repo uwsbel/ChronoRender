@@ -1,6 +1,7 @@
 import unittest, os
 
 from chronorender.renderer import RendererFactory
+from chronorender.cr_utils import which
 
 class RendererTestCase(unittest.TestCase):
     def setUp(self):
@@ -21,3 +22,10 @@ class RendererTestCase(unittest.TestCase):
         aqsis.FrameEnd()
         aqsis.stopRenderContext()
         aqsis.cleanup()
+
+    def test_prman(self):
+        # only test if on system
+        if not which('render'):
+            return
+
+
