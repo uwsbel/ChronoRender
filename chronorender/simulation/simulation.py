@@ -25,6 +25,9 @@ class Simulation(Movable):
         self._members[cro.RenderObject.getTypeName()] = [cro.RenderObject, []]
         self._members[Scriptable.getTypeName()] = [Scriptable, None]
 
+    def getNumFrames(self):
+        return self._data.getNumUniqueElements()
+
     def render(self, ri, framenumber=0, *args, **kwargs):
         if self.script:
             self.script.render(rib, *args, **kwargs)

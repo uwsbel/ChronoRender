@@ -26,11 +26,13 @@ class DataObject(Object):
         self._allfields     = []
         self._currindex     = 0
         self._maxindex      = 0
+        self._resolved      = False
 
 
     def resolveSources(self):
         self._initMultipleSourceResources()
         self._initCrossSrcFields()
+        self._resolved = True
  
     def _initMembersDict(self):
         self._members[ds.DataSource.getTypeName()] = [ds.DataSource, []]
@@ -84,6 +86,15 @@ class DataObject(Object):
 
     def resetDataSourceCounter(self):
         self._currindex = 0
+
+    def getNumUniqueElements(self):
+        if not self._resolved:
+            return 0
+        maxelems = 0
+        for srclist in self._datasrcs:
+            if len(srclist) > maxelems:
+                maxelems = len(srclist)
+        return maxelems
 
     def _initCrossSrcFields(self):
         for srclist in self._datasrcs:

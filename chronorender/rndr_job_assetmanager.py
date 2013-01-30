@@ -91,6 +91,9 @@ class RndrJobAssetManager(object):
         finally:
             os.chdir(prevdir)
 
+    def getFrameRange(self):
+        return self.rndrdoc.getFrameRange()
+
     def _createAssetFinder(self):
         if self.relative:
             return FinderFactory.build(self.rndrdoc.getSearchPaths(), self.outputpath)

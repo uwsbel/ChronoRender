@@ -15,27 +15,32 @@ class RndrJobException(Exception):
 
 class RndrJob():
     def __init__(self, infile, factories):
+        self.stream         = None
         self._metadata      = md.MetaData(infile)
         self._rndrdoc       = rd.RndrDoc(factories, self._metadata)
         self._rootdir       = os.path.abspath(os.path.split(self._metadata.filename)[0])
         self._timecreated   = datetime.datetime.now()
-        self._frames        = self._rndrdoc.getFrameRange()
-        self._assetman      = RndrJobAssetManager(self._rootdir, self._rndrdoc)
         self._renderer      = None
+        self._frames        = None
+        self._assetman      = RndrJobAssetManager(self._rootdir, self._rndrdoc)
 
-    def run(self, renderer=None, framerange=None):
+    def run(self, framerange=None):
         self._assetman.createOutDirs()
         prevdir = os.getcwd()
         try:
             os.chdir(self._rootdir)
-            self._assetman.updateAssets()
-            self._assetman.compileShaders(renderer)
-            self._render(renderer)
+            self._resolveAssets(framerange)
+            self._render()
         finally:
             os.chdir(prevdir)
 
-    def _render(self, renderer=None):
-        self._startRenderer(ri.rmanlibutil.libFromRenderer(renderer))
+    def _resolveAssets(self, framerange=None):
+        self._assetman.updateAssets()
+        self._assetman.compileShaders(self.stream)
+        self._verifyFrameRange(framerange)
+
+    def _render(self):
+        self._startRenderer(ri.rmanlibutil.libFromRenderer(self.stream))
         self._renderOptions()
         self._renderFrames()
         self._stopRenderer()
@@ -53,6 +58,19 @@ class RndrJob():
     def _renderFrames(self):
         for framenum in range(self._frames[0], self._frames[1]+1):
             self._rndrdoc.render(self._renderer, framenum)
+
+    def _verifyFrameRange(self, framerange=None):
+        self._frames = self._assetman.getFrameRange()
+        if framerange:
+            if len(framerange) != 2:
+                raise RndrJobException("invalid framerange: " + str(framerange))
+
+            if framerange[0] < 0 or framerange[1] < 0:
+                raise RndrJobException("invalid framerange: " + str(framerange))
+
+            if framerange[1] > self._frames[1]:
+                framerange[1] = self._frames[1]
+            self._frames = framerange
 
     def setOutputPath(self, path):
         self._assetman.outputpath = path

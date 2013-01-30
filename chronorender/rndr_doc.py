@@ -8,6 +8,7 @@ from chronorender.finder import AssetNotFoundException
 from chronorender.renderobject import RenderObject
 from chronorender.renderpass import RenderPass
 from chronorender.rendersettings import RenderSettings
+from chronorender.simulation import Simulation
 
 class RndrDocException(Exception):
     def __init__(self, value):
@@ -77,7 +78,14 @@ class RndrDoc():
         return self.assetpaths
 
     def getFrameRange(self):
-        return self.settings.framerange
+        maxframes = 0
+        for robj in self.renderables:
+            if isinstance(robj, Simulation):
+                frames = robj.getNumFrames()
+                if frames > maxframes:
+                    maxframes = frames
+        return [0, maxframes-1]
+        # return self.settings.framerange
 
     def getSearchPaths(self):
         return self.settings.searchpaths
