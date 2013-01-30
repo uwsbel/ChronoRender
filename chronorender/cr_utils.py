@@ -35,3 +35,11 @@ def which(program):
                 return exe_file
 
     return None
+
+def getCRAssetPaths():
+    paths = []
+    cr_path = os.path.split(inspect.getfile(inspect.currentframe()))[0]
+    a_path = os.path.join(cr_path, 'assets')
+    for root, dirs, files in os.walk(a_path):
+        paths.append(root)
+    return paths

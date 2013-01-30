@@ -10,7 +10,7 @@ normal shadingnormal(normal N) {
 }
 
 surface
-occsurf(float samples = 64;
+occlusionsurface(float samples = 64;
         float maxvariation = 0.02)
 {
   //normal Ns = shadingnormal(N);

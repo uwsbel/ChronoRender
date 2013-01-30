@@ -1,11 +1,10 @@
-import datetime, os, logging, glob, multiprocessing
+import datetime, os, logging, glob
 
+import chronorender.cr_utils as crutils
 import chronorender.metadata as md
 import chronorender.rndr_doc as rd
 import chronorender.ri as ri
 from chronorender.rndr_job_assetmanager import RndrJobAssetManager
-
-workerpool = multiprocessing.Pool()
 
 class RndrJobException(Exception):
     def __init__(self, value):
@@ -46,14 +45,17 @@ class RndrJob():
         self._stopRenderer()
 
     def _renderOptions(self):
+        cr_paths = crutils.getCRAssetPaths()
+        cr_pathsstr = reduce(lambda x, y: str(x) + ":" + str(y), cr_paths)
+        cr_pathsstr += ":"
         self._renderer.RiOption("searchpath", "shader",
-                self._assetman.getOutPathFor("shader") + ":@")
+                cr_pathsstr + self._assetman.getOutPathFor("shader") + ":@")
         self._renderer.RiOption("searchpath", "procedural",
-                self._assetman.getOutPathFor("script") + ":@")
+                cr_pathsstr + self._assetman.getOutPathFor("script") + ":@")
         self._renderer.RiOption("searchpath", "texture",
-                self._assetman.getOutPathFor("texture") + ":@")
+                cr_pathsstr + self._assetman.getOutPathFor("texture") + ":@")
         self._renderer.RiOption("searchpath", "archive",
-                self._assetman.getOutPathFor("archive") + ":@")
+                cr_pathsstr + self._assetman.getOutPathFor("archive") + ":@")
 
     def _renderFrames(self):
         for framenum in range(self._frames[0], self._frames[1]+1):
