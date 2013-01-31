@@ -8,12 +8,12 @@ class PRMan(Renderer):
     _rmantree = os.environ['RMANTREE']
 
     @staticmethod
-    def getName():
+    def getTypeName():
         return 'prman'
     
     def __init__(self):
         super(PRMan, self).__init__()
-        self._libname = ri.rmanlibutil.libFromRenderer(PRMan.getName())
+        self._libname = ri.rmanlibutil.libFromRenderer(PRMan.getTypeName())
         self._modname = None
         self._module  = None
         self._dir     = None

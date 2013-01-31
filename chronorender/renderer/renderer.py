@@ -10,7 +10,7 @@ class Renderer(object):
     DETACH = 'detached'
 
     @staticmethod
-    def getName():
+    def getTypeName():
         return None
 
     def __init__(self):

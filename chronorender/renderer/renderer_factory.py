@@ -12,11 +12,11 @@ class RendererFactoryException(Exception):
 class RendererFactory():
     @staticmethod
     def build(renderername):
-        if renderername == PRMan.getName():
+        if renderername == PRMan.getTypeName():
             return PRMan()
-        elif renderername == Aqsis.getName():
+        elif renderername == Aqsis.getTypeName():
             return Aqsis()
-        elif renderername == Stdout.getName():
+        elif renderername == Stdout.getTypeName():
             return Stdout()
         else:
             raise RendererFactoryException('renderer: \"' + renderername + '\" is not supported')

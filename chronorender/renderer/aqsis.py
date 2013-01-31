@@ -3,12 +3,12 @@ import chronorender.ri as cri
 
 class Aqsis(Renderer):
     @staticmethod
-    def getName():
+    def getTypeName():
         return 'aqsis'
     
     def __init__(self):
         super(Aqsis, self).__init__()
-        self._libname = cri.rmanlibutil.libFromRenderer(Aqsis.getName())
+        self._libname = cri.rmanlibutil.libFromRenderer(Aqsis.getTypeName())
 
     def init(self):
         self._rihook = cri.loadRI(self._libname)

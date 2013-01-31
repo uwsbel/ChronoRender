@@ -1,6 +1,7 @@
-from prman import PRMan
-from aqsis import Aqsis
-from stdout import Stdout
+from movie import Movie
+from ffmpeg import FFMPEG
+import chronorender.plugins.plugin_manager as pm
+import chronorender.factory as fact
 
 class MovieFactoryException(Exception):
     def __init__(self, value):
@@ -9,13 +10,32 @@ class MovieFactoryException(Exception):
         return repr(self.value)
 
 class MovieFactory():
-    @staticmethod
-    def build(renderername):
-        if renderername == PRMan.getName():
-            return PRMan()
-        elif renderername == Aqsis.getName():
-            return Aqsis()
-        elif renderername == Stdout.getName():
-            return Stdout()
+    def build(self, movie):
+        if movie == FFMPEG.getTypeName():
+            return FFMPEG()
+        elif self._factory:
+            return self._factory.build(movie)
         else:
-            raise MovieFactoryException('renderer: \"' + renderername + '\" is not supported')
+            raise MovieFactoryException('movie encoder: \"' + movie + '\" is not supported')
+
+    def __init__(self):
+        self._plugins = None
+        self._factory = None
+
+        self._loadPlugins()
+        self._loadFactory()
+        print self._plugins, self._factory
+
+    def _loadPlugins(self):
+        plugs = pm.PluginManager()
+        plugs.loadPluginsFor(fact.Factory.getTypeName(), Movie.getTypeName())
+        plugs.registerPluginsFor(fact.Factory.getTypeName(), Movie.getTypeName())
+        self._plugins = plugs.getPlugins(fact.Factory.getTypeName(), Movie.getTypeName())
+
+    def _loadFactory(self):
+        if len(self._plugins) <= 0:
+            return
+
+        self._factory = fact.Factory(Movie.getTypeName())
+        for plug in self._plugins:
+            self._factory.addModule(plug)

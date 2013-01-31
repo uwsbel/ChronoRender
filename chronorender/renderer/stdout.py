@@ -3,7 +3,7 @@ import chronorender.ri as cri
 
 class Stdout(Renderer):
     @staticmethod
-    def getName():
+    def getTypeName():
         return 'stdout'
     
     def __init__(self):

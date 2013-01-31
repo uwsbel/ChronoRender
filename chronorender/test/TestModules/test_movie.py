@@ -1,6 +1,6 @@
 import unittest, os
 
-from chronorender.movie import Movie, FFMPEG
+from chronorender.movie import Movie, FFMPEG, MovieFactory
 
 class MovieTestCase(unittest.TestCase):
 
@@ -9,6 +9,7 @@ class MovieTestCase(unittest.TestCase):
         self.outdir     = os.path.abspath('./output')
 
     def test_ffmpeg_encode(self):
+        return
         mov = FFMPEG(framerate=12)
         mov.setInputFile(self.infilepath)
         mov.outdir = self.outdir
@@ -18,3 +19,9 @@ class MovieTestCase(unittest.TestCase):
         self.assertTrue(os.path.exists(expected_out))
 
         os.remove(expected_out)
+
+    def test_factory(self):
+        fact = MovieFactory()
+        mov = fact.build('ffmpeg')
+
+        self.assertTrue(isinstance(mov, FFMPEG))

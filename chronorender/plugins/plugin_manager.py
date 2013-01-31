@@ -61,7 +61,7 @@ class PluginManager():
 
     def registerPlugins(self):
         for plugintype, val in self._plugins.iteritems():
-            for pluginname, vals in val.iteritems():
+            for pluginname in val.iterkeys():
                 self.registerPluginsFor(plugintype, pluginname)
 
     def registerPluginsFor(self, plugintype, typename):
