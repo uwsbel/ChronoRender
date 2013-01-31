@@ -9,17 +9,16 @@ import chronorender.cr_object as cr_object
 import chronorender.cr_utils as cr_utils
 
 import chronorender.attribute as attr
+import chronorender.camera as cam
+import chronorender.data as data
 import chronorender.dataprocess as dp
 import chronorender.datasource as ds
 import chronorender.distributed as distrib
 import chronorender.geometry as geo
-import chronorender.movie as mov
-import chronorender.renderpass as rp
-
-import chronorender.camera as cam
-import chronorender.data as data
 import chronorender.lighting as lighting
+import chronorender.movie as mov
 import chronorender.renderobject as renderobject
+import chronorender.renderpass as rp
 import chronorender.rendersettings as rendersettings
 import chronorender.scene as scene
 import chronorender.simulation as simulation
@@ -34,6 +33,7 @@ class ChronoRender(object):
                     data.DataObject,
                     dp.DataProcess,
                     ds.DataSource,
+                    distrib.Distributed,
                     geo.Geometry,
                     lighting.Lighting,
                     mov.Movie,
@@ -50,23 +50,24 @@ class ChronoRender(object):
 
     def __init__(self):
         self._jobs              = []
+        self._baseClassDict     = {}
 
         self._plugins           = pm.PluginManager()
         self._factories         = fdict.FactoryDict()
 
+        self._initBaseClassesDict()
         self._processConfig()
         self._initPlugins()
         self._initFactories()
 
+    def _initBaseClassesDict(self):
+        self._baseClassDict = {}
+        for cls in ChronoRender._baseClasses:
+            self._baseClassDict[cls.getTypeName()] = cls
 
     def _processConfig(self):
         yam = self._readConfig()
-
-        # distrib.JobDescriptor._queue = yam['distributed']['queue']
-        # fact = distrib.DistributedFactory()
-        # dist = fact.build()
-        # job = dist.createJobTemplate()
-        # print job.queue
+        self._configureBaseClasses(yam)
 
     def _readConfig(self):
         f = open(self._findDefaultConfigFile())
@@ -78,6 +79,25 @@ class ChronoRender(object):
         self._configpath = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
         return os.path.join(self._configpath, ChronoRender._defaultConfigFile)
 
+    def _configureBaseClasses(self, config):
+        for key, attrdict in config.iteritems():
+            print key, attrdict
+            if key not in self._baseClassDict:
+                continue
+            cls = self._baseClassDict[key]
+            self._configAttribute(cls, attrdict)
+
+    def _configAttribute(self, cls, attr):
+        if isinstance(attr, dict):
+            for k, v in attr.iteritems():
+                self._setClassAttribute(cls, k, v)
+
+    def _setClassAttribute(self, cls, name, val):
+        if hasattr(cls, name):
+            setattr(cls, name, val)
+        else:
+            raise Exception, str(cls) +  " does not have attribute " + name
+
     def _initPlugins(self):
         self._plugins.loadPlugins()
         self._plugins.registerPlugins()
@@ -87,7 +107,7 @@ class ChronoRender(object):
         self._initBuiltInClassFactories()
 
     def _initBaseClassFactories(self):
-        for cls in ChronoRender._baseClasses:
+        for typename, cls in self._baseClassDict.iteritems():
             self._createFactory(cls)
 
     def _initBuiltInClassFactories(self):

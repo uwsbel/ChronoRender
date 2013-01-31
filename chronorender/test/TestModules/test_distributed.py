@@ -25,6 +25,7 @@ class DistributedTestCase(unittest.TestCase):
     def test_submit(self):
         self.dist.initialize()
         job = self.dist.createJobTemplate()
+        print 'QUEUE', job.queue
         self.dist.submit(job)
         self.dist.end()
         return

@@ -6,18 +6,18 @@ class DistributedException(Exception):
         return repr(self.value)
 
 class JobDescriptor(object):
-    _queue = None
-
     def __init__(self):
         self.walltime = 60
         self.nodes    = 1
         self.name     = 'render'
         self.stdout   = None
         self.stderr   = None
-        self.queue    = JobDescriptor._queue
+        self.queue    = None
         self.email    = None
 
 class Distributed(object):
+    queue = None
+
     @staticmethod
     def getTypeName():
         return "distributed"
@@ -30,7 +30,9 @@ class Distributed(object):
         return
 
     def createJobTemplate(self):
-        return JobDescriptor()
+        job = JobDescriptor()
+        job.queue = Distributed.queue
+        return job
 
     def submit(self, job):
         return None
@@ -55,3 +57,6 @@ class Distributed(object):
 
     def getConnection(self):
         return None
+
+def build(**kwargs):
+    return Distributed()
