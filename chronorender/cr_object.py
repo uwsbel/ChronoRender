@@ -101,7 +101,7 @@ class Object(object):
             out = vtype(val)
         elif isinstance(val, list):
             # out = []
-            out = [self._evalParamType(vtype, x) for x in val]
+            out = [self._evalParamType(type(x), x) for x in val]
             # for elem in val:
                 # out.append(self._evalParamType(vtype, elem))
         elif isinstance(val, dict):

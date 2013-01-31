@@ -11,6 +11,7 @@ class FFMPEG(Movie):
         return 'ffmpeg'
 
     def __init__(self, *args, **kwargs):
+        print "BUILD", kwargs
         super(FFMPEG, self).__init__(*args, **kwargs)
 
         self._fileexpr = ""

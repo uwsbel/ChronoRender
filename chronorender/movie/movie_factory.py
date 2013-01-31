@@ -10,11 +10,11 @@ class MovieFactoryException(Exception):
         return repr(self.value)
 
 class MovieFactory():
-    def build(self, movie):
+    def build(self, movie, **kwargs):
         if movie == FFMPEG.getTypeName():
-            return FFMPEG()
+            return FFMPEG(**kwargs)
         elif self._factory:
-            return self._factory.build(movie)
+            return self._factory.build(movie, **kwargs)
         else:
             raise MovieFactoryException('movie encoder: \"' + movie + '\" is not supported')
 
@@ -24,7 +24,6 @@ class MovieFactory():
 
         self._loadPlugins()
         self._loadFactory()
-        print self._plugins, self._factory
 
     def _loadPlugins(self):
         plugs = pm.PluginManager()
