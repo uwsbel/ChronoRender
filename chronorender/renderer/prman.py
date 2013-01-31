@@ -5,7 +5,7 @@ import chronorender.ri as ri
 from chronorender.cr_utils import findModuleOnSysPath
 
 class PRMan(Renderer):
-    _rmantree = os.environ['RMANTREE']
+    _rmantree = os.environ['RMANTREE'] if 'RMANTREE' in os.environ else '.'
 
     @staticmethod
     def getTypeName():

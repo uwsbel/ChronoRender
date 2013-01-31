@@ -42,7 +42,7 @@ class Settings(Renderable):
 
         for d in self.displays:
             # d.render(rib, outpath, postfix, **kwargs)
-            d.render(rib, outpath, postfix, kwargs)
+            d.render(rib, outpath, postfix, **kwargs)
 
 def build(**kwargs):
     return Settings(**kwargs)
