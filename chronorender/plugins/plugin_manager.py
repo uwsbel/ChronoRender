@@ -71,10 +71,14 @@ class PluginManager():
         for path in paths:
             if path not in sys.path:
                 sys.path.insert(0,path)
-        try:
-            conc_plugin['modules'] = map(__import__,conc_plugin['plugins'])
-        finally:
-            pass
+        conc_plugin['modules'] = []
+        for plugin in conc_plugin['plugins']:
+            try:
+                conc_plugin['modules'].append(__import__(plugin))
+            except Exception:
+              print "unable to load plugin: ", plugintype, typename
+            finally:
+              pass
 
     def getPlugins(self, plugintype, pluginname):
         if plugintype not in self._plugins:
@@ -90,3 +94,6 @@ class PluginManager():
         elif pluginname not in self._plugins[plugintype]:
             raise PluginManagerException('no plugin name: ' + pluginname + ' for plugin type: ' + plugintype)
         return self._plugins[plugintype][pluginname]
+
+    def removePlugin(self, plugintype, pluginname):
+        del self._plugins[plugintype][pluginname]

@@ -5,16 +5,32 @@ class DistributedException(Exception):
     def __str__(self):
         return repr(self.value)
 
-class Distributed():
+class JobDescriptor(object):
+    _queue = None
+
+    def __init__(self):
+        self.walltime = 60
+        self.nodes    = 1
+        self.name     = 'render'
+        self.stdout   = None
+        self.stderr   = None
+        self.queue    = JobDescriptor._queue
+        self.email    = None
+
+class Distributed(object):
     @staticmethod
     def getTypeName():
-        return "distribman"
+        return "distributed"
 
     def __init__(self):
         return
 
-    def initialize(self, server):
+    # if server == None, try default connection
+    def initialize(self, server=None):
         return
+
+    def createJobTemplate(self):
+        return JobDescriptor()
 
     def submit(self, job):
         return None
@@ -36,3 +52,6 @@ class Distributed():
 
     def end(self):
         return
+
+    def getConnection(self):
+        return None

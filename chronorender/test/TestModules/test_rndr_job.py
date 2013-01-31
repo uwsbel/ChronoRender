@@ -1,5 +1,6 @@
 import unittest
 import chronorender as cr
+import chronorender.rndr_job as rndr
 import os
 
 class RndrJobTestCase(unittest.TestCase):
@@ -12,7 +13,7 @@ class RndrJobTestCase(unittest.TestCase):
         del self.infile
 
     def test_initJob(self):
-        job = cr.RndrJob(self.infile, self._cr._factories)
+        job = rndr.RndrJob(self.infile, self._cr._factories)
 
     # def test_runJob(self):
         # currdir = os.getcwd()
@@ -33,7 +34,7 @@ class RndrJobTestCase(unittest.TestCase):
 
     def test_runCriJob(self):
         currdir = os.getcwd()
-        job = cr.RndrJob(self.infile, self._cr._factories)
+        job = rndr.RndrJob(self.infile, self._cr._factories)
         try:
             # job.run('prman')                           
             job.stream = 'stdout'

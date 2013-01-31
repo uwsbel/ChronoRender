@@ -38,4 +38,4 @@ for path in paths:
 # import ri
 # from rndr_job import *
 # from rndr_doc import *
-# from cr import *
+from cr import ChronoRender

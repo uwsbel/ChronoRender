@@ -1,1 +1,4 @@
 searchpaths: "/usr/share/Pixie/shaders"
+
+distributed:
+  queue: "render"

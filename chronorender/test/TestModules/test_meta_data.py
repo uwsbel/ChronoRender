@@ -1,7 +1,8 @@
 import unittest
 import chronorender as cr
+import chronorender.shader as shader
 
-from metadata import MetaData
+from chronorender.metadata import MetaData
 
 import sys, os, pprint
 
@@ -25,7 +26,7 @@ class MetaDataTestCase(unittest.TestCase):
         elem = md.findAll('shader')
         self.assertEqual(len(elem), 1)
         for inst in elem:
-            sdr = cr.Shader(**inst)
+            sdr = shader.Shader(**inst)
             self.assertEqual(sdr.getMember('Kd'), '666')
 
         elems = md.getElementsDict()

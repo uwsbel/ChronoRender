@@ -8,6 +8,8 @@ class ChronoRenderTestCase(unittest.TestCase):
     def tearDown(self):
         del self._cr
 
+    def test_create(self):
+        self.assertTrue(True)
     # def test_createAndRunRenderJob(self):
         # inxml = './input/metadata/xml/0.xml'
 

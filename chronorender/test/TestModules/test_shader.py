@@ -1,11 +1,11 @@
 import unittest, os.path
-import chronorender as cr
+import chronorender.shader as shader
 
 from chronorender.renderer import RendererFactory
 
 class ShaderTestCase(unittest.TestCase):
     def setUp(self):
-        self.sdr = cr.Shader(name='plastic.sl')
+        self.sdr = shader.Shader(name='plastic.sl')
         self.sdr._shdrpath = os.path.abspath('./input/shaders/plastic.sl')
         self.sdr._initShaderParameters()
 
@@ -13,7 +13,7 @@ class ShaderTestCase(unittest.TestCase):
         del self.sdr
 
     def test_constructWithFullPath(self):
-        self.sdr = cr.Shader(shdrpath='./input/shaders/plastic.sl')
+        self.sdr = shader.Shader(shdrpath='./input/shaders/plastic.sl')
         self.assertEqual(self.sdr.getShaderType(), 'surface')
 
     def test_setAsset(self):
