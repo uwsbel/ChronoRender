@@ -1,4 +1,5 @@
 from cr_object import Object
+from cr_types import intlist
 
 class MovieException(Exception):
     def __init__(self, value):
@@ -30,7 +31,7 @@ class Movie(Object):
         self._members['outdir']       = [str, ""]
         self._members['framerate']    = [int, 24]
         self._members['format']       = [str, 'default']
-        self._members['resolution']   = [list, [640, 480]] 
+        self._members['resolution']   = [intlist, [640, 480]] 
         self._members['codec']        = [str, 'default']
         self._members['bitrate']      = [str, 'default']
         self._members['vpreset']      = [str, 'default']
