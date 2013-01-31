@@ -1,14 +1,15 @@
-# push jobs to distributed manager
-class DistributedManagerException(Exception):
+from distributed import Distributed
+
+class PBSException(Exception):
     def __init__(self, value):
         self.value = value
     def __str__(self):
         return repr(self.value)
 
-class DistributedManager():
+class PBS(Distributed):
     @staticmethod
     def getTypeName():
-        return "distribman"
+        return "pbs"
 
     def __init__(self):
         return
