@@ -2,7 +2,7 @@ import argparse, os
 import script_utils as su
 su.addCRToPath()
 
-from chronorender import ChronoRender
+from chronorender.cr import ChronoRender
 
 def main():
     parser = argparse.ArgumentParser()

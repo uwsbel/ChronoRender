@@ -32,7 +32,10 @@ for path in paths:
 
 import finder
 import metadata
-from rndr_job import *
-from rndr_doc import *
+import rndr_job
+import rndr_doc
+import cr
 import ri
-from cr import *
+# from rndr_job import *
+# from rndr_doc import *
+# from cr import *
