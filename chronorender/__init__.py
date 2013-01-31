@@ -30,12 +30,12 @@ for path in paths:
     if path not in sys.path:
         sys.path.insert(0, path)
 
-import finder
-import metadata
-import rndr_job
-import rndr_doc
-import cr
-import ri
+# import finder
+# import metadata
+# import rndr_job
+# import rndr_doc
+# import cr
+# import ri
 # from rndr_job import *
 # from rndr_doc import *
 # from cr import *
