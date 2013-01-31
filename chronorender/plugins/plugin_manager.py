@@ -42,38 +42,51 @@ class PluginManager():
     # find all the src files for plugins
     def loadPlugins(self):
         for plugintype, val in self._plugins.iteritems():
-            for pluginname, vals in val.iteritems():
-                if 'paths' not in vals: 
-                    self._plugins[plugintype][pluginname]['paths'] = []
-                if 'plugins' not in vals:
-                    self._plugins[plugintype][pluginname]['plugins'] = []
+            for pluginname in val.iterkeys():
+                self.loadPluginsFor(plugintype, pluginname)
 
-                vals['paths'] = self._getPaths(vals['paths'])
-                for path in vals['paths']:
-                    vals['plugins'] = [PluginManager._getModuleName(x) for x in glob.glob(path+'*.py')]
+    def loadPluginsFor(self, plugintype, typename):
+        conc_plugin = self.getPluginType(plugintype, typename)
+
+        # for pluginname, vals in plugins.iteritems():
+        if 'paths' not in conc_plugin: 
+            self._plugins[plugintype][typename]['paths'] = []
+        if 'plugins' not in conc_plugin:
+            self._plugins[plugintype][typename]['plugins'] = []
+
+        conc_plugin['paths'] = self._getPaths(conc_plugin['paths'])
+        for path in conc_plugin['paths']:
+            conc_plugin['plugins'] = [PluginManager._getModuleName(x) for x in glob.glob(path+'*.py')]
+            
 
     def registerPlugins(self):
         for plugintype, val in self._plugins.iteritems():
             for pluginname, vals in val.iteritems():
-                # load paths into the current python context
-                paths = vals['paths']
-                for path in paths:
-                    if path not in sys.path:
-                        sys.path.insert(0,path)
-                try:
-                    vals['modules'] = map(__import__,vals['plugins'])
-                except ImportError as imp:
-                    print 'import error: ' + str(vals)
-                    print imp
-                    return False
-        return True
+                self.registerPluginsFor(plugintype, pluginname)
+
+    def registerPluginsFor(self, plugintype, typename):
+        conc_plugin = self.getPluginType(plugintype, typename)
+
+        paths = conc_plugin['paths']
+        for path in paths:
+            if path not in sys.path:
+                sys.path.insert(0,path)
+        try:
+            conc_plugin['modules'] = map(__import__,conc_plugin['plugins'])
+        finally:
+            pass
 
     def getPlugins(self, plugintype, pluginname):
         if plugintype not in self._plugins:
-            # raise PluginManagerException('no plugin type: ' + plugintype)
             return []
         elif pluginname not in self._plugins[plugintype]:
-            # raise PluginManagerException('no plugin name: ' + pluginname + ' for plugin type: ' + plugintype)
             return []
         else:
             return self._plugins[plugintype][pluginname]['modules']
+
+    def getPluginType(self, plugintype, pluginname):
+        if plugintype not in self._plugins:
+            raise PluginManagerException('no plugin type: ' + plugintype)
+        elif pluginname not in self._plugins[plugintype]:
+            raise PluginManagerException('no plugin name: ' + pluginname + ' for plugin type: ' + plugintype)
+        return self._plugins[plugintype][pluginname]

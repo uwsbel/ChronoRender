@@ -21,7 +21,8 @@ class PluginManagerTestCase(unittest.TestCase):
     def test_registerPlugins(self):
         man = pm.PluginManager()
         man.loadPlugins()
-        self.assertTrue(man.registerPlugins(), True)
+        man.registerPlugins()
+        self.assertTrue(isinstance(man._plugins['factory']['geometry']['modules'],list))
 
     def test_getPlugins(self):
         man = pm.PluginManager()
@@ -31,3 +32,9 @@ class PluginManagerTestCase(unittest.TestCase):
         geomods = man.getPlugins('factory','geometry')
 
         self.assertTrue(len(geomods) > 0)
+
+    def test_loadPluginsFor(self):
+        man = pm.PluginManager()
+        man.loadPluginsFor('factory', 'movie')
+        man.registerPluginsFor('factory', 'movie')
+        self.assertTrue(isinstance(man._plugins['factory']['movie']['paths'], list))
