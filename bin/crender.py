@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import argparse, os
 import script_utils as su
 su.addCRToPath()
@@ -5,6 +7,18 @@ su.addCRToPath()
 from chronorender.cr import ChronoRender
 
 def main():
+    args = getArgs()
+
+    if args['action'] == 'init':
+        initNewRenderJob(args)
+    elif args['action'] == 'render':
+        startLocalRenderJob(args)
+    elif args['action'] == 'submit':
+        startDistributedJob(args)
+    elif args['action'] == 'update':
+        updateJobAssets(args)
+
+def getArgs():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('action', choices=['init', 'render', 'submit', 'update'])
@@ -31,18 +45,7 @@ def main():
             default=None,
             type=int,
             required=False)
-
-
-    args = vars(parser.parse_args())
-
-    if args['action'] == 'init':
-        initNewRenderJob(args)
-    elif args['action'] == 'render':
-        startLocalRenderJob(args)
-    elif args['action'] == 'submit':
-        startDistributedJob(args)
-    elif args['action'] == 'update':
-        updateJobAssets(args)
+    return vars(parser.parse_args())
 
 def initNewRenderJob(args):
     path = args['outpath'] if args['outpath'] else os.getcwd()
@@ -80,7 +83,6 @@ def verifyMetadata(args):
 def printErrorAndExit(msg):
     print "ERROR:", msg
     exit()
-
 
 if __name__ == '__main__':
     main()

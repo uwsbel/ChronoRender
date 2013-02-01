@@ -31,13 +31,6 @@ class Renderable(Object):
     def getInstanceables(self):
         return []
 
-    def resolveAssets(self, assetman):
-        self._resolvedAssetPaths = True
-        return  []
-
-    def setAsset(self, assetname, obj):
-        return
-
     def render(self, rib, *args, **kwargs):
         self.renderAttributes(rib)
 

@@ -1,4 +1,4 @@
-import inspect, os
+import inspect, os, shutil
 
 import chronorender.rndr_job as rndrjob
 import chronorender.cr_object as cr_object

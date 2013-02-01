@@ -1,7 +1,6 @@
 from chronorender.distributed import Distributed
 
-import pbs
-import traceback, sys
+import pbs, sys
 
 class PBSException(Exception):
     def __init__(self, value):
@@ -14,18 +13,26 @@ class PBS(Distributed):
     def getTypeName():
         return "pbs"
 
+    class PBSJobDescriptor(Distributed.JobDescriptor):
+        def __init__(self):
+          super(PBS.PBSJobDescriptor, self).__init__()
+          self.script = ""
+
+        def resolveAssets(self, assetman):
+            print "SCRIPT", self.script
+            return  [self._writeScriptToDisk(assetman)]
+
+        def _writeScriptToDisk(self, assetman):
+            filename = ''
+            return filename
+
     def __init__(self, *args, **kwargs):
         super(PBS, self).__init__(*args, **kwargs)
-        # stack = traceback.format_stack()
-        # for s in stack:
-          # print s
-        self._connection_id = None
 
-        self._name = self.getMember('name')
+        self._connection_id = None
 
     def _initMembersDict(self):
         super(PBS, self)._initMembersDict()
-        self._members['name']   = [str, '']
 
     def initialize(self, server=None):
         self.connect()
@@ -37,6 +44,15 @@ class PBS(Distributed):
 
         if not self._connection_id:
             raise PBSException('could not connect to pbs server ' + str(server))
+
+    def createJobTemplate(self):
+        job = PBS.PBSJobDescriptor()
+        self._setJobDefaults(job)
+        return job
+
+    def finalizeJob(self, job, assetman):
+        job.script = self._job2Script(job)
+        return job.resolveAssets(assetman)
 
     def submit(self, job):
         print job
@@ -65,11 +81,7 @@ class PBS(Distributed):
         return self._connection_id
 
     def _setJobDefaults(self, job):
-        job.walltime  = Distributed.walltime
-        job.queue = Distributed.queue
-        job.ppn   = Distributed.ppn
-        job.nodes = Distributed.nodes
-        job.script = self._job2Script(job)
+        super(PBS, self)._setJobDefaults(job)
 
     def _job2Script(self, job):
         script = "#!/bin/bash\n"
@@ -77,10 +89,23 @@ class PBS(Distributed):
         script += "#PBS -l nodes=" + str(job.nodes) + ":ppn=" + str(job.ppn) + "\n"
         script += "#PBS -t " + str(job.range[0]) + "-" + str(job.range[1]) + "\n"
         script += "#PBS -q " + str(job.queue) + "\n"
-        script += "cd $PBS_O_WORKDIR"
-        script += Distributed.devicecmds
-        script += Distributed.exec_call
+        script += "cd $PBS_O_WORKDIR\n"
+        script += self._devicecmds
+        script += self._getExportExecPathCMD()
+        script += self._execcall
         return script
+
+    def _getExportExecPathCMD(self):
+        out = ""
+        # platform = sys.platform
+        # if platform == 'win32': 
+        # else: 
+        out = "export PATH=$PATH:" + self._execpath
+        return out
+
+    def resolveAssets(self, assetman):
+        self._resolvedAssetPaths = True
+        return  []
 
 def build(**kwargs):
     obj = PBS(**kwargs)

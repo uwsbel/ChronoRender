@@ -1,4 +1,4 @@
-import datetime, os, logging, glob
+import datetime, os, logging, glob, __main__
 
 import chronorender.cr_object as cr_object
 import chronorender.cr_utils as crutils
@@ -103,19 +103,41 @@ class RndrJob():
 
     def submit(self):
         dist = self._getDistributedInterface()
+        job = self._getConfiguredDistJob(dist)
         dist.initialize()
         dist.end()
 
     def _getDistributedInterface(self):
         distinfo = self._metadata.singleFromType(cd.Distributed, bRequired=False)
 
+        dist = None
         if distinfo:
-            return cr_object.Object(basename=cd.Distributed.getTypeName(), 
+            dist = cr_object.Object(basename=cd.Distributed.getTypeName(), 
                     factories=self._factories, **distinfo)
         else:
-            return cr_object.Object(basename=cd.Distributed.getTypeName(), 
+            dist = cr_object.Object(basename=cd.Distributed.getTypeName(), 
                     factories=self._factories)
+        dist._execpath = RndrJob._getCRBinPath()
+        return dist
         # return RndrJob._DistributedFactory.build()
+
+    def _getConfiguredDistJob(self, dist):
+        job = dist.createJobTemplate()
+        out = dist.finalizeJob(job, self._assetman)
+        return job
+
+    # TODO Move this outta here
+    @staticmethod
+    def _getCRBinPath():
+        path = os.path.abspath(os.path.split(__main__.__file__)[1])
+
+        currdir = path
+        parentdir, basename = os.path.split(currdir)
+        while basename != "chronorender" and currdir != parentdir:
+            currdir = parentdir
+            parentdir, basename = os.path.split(currdir)
+
+        return os.path.join(parentdir, "bin")
 
     def _startRenderer(self):
         self._renderer.init()
