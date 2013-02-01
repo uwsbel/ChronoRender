@@ -149,3 +149,11 @@ class Object(object):
             return kwargs[varname]
         else:
             return self.getMember(varname)
+
+    def resolveAssets(self, assetman):
+        self._resolvedAssetPaths = True
+        return  []
+
+    def setAsset(self, assetname, obj):
+        return
+
