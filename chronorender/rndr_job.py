@@ -110,6 +110,7 @@ class RndrJob():
         if jobinfo:
             job = cr_object.Object(basename=cd.Distributed.getTypeName(), 
                     factories=self._factories, **jobinfo)
+            print "JOB", job.getTypeName()
             if isinstance(job, cd.Distributed):
                 return RndrJob._DistributedFactory.build()
 

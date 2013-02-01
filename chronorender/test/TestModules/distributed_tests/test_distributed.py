@@ -1,6 +1,8 @@
 import unittest, os
 
 from chronorender.distributed import Distributed, DistributedFactory
+import chronorender as cr
+import chronorender.rndr_job as rndr
 
 class DistributedTestCase(unittest.TestCase):
 

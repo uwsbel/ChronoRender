@@ -6,8 +6,11 @@ def setPythonPathForCRImport():
     script_path = os.path.dirname(os.path.abspath(script_file))
     modtest_path = os.path.split(script_path)[0]
     mod_path = os.path.split(modtest_path)[0]
-    modtest_path += '/test/TestModules'
-    sys.path.append(modtest_path)
+    main_path = os.path.join(modtest_path , 'test')
+    main_path = os.path.join(main_path, 'TestModules')
+    dist_path = os.path.join(main_path, 'distributed_tests')
+    sys.path.append(main_path)
+    sys.path.append(dist_path)
     sys.path.append(mod_path)
 
 
@@ -45,6 +48,8 @@ if __name__ == '__main__':
             action="store_true")
     parser.add_argument('-d', help="run distributed tests",
             action="store_true")
+    parser.add_argument('-only', help="run this test subset only",
+            action="store_true")
 
     args = parser.parse_args()
 
@@ -56,12 +61,13 @@ if __name__ == '__main__':
     alltests = getTestSuites(args.modules, 'TestModules/test_*.py')
     disttests = getTestSuites(args.modules, 'TestModules/distributed_tests/test_*.py')
 
-    for suite in alltests:
-        unittest.TextTestRunner(verbosity=2).run(suite)
-
     if args.d:
         for suite in disttests:
             unittest.TextTestRunner(verbosity=2).run(suite)
+
+    if not args.only:
+      for suite in alltests:
+          unittest.TextTestRunner(verbosity=2).run(suite)
 
     sys.stdout = _stdout
     # unittest.main()      

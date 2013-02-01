@@ -12,7 +12,6 @@ class DistributedFactory():
         self._validateSystemDistributedManagers()
 
     def build(self, typename=None, **kwargs):
-        print "TYPE", typename
 
         if self._bDrmaa:
             from dist_drmaa import DRMAA
