@@ -3,11 +3,14 @@ import os, imp, __main__, inspect, sys
 class Prog(object):
     def __init__(self):
           self.args = self.getArgs()
-          self.path , self.name = self.getPathAndName()
+          self.path , self.name = self.getPathAndName(__file__)
           self.call = self.getProgCall()
 
     def getArgs():
         return {}
+
+    def parseArgs():
+        self.args = {}
 
     def main():
         exit()
@@ -16,8 +19,10 @@ class Prog(object):
         print "ERROR:", msg
         exit()
 
-    def getPathAndName(self):
-        return os.path.split(os.path.abspath(__file__))
+    def getPathAndName(self, frame):
+        path, name = os.path.split(os.path.abspath(frame))
+        name = self._removePYCExt(name)
+        return path, name
 
     def getProgCall(self):
         out = self.name + " "
@@ -26,6 +31,14 @@ class Prog(object):
                 continue
             out += "--" + k + " " + str(v)
         return out
+
+    def _removePYCExt(self, name):
+        name, ext = os.path.splitext(name)
+        if ext == ".pyc":
+            name += ".py"
+        else:
+            name += ext
+        return name
 
     @staticmethod
     def getCRBinPath():

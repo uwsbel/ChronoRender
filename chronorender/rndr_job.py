@@ -101,7 +101,7 @@ class RndrJob():
     def copyAssetToDirectory(self, asset):
         self._assetman._copyAssetToDirectory(asset)
 
-    def submit(self):
+    def submit(self, prog):
         dist = self._getDistributedInterface()
         job = self._getConfiguredDistJob(dist)
         dist.initialize()

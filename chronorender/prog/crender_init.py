@@ -6,11 +6,16 @@ from chronorender.cr import ChronoRender
 class CRenderInit(Prog):
     def __init__(self):
         super(CRenderInit, self).__init__()
+        self.path , self.name = self.getPathAndName(__file__)
 
     def main(self):
+        self.args = self.parseArgs()
         self.initNewRenderJob()
 
     def getArgs(self):
+        return { 'outpath' : ''}
+
+    def parseArgs(self):
         parser = argparse.ArgumentParser()
         
         parser.add_argument('-o', '--outpath', help='used with init, where to \

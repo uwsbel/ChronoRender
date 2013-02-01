@@ -6,11 +6,18 @@ from chronorender.cr import ChronoRender
 class CRenderDist(Prog):
     def __init__(self):
         super(CRenderDist, self).__init__()
+        self.path , self.name = self.getPathAndName(__file__)
 
     def main(self):
+        self.args = self.parseArgs()
         self.startDistributedJob()
 
     def getArgs(self):
+        return { 'metadata' : '',
+                 'renderer' : 'stdout',
+                 'framerange' : None}
+
+    def parseArgs(self):
         parser = argparse.ArgumentParser()
 
         parser.add_argument('-m', '--metadata', help='the data file that contains the \
