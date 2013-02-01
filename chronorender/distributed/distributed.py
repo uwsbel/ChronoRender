@@ -14,9 +14,19 @@ class JobDescriptor(object):
         self.stderr   = None
         self.queue    = None
         self.email    = None
+        self.range    = [-1, -1]
+        self.script   = ""
+        self.nodes    = 1
+        self.ppn      = 1
 
 class Distributed(object):
-    queue = None
+    walltime    = 60
+    queue       = None
+    ppn         = 32
+    nodes       = 1
+    devicecmds  = ""
+    exec_path   = ""
+    exec_call   = ""
 
     @staticmethod
     def getTypeName():
@@ -31,7 +41,7 @@ class Distributed(object):
 
     def createJobTemplate(self):
         job = JobDescriptor()
-        job.queue = Distributed.queue
+        self._setJobDefaults(job)
         return job
 
     def submit(self, job):
@@ -57,6 +67,12 @@ class Distributed(object):
 
     def getConnection(self):
         return None
+
+    def _setJobDefaults(self, job):
+        job.walltime  = Distributed.walltime
+        job.queue = Distributed.queue
+        job.ppn   = Distributed.ppn
+        job.nodes = Distributed.nodes
 
 def build(**kwargs):
     return Distributed()

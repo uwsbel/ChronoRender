@@ -1,12 +1,9 @@
-import inspect, os, shutil
-import thirdparty.yaml as yaml
+import inspect, os
 
-import chronorender.plugins as pm
-import chronorender.factory as factory
 import chronorender.rndr_job as rndrjob
-import chronorender.factorydict as fdict
 import chronorender.cr_object as cr_object
 import chronorender.cr_utils as cr_utils
+import chronorender.cr_constructor as cr_constructor
 
 import chronorender.attribute as attr
 import chronorender.camera as cam
@@ -47,86 +44,28 @@ class ChronoRender(object):
                     shader.Shader,
                     visualizer.Visualizer,
                     scriptable.Scriptable]
+    
+    _builtinClasses = [dp.SelectNode,
+                      ds.CSVDataSource,
+                      geo.Sphere,
+                      geo.File,
+                      mov.FFMPEG,
+                      rp.RayTracePass,
+                      rp.OcclusionPass]
 
     def __init__(self):
         self._jobs              = []
-        self._baseClassDict     = {}
+        self._constructor       = cr_constructor.CRConstructor()
+        self._factories         = self._constructFactories()
 
-        self._plugins           = pm.PluginManager()
-        self._factories         = fdict.FactoryDict()
-
-        self._initBaseClassesDict()
-        self._processConfig()
-        self._initPlugins()
-        self._initFactories()
-
-    def _initBaseClassesDict(self):
-        self._baseClassDict = {}
-        for cls in ChronoRender._baseClasses:
-            self._baseClassDict[cls.getTypeName()] = cls
-
-    def _processConfig(self):
-        yam = self._readConfig()
-        self._configureBaseClasses(yam)
-
-    def _readConfig(self):
-        f = open(self._findDefaultConfigFile())
-        yam = yaml.safe_load(f)
-        f.close()
-        return yam
+    def _constructFactories(self):
+        return self._constructor.buildAndConfigureFactories(
+            ChronoRender._baseClasses, ChronoRender._builtinClasses,
+            self._findDefaultConfigFile())
 
     def _findDefaultConfigFile(self):
         self._configpath = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
         return os.path.join(self._configpath, ChronoRender._defaultConfigFile)
-
-    def _configureBaseClasses(self, config):
-        for key, attrdict in config.iteritems():
-            print key, attrdict
-            if key not in self._baseClassDict:
-                continue
-            cls = self._baseClassDict[key]
-            self._configAttribute(cls, attrdict)
-
-    def _configAttribute(self, cls, attr):
-        if isinstance(attr, dict):
-            for k, v in attr.iteritems():
-                self._setClassAttribute(cls, k, v)
-
-    def _setClassAttribute(self, cls, name, val):
-        if hasattr(cls, name):
-            setattr(cls, name, val)
-        else:
-            raise Exception, str(cls) +  " does not have attribute " + name
-
-    def _initPlugins(self):
-        self._plugins.loadPlugins()
-        self._plugins.registerPlugins()
-
-    def _initFactories(self):
-        self._initBaseClassFactories()
-        self._initBuiltInClassFactories()
-
-    def _initBaseClassFactories(self):
-        for typename, cls in self._baseClassDict.iteritems():
-            self._createFactory(cls)
-
-    def _initBuiltInClassFactories(self):
-        self._addFactoryModule(dp.DataProcess, dp.SelectNode)
-        self._addFactoryModule(ds.DataSource, ds.CSVDataSource)
-        self._addFactoryModule(geo.Geometry, geo.Sphere)
-        self._addFactoryModule(geo.Geometry, geo.File)
-        self._addFactoryModule(mov.Movie, mov.FFMPEG)
-        self._addFactoryModule(rp.RenderPass, rp.RayTracePass)
-        self._addFactoryModule(rp.RenderPass, rp.OcclusionPass)
-
-    def _createFactory(self, cls):
-        modules = self._plugins.getPlugins(factory.Factory.getTypeName(), cls.getTypeName())
-        # add default constructor
-        modules.append(inspect.getmodule(cls))
-        self._factories.addFactory(cls.getTypeName(), modules)
-
-    def _addFactoryModule(self, basecls, cls):
-        self._factories.appendFactory(basecls.getTypeName(), inspect.getmodule(cls))
 
     def getFactories(self, typename):
         return self._factories.getFactory(typename)

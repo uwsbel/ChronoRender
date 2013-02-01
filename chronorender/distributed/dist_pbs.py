@@ -46,3 +46,13 @@ class PBS(Distributed):
 
     def getConnection(self):
         return self._connection_id
+
+    def _job2Script(self, job):
+        script = "#!/bin/bash\n"
+        script += "#PBS -N " + str(job.name) + "\n"
+        script += "#PBS -l nodes=" + str(job.nodes) + ":ppn=" + str(job.ppn) + "\n"
+        script += "#PBS -t " + str(job.range[0]) + "-" + str(job.range[1]) + "\n"
+        script += "#PBS -q " + str(job.queue) + "\n"
+        script += "cd $PBS_O_WORKDIR"
+        script += Distributed.devicecmds
+        script += Distributed.exec_call
