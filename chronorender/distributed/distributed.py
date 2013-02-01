@@ -1,4 +1,4 @@
-import chronorender.cr_object as cr_object
+from chronorender.cr_object import Object
 # push jobs to distributed manager
 class DistributedException(Exception):
     def __init__(self, value):
@@ -6,21 +6,7 @@ class DistributedException(Exception):
     def __str__(self):
         return repr(self.value)
 
-class JobDescriptor(object):
-    def __init__(self):
-        self.walltime = 60
-        self.nodes    = 1
-        self.name     = 'render'
-        self.stdout   = None
-        self.stderr   = None
-        self.queue    = None
-        self.email    = None
-        self.range    = [-1, -1]
-        self.script   = ""
-        self.nodes    = 1
-        self.ppn      = 1
-
-class Distributed(cr_object.Object):
+class Distributed(Object):
     walltime    = 60
     queue       = None
     ppn         = 32
@@ -29,18 +15,35 @@ class Distributed(cr_object.Object):
     exec_path   = ""
     exec_call   = ""
 
+    class JobDescriptor(object):
+        def __init__(self):
+            self.walltime = 60
+            self.nodes    = 1
+            self.name     = 'render'
+            self.stdout   = None
+            self.stderr   = None
+            self.queue    = None
+            self.email    = None
+            self.range    = [-1, -1]
+            self.script   = ""
+            self.nodes    = 1
+            self.ppn      = 1
+
     @staticmethod
     def getTypeName():
         return "distributed"
 
     def __init__(self, *args,  **kwargs):
-        super(cr_object.Object, self).__init__(*args, **kwargs)
+        super(Distributed, self).__init__(*args, **kwargs)
+
+    def _initMembersDict(self):
+        super(Distributed, self)._initMembersDict()
 
     def initialize(self, server=None):
         raise DistributedException('not implemented')
 
     def createJobTemplate(self):
-        job = JobDescriptor()
+        job = Distributed.JobDescriptor()
         self._setJobDefaults(job)
         return job
 

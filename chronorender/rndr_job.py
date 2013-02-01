@@ -102,18 +102,17 @@ class RndrJob():
         self._assetman._copyAssetToDirectory(asset)
 
     def submit(self):
-        conn = self._getDistributedConnection()
+        dist = self._getDistributedInterface()
+        print dist
 
-    def _getDistributedConnection(self):
-        jobinfo = self._metadata.singleFromType(cd.Distributed, bRequired=False)
+    def _getDistributedInterface(self):
+        distinfo = self._metadata.singleFromType(cd.Distributed, bRequired=False)
 
-        if jobinfo:
-            job = cr_object.Object(basename=cd.Distributed.getTypeName(), 
-                    factories=self._factories, **jobinfo)
-            print "JOB", job.getTypeName()
-            if isinstance(job, cd.Distributed):
-                return RndrJob._DistributedFactory.build()
-
+        if distinfo:
+            dist = cr_object.Object(basename=cd.Distributed.getTypeName(), 
+                    factories=self._factories, **distinfo)
+            if not isinstance(dist, cd.Distributed):
+                return dist
         return RndrJob._DistributedFactory.build()
 
     def _startRenderer(self):

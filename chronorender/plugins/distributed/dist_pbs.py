@@ -1,6 +1,7 @@
-from distributed import Distributed
+from chronorender.distributed import Distributed
 
 import pbs
+import traceback, sys
 
 class PBSException(Exception):
     def __init__(self, value):
@@ -15,7 +16,16 @@ class PBS(Distributed):
 
     def __init__(self, *args, **kwargs):
         super(PBS, self).__init__(*args, **kwargs)
+        # stack = traceback.format_stack()
+        # for s in stack:
+          # print s
         self._connection_id = None
+
+        self._name = self.getMember('name')
+
+    def _initMembersDict(self):
+        super(PBS, self)._initMembersDict()
+        self._members['name']   = [str, '']
 
     def initialize(self, server=None):
         if not server:
@@ -59,4 +69,5 @@ class PBS(Distributed):
         script += Distributed.exec_call
 
 def build(**kwargs):
-    return PBS(**kwargs)
+    obj = PBS(**kwargs)
+    return obj
