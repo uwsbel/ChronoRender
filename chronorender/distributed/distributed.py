@@ -32,7 +32,7 @@ class Distributed(object):
     def getTypeName():
         return "distributed"
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         return
 
     # if server == None, try default connection

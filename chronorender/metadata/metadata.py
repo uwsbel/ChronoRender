@@ -25,14 +25,17 @@ class MetaData(object):
 
     def singleFromType(self, elemtype, bRequired=True):
         elems = self.findAll(elemtype.getTypeName())
-        if len(elems) != 1 and bRequired:
-            raise MetaDataException('not only ONE ' + elemtype.getTypeName() + ' in metadata, found: ' + str(len(elems)))
+        if len(elems) != 1:
+            if bRequired:
+                raise MetaDataException('not only ONE ' + elemtype.getTypeName() + ' in metadata, found: ' + str(len(elems)))
+            return None
         return elems[0]
         # return self._constructObject(elems[0], elemtype)
 
     def listFromType(self, elemtype, bRequired=True):
         elems = self.findAll(elemtype.getTypeName())
-        if len(elems) <= 0 and bRequired:
-            raise MetaDataException('no ' + elemtype.getTypeName() + ' in metadata')
-
+        if len(elems) <= 0:
+            if bRequired:
+                raise MetaDataException('no ' + elemtype.getTypeName() + ' in metadata')
+            return []
         return elems

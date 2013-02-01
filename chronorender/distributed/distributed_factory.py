@@ -11,17 +11,30 @@ class DistributedFactory():
 
         self._validateSystemDistributedManagers()
 
-    def build(self, manager=''):
+    def build(self, typename=None, **kwargs):
+        print "TYPE", typename
+
         if self._bDrmaa:
             from dist_drmaa import DRMAA
-            return DRMAA()
-        elif self._bPBS:
+            if typename and typename != DRAMM.getTypeName():
+                pass
+            else:
+                return DRMAA(**kwargs)
+
+        if self._bPBS:
             from dist_pbs import PBS
-            return PBS()
-        else:
-          raise DistributedFactoryException('no supported distributed manager installed on system')
+            if typename and typename != PBS.getTypeName():
+                pass
+            else:
+                return PBS(**kwargs)
+
+        raise DistributedFactoryException('distributed manager is not supported OR not installed on system')
+
+    def _buildFromTypeName(self, name):
+        return
 
     def _validateSystemDistributedManagers(self):
+        self._validateDRMAA()
         self._validatePBS()
 
     def _validatePBS(self):

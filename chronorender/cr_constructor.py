@@ -24,7 +24,6 @@ class CRConstructor(object):
 
     def _configureBaseClasses(self, config):
         for key, attrdict in config.iteritems():
-            print key, attrdict
             if key not in self._baseClassDict:
                 continue
             cls = self._baseClassDict[key]

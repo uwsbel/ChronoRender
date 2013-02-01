@@ -13,7 +13,7 @@ class PBS(Distributed):
     def getTypeName():
         return "pbs"
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         self._connection_id = None
 
     def initialize(self, server=None):

@@ -5,6 +5,7 @@ import chronorender.metadata as md
 import chronorender.rndr_doc as rd
 import chronorender.renderer as cr
 import chronorender.ri as ri
+import chronorender.distributed as cd
 from chronorender.rndr_job_assetmanager import RndrJobAssetManager
 
 class RndrJobException(Exception):
@@ -15,6 +16,7 @@ class RndrJobException(Exception):
 
 class RndrJob():
     _RendererFactory = cr.RendererFactory()
+    _DistributedFactory = cd.DistributedFactory()
 
     def __init__(self, infile, factories):
         self.stream         = None
@@ -96,6 +98,18 @@ class RndrJob():
 
     def copyAssetToDirectory(self, asset):
         self._assetman._copyAssetToDirectory(asset)
+
+    def submit(self):
+        conn = self._getDistributedConnection()
+
+    def _getDistributedConnection(self):
+        jobinfo = self._metadata.singleFromType(cd.Distributed, bRequired=False)
+
+        jtype = None
+        if jobinfo and Object.getInstanceQualifier() in jobinfo:
+            jtype = jobinfo[Object.getInstanceQualifier()]
+            return RndrJob._DistributedFactory.build(typename=jtype, **jobinfo)
+        return RndrJob._DistributedFactory.build()
 
     def _startRenderer(self):
         self._renderer.init()
