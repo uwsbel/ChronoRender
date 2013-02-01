@@ -7,11 +7,17 @@ import chronorender.rndr_job as rndr
 class DistributedTestCase(unittest.TestCase):
 
     def setUp(self):
-        fact = DistributedFactory()
-        self.dist = fact.build()
+        self.cr = cr.ChronoRender()
+        # fact = DistributedFactory()
+        self.fact = self.cr._factories.getFactory(Distributed.getTypeName())
+
+        try:
+          self.dist = self.fact.build('pbs')
+        except Exception:
+          self._delAssets()
 
     def tearDown(self):
-        del self.dist
+        self._delAssets()
 
     def test_factory(self):
         self.assertTrue(self.dist != None)
@@ -29,3 +35,7 @@ class DistributedTestCase(unittest.TestCase):
         job = self.dist.createJobTemplate()
         self.dist.submit(job)
         self.dist.end()
+
+    def _delAssets(self):
+        del self.cr
+        del self.dist

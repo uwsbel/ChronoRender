@@ -103,17 +103,19 @@ class RndrJob():
 
     def submit(self):
         dist = self._getDistributedInterface()
-        print dist
+        dist.initialize()
+        dist.end()
 
     def _getDistributedInterface(self):
         distinfo = self._metadata.singleFromType(cd.Distributed, bRequired=False)
 
         if distinfo:
-            dist = cr_object.Object(basename=cd.Distributed.getTypeName(), 
+            return cr_object.Object(basename=cd.Distributed.getTypeName(), 
                     factories=self._factories, **distinfo)
-            if not isinstance(dist, cd.Distributed):
-                return dist
-        return RndrJob._DistributedFactory.build()
+        else:
+            return cr_object.Object(basename=cd.Distributed.getTypeName(), 
+                    factories=self._factories)
+        # return RndrJob._DistributedFactory.build()
 
     def _startRenderer(self):
         self._renderer.init()

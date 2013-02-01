@@ -28,9 +28,15 @@ class PBS(Distributed):
         self._members['name']   = [str, '']
 
     def initialize(self, server=None):
+        self.connect()
+
+    def connect(self, server=None):
         if not server:
           server = pbs.pbs_default()
         self._connection_id = pbs.pbs_connect(server)
+
+        if not self._connection_id:
+            raise PBSException('could not connect to pbs server ' + str(server))
 
     def submit(self, job):
         print job
@@ -58,6 +64,13 @@ class PBS(Distributed):
     def getConnection(self):
         return self._connection_id
 
+    def _setJobDefaults(self, job):
+        job.walltime  = Distributed.walltime
+        job.queue = Distributed.queue
+        job.ppn   = Distributed.ppn
+        job.nodes = Distributed.nodes
+        job.script = self._job2Script(job)
+
     def _job2Script(self, job):
         script = "#!/bin/bash\n"
         script += "#PBS -N " + str(job.name) + "\n"
@@ -67,6 +80,7 @@ class PBS(Distributed):
         script += "cd $PBS_O_WORKDIR"
         script += Distributed.devicecmds
         script += Distributed.exec_call
+        return script
 
 def build(**kwargs):
     obj = PBS(**kwargs)

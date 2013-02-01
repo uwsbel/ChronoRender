@@ -42,6 +42,9 @@ class Distributed(Object):
     def initialize(self, server=None):
         raise DistributedException('not implemented')
 
+    def connect(self, server=None):
+        raise DistributedException('not implemented')
+
     def createJobTemplate(self):
         job = Distributed.JobDescriptor()
         self._setJobDefaults(job)
