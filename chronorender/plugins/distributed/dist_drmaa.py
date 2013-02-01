@@ -13,8 +13,8 @@ class DRMAA(Distributed):
     def getTypeName():
         return "pbs"
 
-    def __init__(self, **kwargs):
-        return
+    def __init__(self, *args, **kwargs):
+        super(DRMAA, self).__init__(*args, **kwargs)
 
     def initialize(self, server):
         return
@@ -39,3 +39,6 @@ class DRMAA(Distributed):
 
     def end(self):
         return
+      
+def build(**kwargs):
+    return DRMAA(**kwargs)

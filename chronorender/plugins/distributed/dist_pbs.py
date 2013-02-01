@@ -13,7 +13,8 @@ class PBS(Distributed):
     def getTypeName():
         return "pbs"
 
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
+        super(PBS, self).__init__(*args, **kwargs)
         self._connection_id = None
 
     def initialize(self, server=None):
@@ -56,3 +57,6 @@ class PBS(Distributed):
         script += "cd $PBS_O_WORKDIR"
         script += Distributed.devicecmds
         script += Distributed.exec_call
+
+def build(**kwargs):
+    return PBS(**kwargs)

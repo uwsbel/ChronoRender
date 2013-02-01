@@ -1,3 +1,4 @@
+import chronorender.cr_object as cr_object
 # push jobs to distributed manager
 class DistributedException(Exception):
     def __init__(self, value):
@@ -19,7 +20,7 @@ class JobDescriptor(object):
         self.nodes    = 1
         self.ppn      = 1
 
-class Distributed(object):
+class Distributed(cr_object.Object):
     walltime    = 60
     queue       = None
     ppn         = 32
@@ -32,8 +33,8 @@ class Distributed(object):
     def getTypeName():
         return "distributed"
 
-    def __init__(self, **kwargs):
-        return
+    def __init__(self, *args,  **kwargs):
+        super(cr_object.Object, self).__init__(*args, **kwargs)
 
     def initialize(self, server=None):
         raise DistributedException('not implemented')
@@ -68,4 +69,4 @@ class Distributed(object):
         job.nodes = Distributed.nodes
 
 def build(**kwargs):
-    return Distributed()
+    return Distributed(**kwargs)
