@@ -42,5 +42,5 @@ chronorender:
               shader:
                   - name: "plastic.sl"
                     Kd: 1
-    # distributed:
-        # type: "drmaa"
+    distributed:
+        type: "drmaa"

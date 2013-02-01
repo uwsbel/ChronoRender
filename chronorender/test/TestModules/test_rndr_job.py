@@ -44,8 +44,8 @@ class RndrJobTestCase(unittest.TestCase):
 
     def test_submitJob(self):
         currdir = os.getcwd()
-        # job = rndr.RndrJob(self.infile, self._cr._factories)
-        # try:
-            # job.submit()
-        # finally:
-            # os.chdir(currdir)
+        job = rndr.RndrJob(self.infile, self._cr._factories)
+        try:
+            job.submit()
+        finally:
+            os.chdir(currdir)

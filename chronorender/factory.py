@@ -1,3 +1,4 @@
+import inspect, sys
 
 class Factory():
     @staticmethod
@@ -11,8 +12,15 @@ class Factory():
 
     def _loadObjects(self):
         for mod in self._modules:
-            obj = mod.build()
-            self._objectconstructors[obj.getTypeName()] = mod.build
+            clsmembers = inspect.getmembers(sys.modules[mod.__name__], inspect.isclass)
+            newclasses = []
+            for cls in clsmembers:
+                if cls[1].__module__ == mod.__name__:
+                    newclasses.append(cls[1])
+
+            for cls in newclasses:
+                if hasattr(cls, 'getTypeName'):
+                    self._objectconstructors[cls.getTypeName()] = mod.build
 
 
     def _clearObjects(self):
@@ -37,7 +45,6 @@ class Factory():
 
     def removeModule(self, module):
         if module in self._modules:
-            obj = module.build()
             self._modules.remove(module)
 
     def build(self, typename, **kwargs):
