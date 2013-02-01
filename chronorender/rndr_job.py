@@ -1,5 +1,6 @@
 import datetime, os, logging, glob
 
+import chronorender.cr_object as cr_object
 import chronorender.cr_utils as crutils
 import chronorender.metadata as md
 import chronorender.rndr_doc as rd
@@ -20,8 +21,9 @@ class RndrJob():
 
     def __init__(self, infile, factories):
         self.stream         = None
+        self._factories     = factories
         self._metadata      = md.MetaData(infile)
-        self._rndrdoc       = rd.RndrDoc(factories, self._metadata)
+        self._rndrdoc       = rd.RndrDoc(self._factories, self._metadata)
         self._rootdir       = os.path.abspath(os.path.split(self._metadata.filename)[0])
         self._timecreated   = datetime.datetime.now()
         self._renderer      = None
@@ -105,10 +107,12 @@ class RndrJob():
     def _getDistributedConnection(self):
         jobinfo = self._metadata.singleFromType(cd.Distributed, bRequired=False)
 
-        jtype = None
-        if jobinfo and Object.getInstanceQualifier() in jobinfo:
-            jtype = jobinfo[Object.getInstanceQualifier()]
-            return RndrJob._DistributedFactory.build(typename=jtype, **jobinfo)
+        if jobinfo:
+            job = cr_object.Object(basename=cd.Distributed.getTypeName(), 
+                    factories=self._factories, **jobinfo)
+            if isinstance(job, cd.Distributed):
+                return RndrJob._DistributedFactory.build()
+
         return RndrJob._DistributedFactory.build()
 
     def _startRenderer(self):

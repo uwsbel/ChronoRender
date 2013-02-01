@@ -17,9 +17,14 @@ import chronorender as cr
 
 
 
-def getTestSuites(modfilter):
-    inmodules = glob.glob('TestModules/test_*.py')
-    module_strings = [''+str[12:len(str)-3] for str in inmodules]
+def getTestSuites(modfilter, expr=''):
+    inmodules = glob.glob(expr)
+
+    if len(inmodules) <= 0:
+        return
+
+    module_strings = [os.path.splitext(os.path.split(str)[1])[0] for str in inmodules]
+
     impmods = module_strings
     if len(modfilter) != 0:
         impmods = [mod for mod in module_strings if mod in modfilter]
@@ -38,6 +43,8 @@ if __name__ == '__main__':
     parser.add_argument('modules', metavar='N', type=str, nargs='*', help='list of test modules to run')
     parser.add_argument('-s', help="suppress test output",
             action="store_true")
+    parser.add_argument('-d', help="run distributed tests",
+            action="store_true")
 
     args = parser.parse_args()
 
@@ -46,9 +53,15 @@ if __name__ == '__main__':
         null = open(os.devnull, 'wb')
         sys.stdout = null
 
-    alltests = getTestSuites(args.modules)
+    alltests = getTestSuites(args.modules, 'TestModules/test_*.py')
+    disttests = getTestSuites(args.modules, 'TestModules/distributed_tests/test_*.py')
+
     for suite in alltests:
         unittest.TextTestRunner(verbosity=2).run(suite)
+
+    if args.d:
+        for suite in disttests:
+            unittest.TextTestRunner(verbosity=2).run(suite)
 
     sys.stdout = _stdout
     # unittest.main()      

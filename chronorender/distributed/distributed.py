@@ -35,9 +35,8 @@ class Distributed(object):
     def __init__(self, **kwargs):
         return
 
-    # if server == None, try default connection
     def initialize(self, server=None):
-        return
+        raise DistributedException('not implemented')
 
     def createJobTemplate(self):
         job = JobDescriptor()
@@ -45,28 +44,22 @@ class Distributed(object):
         return job
 
     def submit(self, job):
-        return None
+        raise DistributedException('not implemented')
 
     def runJob(self, job):
-        return None
-
-    def runJobs(self, joblist):
-        out = []
-        for job in joblist:
-            out.append(self.runJob(job))
-        return out
+        raise DistributedException('not implemented')
 
     def wait(self, jobid, timeout):
-        return
+        raise DistributedException('not implemented')
 
     def synchronize(self, timeout):
-        return
+        raise DistributedException('not implemented')
 
     def end(self):
-        return
+        raise DistributedException('not implemented')
 
     def getConnection(self):
-        return None
+        raise DistributedException('not implemented')
 
     def _setJobDefaults(self, job):
         job.walltime  = Distributed.walltime

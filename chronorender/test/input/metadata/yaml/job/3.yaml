@@ -43,4 +43,5 @@ chronorender:
                   - name: "plastic.sl"
                     Kd: 1
     distributed:
-        type: "drmaa"
+        name: "gorb"
+        # type: "drmaa"

@@ -5,6 +5,8 @@ factory:
         paths: "dataprocess"
     datasource:
         paths: "datasource"
+    distributed:
+        paths: "distributed"
     geometry:
         paths: "geometry"
     lighting:
