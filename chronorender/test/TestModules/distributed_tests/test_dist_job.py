@@ -6,7 +6,7 @@ import chronorender.prog as prog
 class RndrJobTestCase(unittest.TestCase):
     def setUp(self):
         self._cr = cr.ChronoRender()
-        self.infile = './input/metadata/yaml/job/dist.yml'
+        self.infile = './input/metadata/yaml/job/dist2.yml'
 
     def tearDown(self):
         del self._cr
@@ -19,8 +19,8 @@ class RndrJobTestCase(unittest.TestCase):
         p = prog.CRenderLocal()
         try:
             job.submit(p)
-            # files = glob.glob('./input/metadata/yaml/job/OUTPUT/*.sh')
-            # for f in files:
-                # os.remove(f)
+            files = glob.glob('./input/metadata/yaml/job/OUTPUT/*.sh')
+            for f in files:
+                os.remove(f)
         finally:
             os.chdir(currdir)

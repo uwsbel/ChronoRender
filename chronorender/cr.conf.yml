@@ -2,3 +2,4 @@ searchpaths: "/usr/share/Pixie/shaders"
 
 distributed:
   queue: "prman"
+  devicecmds: "source /etc/profile\nmodule load python/2.7.3\nmodule load prman/17.0"
