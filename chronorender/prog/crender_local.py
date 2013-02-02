@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import argparse, os
 
 from cr_prog import Prog
@@ -14,7 +15,7 @@ class CRenderLocal(Prog):
 
     def getArgs(self):
         return { 'metadata' : '',
-                 'renderer' : 'stdout',
+                 'renderer' : '',
                  'framerange' : None}
 
     def parseArgs(self):

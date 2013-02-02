@@ -1,4 +1,4 @@
-import unittest, os
+import unittest, os, glob
 
 from chronorender.distributed import Distributed, DistributedFactory
 import chronorender as cr
@@ -30,12 +30,6 @@ class DistributedTestCase(unittest.TestCase):
         self.dist.end()
 
         self.assertTrue(cid != None)
-
-    def test_submit(self):
-        self.dist.initialize()
-        job = self.dist.createJobTemplate()
-        self.dist.submit(job)
-        self.dist.end()
 
     def _delAssets(self):
         del self.cr

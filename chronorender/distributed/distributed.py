@@ -27,6 +27,10 @@ class Distributed(Object):
             self.range    = [0, 0]
             self.nodes    = 1
             self.ppn      = 1
+            self.prog     = None
+            self.id       = None
+            self.done     = False
+            self.wd       = ""
 
         def resolveAssets(self, assetman):
             return  []
@@ -74,13 +78,7 @@ class Distributed(Object):
     def submit(self, job):
         raise DistributedException('not implemented')
 
-    def runJob(self, job):
-        raise DistributedException('not implemented')
-
-    def wait(self, jobid, timeout):
-        raise DistributedException('not implemented')
-
-    def synchronize(self, timeout):
+    def wait(self, job, timeout):
         raise DistributedException('not implemented')
 
     def end(self):

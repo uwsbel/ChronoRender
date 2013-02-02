@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import os, imp, __main__, inspect, sys
 
 class Prog(object):
@@ -29,7 +30,7 @@ class Prog(object):
         for k, v in self.args.iteritems():
             if not v:
                 continue
-            out += "--" + k + " " + str(v)
+            out += "--" + k + " " + str(v) + " "
         return out
 
     def _removePYCExt(self, name):

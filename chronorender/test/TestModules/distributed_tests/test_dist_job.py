@@ -1,4 +1,4 @@
-import unittest, os
+import unittest, os, glob
 import chronorender as cr
 import chronorender.rndr_job as rndr
 import chronorender.prog as prog
@@ -15,9 +15,12 @@ class RndrJobTestCase(unittest.TestCase):
     def test_submitJob(self):
         currdir = os.getcwd()
         job = rndr.RndrJob(self.infile, self._cr._factories)
+        job.stream = 'prman'
         p = prog.CRenderLocal()
-        print p, p.args, p.getProgCall()
         try:
             job.submit(p)
+            # files = glob.glob('./input/metadata/yaml/job/OUTPUT/*.sh')
+            # for f in files:
+                # os.remove(f)
         finally:
             os.chdir(currdir)

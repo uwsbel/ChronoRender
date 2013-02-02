@@ -25,9 +25,9 @@ class RndrJob():
         self._metadata      = md.MetaData(infile)
         self._rndrdoc       = rd.RndrDoc(self._factories, self._metadata)
         self._rootdir       = os.path.abspath(os.path.split(self._metadata.filename)[0])
-        self._timecreated   = datetime.datetime.now()
+        self._timecreated   = datetime.datetime.utcnow()
         self._renderer      = None
-        self._frames        = None
+        self._frames        = [0, 0]
         self._assetman      = RndrJobAssetManager(self._rootdir, self._rndrdoc)
 
     def run(self, framerange=None):
@@ -49,7 +49,6 @@ class RndrJob():
         self._verifyFrameRange(framerange)
 
     def _render(self):
-        #self._startRenderer(ri.rmanlibutil.libFromRenderer(self.stream))
         self._renderer = RndrJob._RendererFactory.build(self.stream)
         self._startRenderer()
         self._renderOptions()
@@ -102,14 +101,22 @@ class RndrJob():
         self._assetman._copyAssetToDirectory(asset)
 
     def submit(self, prog):
-        dist = self._getDistributedInterface()
-        job = self._getConfiguredDistJob(dist)
-        dist.initialize()
-        dist.end()
+        prevdir = os.getcwd()
+        try:
+            os.chdir(self._rootdir)
+            dist = self._getDistributedInterface()
+            job = self._getConfiguredDistJob(dist, prog)
+            dist.initialize()
+            dist.submit(job)
+            dist.wait(job)
+            dist.end()
+        except Exception as err:
+            raise err
+        finally:
+            os.chdir(prevdir)
 
     def _getDistributedInterface(self):
         distinfo = self._metadata.singleFromType(cd.Distributed, bRequired=False)
-
         dist = None
         if distinfo:
             dist = cr_object.Object(basename=cd.Distributed.getTypeName(), 
@@ -117,27 +124,22 @@ class RndrJob():
         else:
             dist = cr_object.Object(basename=cd.Distributed.getTypeName(), 
                     factories=self._factories)
-        dist._execpath = RndrJob._getCRBinPath()
         return dist
-        # return RndrJob._DistributedFactory.build()
 
-    def _getConfiguredDistJob(self, dist):
+    def _getConfiguredDistJob(self, dist, prog):
         job = dist.createJobTemplate()
+        job.name = "render_" + self._timecreated.strftime("%y_%m_%d_%s")
+        job.queue = "prman"
+        job.prog = self._configureProgForJob(prog)
+        job.wd = self._rootdir
         out = dist.finalizeJob(job, self._assetman)
         return job
 
-    # TODO Move this outta here
-    @staticmethod
-    def _getCRBinPath():
-        path = os.path.abspath(os.path.split(__main__.__file__)[1])
-
-        currdir = path
-        parentdir, basename = os.path.split(currdir)
-        while basename != "chronorender" and currdir != parentdir:
-            currdir = parentdir
-            parentdir, basename = os.path.split(currdir)
-
-        return os.path.join(parentdir, "bin")
+    def _configureProgForJob(self, prog):
+        prog.args['metadata'] = self._metadata.filename
+        prog.args['framerange'] = str(self._frames[0]) + " " + str(self._frames[1])
+        prog.args['renderer'] = self.stream
+        return prog
 
     def _startRenderer(self):
         self._renderer.init()

@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import argparse, os
 
 from cr_prog import Prog
