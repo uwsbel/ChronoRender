@@ -23,16 +23,16 @@ class Settings(Renderable):
         self.interp     = self.getMember('interpolation')
         self.rate       = self.getMember('shadingrate')
         self.samples    = self.getMember('pixelsamples')
-        self.displays   = self.getMember('display')
+        self.displays   = self.getMember(disp.Display.getTypeName())
 
     def _initMembersDict(self):
         super(Settings, self)._initMembersDict()
-        self._members['name']           = [str, 'default']
-        self._members['resolution']     = [intlist, [640, 480]]
-        self._members['interpolation']  = [str, 'smooth']
-        self._members['shadingrate']    = [float, 4.0]
-        self._members['pixelsamples']   = [intlist, [4, 4]]
-        self._members['display']        = [disp.Display, []]
+        self._members['name']                       = [str, 'default']
+        self._members['resolution']                 = [intlist, [640, 480]]
+        self._members['interpolation']              = [str, 'smooth']
+        self._members['shadingrate']                = [float, 4.0]
+        self._members['pixelsamples']               = [intlist, [4, 4]]
+        self._members[disp.Display.getTypeName()]   = [disp.Display, []]
 
     def render(self, rib, outpath='', postfix='', **kwargs):
         rib.Format(self.resolution[0], self.resolution[1], 1)

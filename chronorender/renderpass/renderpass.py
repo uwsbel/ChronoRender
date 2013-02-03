@@ -1,6 +1,7 @@
 from cr_renderable import Renderable
 from cr_scriptable import Scriptable
 
+import hider as hider
 import chronorender.scene as cscene
 import chronorender.lighting as clight
 import settings as csett
@@ -21,22 +22,25 @@ class RenderPass(Renderable):
     def __init__(self, *args, **kwargs):
         super(RenderPass,self).__init__(*args, **kwargs)
 
+        self.name           = self.getMember('name')
         self.rndrsettings   = self.getMember(csett.Settings.getTypeName())
         self.lighting       = self.getMember(clight.Lighting.getTypeName())
         self.camera         = self.getMember(ccam.Camera.getTypeName())
         self.scene          = self.getMember(cscene.Scene.getTypeName())
-        self.script     = self.getMember(Scriptable.getTypeName())
+        self.script         = self.getMember(Scriptable.getTypeName())
+        self.hiders         = self.getMember(hider.Hider.getTypeName())
         self.renderables    = []
 
     def _initMembersDict(self):
         super(RenderPass, self)._initMembersDict()
 
-        self._members['name']                           = [str, 'nothing']
+        self._members['name']                           = [str, 'pass']
         self._members[cscene.Scene.getTypeName()]       = [cscene.Scene, []]
         self._members[clight.Lighting.getTypeName()]    = [clight.Lighting, []]
         self._members[ccam.Camera.getTypeName()]        = [ccam.Camera, []]
         self._members[csett.Settings.getTypeName()]     = [csett.Settings, []]
-        self._members[Scriptable.getTypeName()] = [Scriptable, None]
+        self._members[Scriptable.getTypeName()]         = [Scriptable, None]
+        self._members[hider.Hider.getTypeName()]        = [hider.Hider, []]          
 
     def addRenderable(self, obj):
         if isinstance(obj, list):
@@ -78,11 +82,14 @@ class RenderPass(Renderable):
             rib.FrameBegin(passnumber)
             self._renderSettings(rib, **passargs)
 
+            self.renderOptions(rib)
             self.renderAttributes(rib)
 
             self._renderInstanceDecls(rib, **passargs)
 
             self._renderCamera(rib, **passargs)
+
+            self._renderHider(rib, **passargs)
 
             rib.WorldBegin()
             self._renderLighting(rib, **passargs)
@@ -108,6 +115,10 @@ class RenderPass(Renderable):
     def _renderCamera(self, rib, **kwargs):
         for cam in self.camera:
             cam.render(rib, **kwargs)
+
+    def _renderHider(self, rib, **kwargs):
+        for hider in self.hiders:
+            hider.render(rib, **kwargs)
 
     def _renderLighting(self, rib, **kwargs):
         for light in self.lighting:

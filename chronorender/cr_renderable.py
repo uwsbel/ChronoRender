@@ -1,5 +1,6 @@
-from cr_object import Object, ObjectException
-from attribute import Attribute
+from chronorender.cr_object import Object, ObjectException
+from chronorender.attribute import Attribute
+from chronorender.option    import Option
 
 # extended object, can be rendered
 class RenderableException(ObjectException):
@@ -18,12 +19,14 @@ class Renderable(Object):
         self.instanced              = False
         self.instanceid             = Renderable._instanceid
         self.attributes             = self.getMember(Attribute.getTypeName())
+        self.options                = self.getMember(Option.getTypeName())
 
         Renderable._instanceid += 1
 
     def _initMembersDict(self):
         super(Renderable, self)._initMembersDict()
         self._members[Attribute.getTypeName()]   = [Attribute, []]
+        self._members[Option.getTypeName()]      = [Option, []]
 
     def getInstanceID(self):
         return self.instanceid
@@ -38,6 +41,10 @@ class Renderable(Object):
         for attr in self.attributes:
             attr.render(rib)
 
+    def renderOptions(self, rib):
+        for opt in self.options:
+            opt.render(rib)
+
     def renderShape(self, rib, rendershaders=True, **kwargs):
         return
 
@@ -46,3 +53,9 @@ class Renderable(Object):
         for key, val in paramsdict.iteritems():
           attr.addParameter(key, val)
         self.attributes.append(attr)
+
+    def addOption(self, name, paramsdict):
+        opt = Option(name)
+        for key, val in paramsdict.iteritems():
+          opt.addParameter(key, val)
+        self.options.append(opt)
