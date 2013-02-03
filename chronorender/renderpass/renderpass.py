@@ -67,24 +67,24 @@ class RenderPass(Renderable):
     def setAsset(self, assetname, obj):
         return
 
-    def render(self, rib, passnumber, framenumber, 
+    def render(self, rib, passnumber, fnum, 
             outpath='', outpostfix='', *args, **kwargs):
         if self.script:
             self.script.render(rib, *args, **kwargs)
         else:
             rib.FrameBegin(passnumber)
-            self._renderSettings(rib, outpath, outpostfix, **kwargs)
+            self._renderSettings(rib, outpath, outpostfix, framenumber=fnum, **kwargs)
 
             self.renderAttributes(rib)
 
-            self._renderInstanceDecls(rib, framenumber=framenumber, **kwargs)
+            self._renderInstanceDecls(rib, framenumber=fnum, **kwargs)
 
-            self._renderCamera(rib, **kwargs)
+            self._renderCamera(rib, framenumber=fnum, **kwargs)
 
             rib.WorldBegin()
-            self._renderLighting(rib, **kwargs)
-            self._renderRenderables(rib, **kwargs)
-            self._renderScene(rib, **kwargs)
+            self._renderLighting(rib, framenumber=fnum, **kwargs)
+            self._renderRenderables(rib, framenumber=fnum, **kwargs)
+            self._renderScene(rib, framenumber=fnum, **kwargs)
             rib.WorldEnd()
 
             rib.FrameEnd()
