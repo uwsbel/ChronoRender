@@ -1,0 +1,7 @@
+- Make exec that can be used as procedural RIB
+  * compatibility with RenderMan Studio w/ Maya
+  * maybe better to just use chronorender module instead so to avoid need for metadata
+
+
+- Global Illumination Pass
+
