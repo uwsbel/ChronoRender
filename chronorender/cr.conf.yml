@@ -1,4 +1,5 @@
-searchpaths: "/usr/share/Pixie/shaders"
+finder:
+  searchpaths: ["/usr/share/Pixie/shaders","/usr/local/pixar"]
 
 distributed:
   queue: "prman"

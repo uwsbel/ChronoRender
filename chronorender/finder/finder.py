@@ -9,6 +9,11 @@ class AssetNotFoundException(Exception):
         return repr(msg)
 
 class Finder(object):
+    searchpaths = ""
+
+    def __init__(self, paths, relative=None):
+      self._searchpaths = Finder.searchpaths
+
     def __str__(self):
         return str(self._searchpaths)
 

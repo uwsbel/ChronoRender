@@ -24,7 +24,8 @@ class PhotonPass(RayTracePass):
 
     def render(self, rib, passnumber, framenumber, outpath='', outpostfix='', *args, **kwargs):
         self._getCurrMapName(framenumber)
-        self.map_attr.setMember('string photonmap', self.map_name)
+        # self.map_attr.setMember('string photonmap', self.map_name)
+        self.map_attr.setMember('string globalmap', self.map_name)
         super(PhotonPass,self).render(rib, passnumber, framenumber, outpath, 
                 outpostfix, *args, **kwargs)
 
@@ -41,14 +42,14 @@ class PhotonPass(RayTracePass):
             self.options.append(opt)
 
     def _initTransientPhotonMapAttributes(self):
-        self.map_attr = Attribute(name='photon', **{'string photonmap' : ''})
+        self.map_attr = Attribute(name='photon', **{'string globalmap' : ''})
         attrs = [self.map_attr]
 
         for attr in attrs:
             self.attributes.append(attr)
 
     def _getCurrMapName(self, framenumber):
-        self.map_name = self.name + "_" + str(framenumber) + ".ptc"
+        self.map_name = self.name + "_" + str(framenumber) + ".gpm"
 
 def build(**kwargs):
     return PhotonPass(**kwargs)

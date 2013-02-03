@@ -17,7 +17,7 @@ photon_gi_light(
 
   illuminate (Ps + Ns) {
       color radio = 0;
-      texture3d(photonmap, Ps, Ns, "_radiosity", radio);
+      texture3d(causticmap, Ps, Ns, "_radiosity", radio);
       Cl = radio;
   }
 }
