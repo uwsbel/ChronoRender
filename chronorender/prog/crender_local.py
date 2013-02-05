@@ -32,25 +32,22 @@ class CRenderLocal(Prog):
         parser.add_argument('-f', '--framerange',
                 nargs=2,
                 help='render the specified framerange; by default renders all frames',
-                default=None,
+                default=[0,0],
                 type=int,
                 required=False)
         return vars(parser.parse_args())
 
+    def verifyMetaData(self):
+        return super(CRenderLocal, self).verifyMetaData()
+
     def startLocalRenderJob(self):
-        md = self.verifyMetadata()
+        md = self.verifyMetaData()
         stream = self.args['renderer']
         frange = self.args['framerange']
 
         cr = ChronoRender()
-        cr.createAndRunRenderJob(md, stream, frange)
-
-    def verifyMetadata(self):
-        if not self.args['metadata']:
-            self.printErrorAndExit('no metadata specified')
-        if not os.path.exists(self.args['metadata']):
-            self.printErrorAndExit('metadata does not exist: ' + str(self.args['metadata']))
-        return self.args['metadata']
+        job = cr.createJob(md)
+        cr.runRenderJob(job, frange)
 
 if __name__ == '__main__':
     cr = CRenderLocal()

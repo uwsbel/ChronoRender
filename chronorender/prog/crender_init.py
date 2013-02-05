@@ -28,7 +28,8 @@ class CRenderInit(Prog):
         path = self.args['outpath'] if self.args['outpath'] else os.getcwd()
 
         cr = ChronoRender()
-        cr.generateRenderJobToDisk(path)
+        job = cr.createJob()
+        cr.writeJobToDisk(job, path)
 
 if __name__ == '__main__':
     cr = CRenderInit()

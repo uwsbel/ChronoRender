@@ -13,6 +13,8 @@ light
 envlight(
     float samples = 64, maxvariation = 0.02;
     string envmap = "";
+    float maxdist = 1;
+    float coneangle = 0.785;
     color filter = color(1);
     output float __nonspecular = 1;)
 {
@@ -21,7 +23,9 @@ envlight(
   illuminate (Ps + Ns) {
       color irrad = 0;
       float occ = occlusion(Ps, Ns, samples, 
-              "maxvariation", 0.0,
+              "maxvariation", maxvariation,
+              "maxdist", maxdist,
+              "coneangle", coneangle
               "environmentmap", envmap,
               "environmentcolor", irrad
               ); 

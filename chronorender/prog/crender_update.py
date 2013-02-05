@@ -23,17 +23,14 @@ class CRenderUpdate(Prog):
                 render job info', required=False)
         return vars(parser.parse_args())
 
-    def updateJobAssets(self):
-        md = self.verifyMetadata()
-        cr = ChronoRender()
-        cr.updateJobAssets(md)
+    def verifyMetaData(self):
+        return super(CRenderUpdate, self).verifyMetaData()
 
-    def verifyMetadata(self):
-        if not self.args['metadata']:
-            self.printErrorAndExit('no metadata specified')
-        if not os.path.exists(self.args['metadata']):
-            self.printErrorAndExit('metadata does not exist: ' + str(self.args['metadata']))
-        return self.args['metadata']
+    def updateJobAssets(self):
+        md = self.verifyMetaData()
+        cr = ChronoRender()
+        job = cr.createJob(md)
+        cr.updateJobAssets(job)
 
 if __name__ == '__main__':
     cr = CRenderUpdate()

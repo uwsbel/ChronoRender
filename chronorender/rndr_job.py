@@ -20,7 +20,7 @@ class RndrJob():
     _DistributedFactory = cd.DistributedFactory()
 
     def __init__(self, infile, factories):
-        self.stream         = None
+        self.stream         = 'stdout'
         self._factories     = factories
         self._metadata      = md.MetaData(infile)
         self._rndrdoc       = rd.RndrDoc(self._factories, self._metadata)
@@ -47,6 +47,9 @@ class RndrJob():
         self._assetman.compileShaders(self.stream)
         self._assetman.convertTextures(self.stream)
         self._verifyFrameRange(framerange)
+
+    def renderByType(self, vtype):
+        return
 
     def _render(self):
         self._renderer = RndrJob._RendererFactory.build(self.stream)
@@ -148,3 +151,6 @@ class RndrJob():
     def _stopRenderer(self):
         self._renderer.stopRenderContext()
         self._renderer.cleanup()
+
+    def getMetaData(self):
+        return self._metadata

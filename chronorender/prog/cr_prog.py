@@ -41,6 +41,13 @@ class Prog(object):
             name += ext
         return name
 
+    def verifyMetaData(self):
+        if not self.args['metadata']:
+            self.printErrorAndExit('no metadata specified')
+        if not os.path.exists(self.args['metadata']):
+            self.printErrorAndExit('metadata does not exist: ' + str(self.args['metadata']))
+        return self.args['metadata']
+
     @staticmethod
     def getCRBinPath():
         path = os.path.abspath(os.path.split(__main__.__file__)[1])

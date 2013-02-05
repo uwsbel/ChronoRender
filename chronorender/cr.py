@@ -67,37 +67,45 @@ class ChronoRender(object):
         self._configpath = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
         return os.path.join(self._configpath, ChronoRender._defaultConfigFile)
 
-    def getFactories(self, typename):
-        return self._factories.getFactory(typename)
+    def getFactories(self, typename=None):
+        if not typename:
+            return self._factories
+        else:
+            return self._factories.getFactory(typename)
 
-    def generateRenderJobToDisk(self, dest):
-        defaultmd = cr_utils.getAbsPathRelativeToModule(ChronoRender, './assets/default.yml')
-        job = self._createRenderJob(defaultmd)
-
+    def writeJobToDisk(self, job, dest):
         outpath = os.path.join(dest, "RENDERMAN")
 
         job.setOutputPath(outpath)
         job.createOutDirs()
 
         defaultscene = cr_utils.getAbsPathRelativeToModule(ChronoRender, './assets/default_scene.rib')
-        defaultcam = cr_utils.getAbsPathRelativeToModule(ChronoRender, './assets/default_camera.rib')
-        defaultlighting = cr_utils.getAbsPathRelativeToModule(ChronoRender, './assets/default_lighting.rib')
         job.copyAssetToDirectory(defaultscene)
+        defaultcam = cr_utils.getAbsPathRelativeToModule(ChronoRender, './assets/default_camera.rib')
         job.copyAssetToDirectory(defaultcam)
+        defaultlighting = cr_utils.getAbsPathRelativeToModule(ChronoRender, './assets/default_lighting.rib')
         job.copyAssetToDirectory(defaultlighting)
-        shutil.copy2(defaultmd, outpath)
+        shutil.copy2(job.getMetaData().filename, outpath)
 
-    def updateJobAssets(self, mdfile):
-        job = self._createRenderJob(mdfile)
+    def updateJobAssets(self, job):
+        mdfile = job.getMetaData().filename
         dest = os.path.abspath(os.path.split(mdfile)[0])
 
         job.setOutputPath(dest)
         job.updateAssets()
 
-    def createAndRunRenderJob(self, mdfile, stream='', framerange=None):
-        job = self._createRenderJob(mdfile)
-        job.stream = stream
+    def createJob(self, mdfile=None):
+        if not mdfile:
+            mdfile = self._getDefaultMetaData()
+        return self._createRenderJob(mdfile)
 
+    def runJob(self, job):
+        job.run()
+
+    def submitJob(self, job, prog):
+        job.submit(prog)
+
+    def runRenderJob(self, job, framerange=None):
         try:
             job.run(framerange)
         except Exception as e:
@@ -105,12 +113,11 @@ class ChronoRender(object):
         finally:
             exit()
 
-    def createAndSubmitRenderJob(self, mdfile, stream=''):
-        job = self._createRenderJob(mdfile)
-        self._submitRenderJob(job)
+    def _getDefaultMetaData(self):
+        return cr_utils.getAbsPathRelativeToModule(ChronoRender, './assets/default.yml')
 
     def _createRenderJob(self, mdfile):
         return rndrjob.RndrJob(mdfile, self._factories)
 
-    def _submitRenderJob(self, job):
-        return
+    def _submitRenderJob(self, job, prog):
+        job.submit(prog)

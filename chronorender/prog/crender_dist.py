@@ -2,6 +2,7 @@
 import argparse, os
 
 from cr_prog import Prog
+from crender_local import CRenderLocal
 from chronorender.cr import ChronoRender
 
 class CRenderDist(Prog):
@@ -42,19 +43,17 @@ class CRenderDist(Prog):
                 required=False)
         return vars(parser.parse_args())
 
+    def verifyMetaData(self):
+        return super(CRenderDist, self).verifyMetaData()
+
     def startDistributedJob(self):
-        md = self.verifyMetadata()
+        md = self.verifyMetaData()
         stream = args['renderer']
 
-        #cr = ChronoRender()
-        #cr.createAndSubmitRenderJob(md, stream)
-
-    def verifyMetadata(self):
-        if not self.args['metadata']:
-            self.printErrorAndExit('no metadata specified')
-        if not os.path.exists(self.args['metadata']):
-            self.printErrorAndExit('metadata does not exist: ' + str(self.args['metadata']))
-        return self.args['metadata']
+        cr = ChronoRender()
+        job = cr.createJob(md)
+        prog = CRLocal()
+        cr.submitJob(job, prog)
 
 if __name__ == '__main__':
     cr = CRenderDist()
