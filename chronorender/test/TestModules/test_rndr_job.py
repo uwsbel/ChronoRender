@@ -38,7 +38,7 @@ class RndrJobTestCase(unittest.TestCase):
         try:
             # job.run('prman')                           
             job.stream = 'stdout'
-            job.frames = [0,0]
+            job.frames = [0,2]
             job.run()                           
         finally:
             os.chdir(currdir)

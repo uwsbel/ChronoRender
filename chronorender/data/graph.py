@@ -1,4 +1,7 @@
-from collections import OrderedDict
+try:
+  from collections import OrderedDict
+except ImportError:
+  from chronorender.thirdparty.ordereddict import OrderedDict
 from chronorender.data.utils import get_logger
 
 class Graph(object):
