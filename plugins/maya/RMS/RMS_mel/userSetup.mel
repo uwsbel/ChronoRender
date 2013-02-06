@@ -1,0 +1,5 @@
+	
+if(`about -windows` || `about -linux`) {
+    python("import sys");
+    python("sys.path.append('C:/Users/Aaron/Documents/maya/projects/RMS_python')");
+    }

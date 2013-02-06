@@ -1,0 +1,3 @@
+
+def isOK():
+    print "Yes"
