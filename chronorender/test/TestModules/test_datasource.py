@@ -1,5 +1,5 @@
 import unittest
-from chronorender.cr import ChronoRender
+from chronorender import ChronoRender
 
 import chronorender.datasource as ds
 import chronorender.metadata as md

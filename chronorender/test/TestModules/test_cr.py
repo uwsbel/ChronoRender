@@ -1,5 +1,5 @@
 import unittest
-from chronorender.cr import ChronoRender
+from chronorender import ChronoRender
 
 class ChronoRenderTestCase(unittest.TestCase):
     def setUp(self):

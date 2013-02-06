@@ -1,6 +1,6 @@
 import unittest
 
-from chronorender.cr import ChronoRender
+from chronorender import ChronoRender
 import chronorender.data as dat
 import chronorender.datatarget as dt
 import chronorender.dataprocess as dp

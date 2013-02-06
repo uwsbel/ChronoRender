@@ -2,7 +2,7 @@
 import argparse, os
 
 from cr_prog import Prog
-from chronorender.cr import ChronoRender
+from chronorender import ChronoRender
 
 class CRenderUpdate(Prog):
     def __init__(self):

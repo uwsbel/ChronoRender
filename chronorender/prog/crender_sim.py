@@ -2,7 +2,7 @@
 import argparse
 
 from cr_prog import Prog
-from chronorender.cr import ChronoRender
+from chronorender import ChronoRender
 from chronorender.simulation import Simulation
 
 class CRenderSim(Prog):

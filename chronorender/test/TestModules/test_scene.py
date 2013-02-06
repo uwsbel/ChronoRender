@@ -1,5 +1,5 @@
 import unittest
-from chronorender.cr import ChronoRender
+from chronorender import ChronoRender
 from chronorender.scene import Scene
 
 from chronorender.renderpass.settings import Settings

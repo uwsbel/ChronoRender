@@ -3,7 +3,7 @@ import argparse, os
 
 from cr_prog import Prog
 from crender_local import CRenderLocal
-from chronorender.cr import ChronoRender
+from chronorender import ChronoRender
 
 class CRenderDist(Prog):
     def __init__(self):

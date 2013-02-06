@@ -5,6 +5,11 @@ def natural_sort(slist):
     alphanum_key = lambda key: [convert(c) for c in re.split('([0-9]+)', key)]
     return sorted(slist, key = alphanum_key)
 
+def getAssetsPath():
+    path = os.path.abspath(__file__)
+    path = os.path.split(path)[0]
+    return os.path.join(path, 'assets')
+
 def getAbsPathRelativeToModule(cls, path):
     modpath = os.path.split(inspect.getfile(cls))[0]
     return getAbsPathRelativeTo(path, modpath)
