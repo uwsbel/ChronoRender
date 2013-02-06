@@ -1,6 +1,6 @@
 import unittest
 from chronorender.cr import ChronoRender
-from visualizer import Visualizer
+from chronorender.visualizer import Visualizer
 
 class VisualizerTestCase(unittest.TestCase):
     def setUp(self):

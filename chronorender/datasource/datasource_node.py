@@ -1,6 +1,6 @@
-import data.nodes.base
+from chronorender.data.nodes.base import SourceNode
 
-class DataSourceNode(data.nodes.base.SourceNode):
+class DataSourceNode(SourceNode):
 
     node_info = {
         "label" : "Null Data Source",
@@ -15,7 +15,7 @@ class DataSourceNode(data.nodes.base.SourceNode):
     }
 
     def __init__(self, datasrc, *args, **kwargs):
-        super(data.nodes.base.SourceNode, self).__init__()
+        super(SourceNode, self).__init__()
         
         self._datasrc = datasrc
         self._fields = None

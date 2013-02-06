@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import data.utils as utils
+import chronorender.data 
 import heapq
+from chronorender.data.utils import get_logger, to_identifier, decamelize
 
 __all__ = (
     "create_node",
@@ -97,7 +98,7 @@ def node_subclasses(root, abstract = False):
           ``False``
     """
     classes = []
-    for c in utils.subclass_iterator(root):
+    for c in subclass_iterator(root):
         try:
             info = get_node_info(c)
 
@@ -115,7 +116,7 @@ def get_node_info(cls):
 
     if hasattr(cls, "__node_info__") and cls not in _node_info_warnings:
 
-        utils.get_logger().warn("depreciated __node_info__ present in %s, rename to node_info" \
+        get_logger().warn("depreciated __node_info__ present in %s, rename to node_info" \
                     " (this warning will be shown only once)" % str(cls))
         _node_info_warnings.add(cls)
 
@@ -318,7 +319,7 @@ class Node(object):
         ``CSVSourceNode`` will be ``csv_source``.
         """
 
-        logger = utils.get_logger()
+        logger = get_logger()
 
         # FIXME: this is temporary warning
         info = get_node_info(cls)
@@ -328,7 +329,7 @@ class Node(object):
             ident = info.get("name")
 
         if not ident:
-            ident = utils.to_identifier(utils.decamelize(cls.__name__))
+            ident = to_identifier(decamelize(cls.__name__))
             if ident.endswith("_node"):
                 ident = ident[:-5]
 

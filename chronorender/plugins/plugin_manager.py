@@ -1,4 +1,4 @@
-import thirdparty.yaml as yaml
+import chronorender.thirdparty.yaml as yaml
 import inspect, os, glob, sys
 
 class PluginManagerException(Exception):
@@ -76,7 +76,8 @@ class PluginManager():
             try:
                 conc_plugin['modules'].append(__import__(plugin))
             except Exception as e:
-              # print e, "unable to load plugin: ", plugintype, typename
+              # print "unable to load plugin: ", plugin, plugintype, typename
+              # print "\t", e 
               pass
             finally:
               pass

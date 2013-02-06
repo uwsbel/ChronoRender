@@ -2,10 +2,10 @@
 
 import threading
 import sys
-from data.nodes.base import node_dictionary, TargetNode, NodeFinished
-from data.utils import get_logger
-from data.nodes import *
-from data.common import *
+from chronorender.data.nodes.base import node_dictionary, TargetNode, NodeFinished
+from chronorender.data.utils import get_logger
+from chronorender.data.nodes import *
+from chronorender.data.common import *
 from .graph import *
 
 __all__ = [

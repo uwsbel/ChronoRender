@@ -1,5 +1,5 @@
-from cr_movable import Movable
-from cr_scriptable import Scriptable
+from chronorender.cr_movable import Movable
+from chronorender.cr_scriptable import Scriptable
 
 class GeometryException(Exception):
     def __init__(self, value):

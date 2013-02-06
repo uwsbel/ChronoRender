@@ -1,7 +1,7 @@
-from cr_renderable import Renderable
-import renderpass.display as disp
+from chronorender.cr_renderable import Renderable
+from chronorender.renderpass.display import Display
 
-from cr_types import floatlist, intlist
+from chronorender.cr_types import floatlist, intlist
 
 class SettingsException(Exception):
     def __init__(self, value):
@@ -23,7 +23,7 @@ class Settings(Renderable):
         self.interp     = self.getMember('interpolation')
         self.rate       = self.getMember('shadingrate')
         self.samples    = self.getMember('pixelsamples')
-        self.displays   = self.getMember(disp.Display.getTypeName())
+        self.displays   = self.getMember(Display.getTypeName())
 
     def _initMembersDict(self):
         super(Settings, self)._initMembersDict()
@@ -32,7 +32,7 @@ class Settings(Renderable):
         self._members['interpolation']              = [str, 'smooth']
         self._members['shadingrate']                = [float, 4.0]
         self._members['pixelsamples']               = [intlist, [4, 4]]
-        self._members[disp.Display.getTypeName()]   = [disp.Display, []]
+        self._members[Display.getTypeName()]   = [Display, []]
 
     def render(self, rib, outpath='', postfix='', **kwargs):
         rib.Format(self.resolution[0], self.resolution[1], 1)

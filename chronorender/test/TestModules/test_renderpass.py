@@ -1,7 +1,7 @@
 import unittest, os
 
-from metadata import MetaData
-from renderpass import RenderPass
+from chronorender.metadata import MetaData
+from chronorender.renderpass import RenderPass
 from chronorender.renderer import RendererFactory
 
 class RenderPassTestCase(unittest.TestCase):

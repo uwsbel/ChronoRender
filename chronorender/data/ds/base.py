@@ -25,8 +25,8 @@
 
 import urllib2
 import urlparse
-import data.dq
-from data.metadata import collapse_record, Field
+import chronorender.data.dq
+from chronorender.data.metadata import collapse_record, Field
 
 def open_resource(resource, mode = None):
     """Get file-like handle for a resource. Conversion:

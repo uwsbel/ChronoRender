@@ -1,4 +1,4 @@
-from geometry import Geometry
+from chronorender.geometry import Geometry
 
 class Cube(Geometry):
     @staticmethod

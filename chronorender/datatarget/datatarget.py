@@ -1,5 +1,5 @@
 # import data.ds.base
-import data.nodes.base
+from chronorender.data.nodes.base import TargetNode
 # Should implement:
 # * fields
 # * prepare()
@@ -13,7 +13,7 @@ class DataTargetException(Exception):
         return repr(self.value)
 
 
-class DataTarget(data.nodes.base.TargetNode):
+class DataTarget(TargetNode):
     node_info = {
         "label" : "blah",
         "description" : "gorb",

@@ -1,12 +1,11 @@
-import data.ds.base
-import data.metadata as metadata
+import chronorender.data.metadata as metadata
 try:
     import gdata.spreadsheet.text_db
 except:
-    from data.utils import MissingPackage
+    from chronorender.data.utils import MissingPackage
     gdata = MissingPackage("gdata", "Google data (spreadsheet) source/target")
 
-from datasource import DataSource
+from chronorender.datasource import DataSource
 
 # Documentation:
 # http://gdata-python-client.googlecode.com/svn/trunk/pydocs/

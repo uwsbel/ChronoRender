@@ -1,12 +1,12 @@
 # import weakref
-from cr_movable import Movable
-from cr_scriptable import Scriptable
-import cr_enums as cre
+from chronorender.cr_movable import Movable
+from chronorender.cr_scriptable import Scriptable
+import chronorender.cr_enums as cre
 from itertools import izip
 
 import chronorender.geometry as cg
 import chronorender.shader as cs
-from cr_types import intlist, floatlist
+from chronorender.cr_types import intlist, floatlist
 
 class RenderObjectException(Exception):
     def __init__(self, value):

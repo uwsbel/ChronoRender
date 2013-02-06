@@ -1,6 +1,6 @@
 # from chronorender.cr_object import Renderable
 
-from geometry import Geometry
+from chronorender.geometry import Geometry
 
 class Cone(Geometry):
     @staticmethod

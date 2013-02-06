@@ -1,8 +1,8 @@
 import unittest
 from chronorender.cr import ChronoRender
-from scene import Scene
+from chronorender.scene import Scene
 
-from renderpass.settings import Settings
+from chronorender.renderpass.settings import Settings
 
 class SceneTestCase(unittest.TestCase):
     def setUp(self):

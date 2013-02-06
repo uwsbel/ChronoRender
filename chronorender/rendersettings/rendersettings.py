@@ -1,7 +1,7 @@
 import os, re
 
-from cr_object import Object
-from cr_types import intlist, strlist
+from chronorender.cr_object import Object
+from chronorender.cr_types import intlist, strlist
 
 class RenderSettingsException(Exception):
     def __init__(self, value):

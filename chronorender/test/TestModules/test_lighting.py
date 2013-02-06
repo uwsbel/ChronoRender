@@ -1,5 +1,5 @@
 import unittest
-from lighting import Lighting
+from chronorender.lighting import Lighting
 
 class LightingTestCase(unittest.TestCase):
     def test_create(self):

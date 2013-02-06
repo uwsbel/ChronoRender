@@ -1,6 +1,6 @@
 import os.path as path
 
-from cr_renderable import Renderable
+from chronorender.cr_renderable import Renderable
 
 class DisplayException(Exception):
     def __init__(self, value):

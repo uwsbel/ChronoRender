@@ -55,7 +55,7 @@ import math, sl, simplecpp
 import _slparser
 from _slreturntypes import _ShaderInfo, _ShaderParam
 
-from cr_types import floatlist, floatlist3
+from chronorender.cr_types import floatlist, floatlist3
 
 try:
     import sloargs

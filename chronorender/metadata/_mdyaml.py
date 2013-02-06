@@ -1,6 +1,6 @@
 from _mdreader import _MDReader
 
-import thirdparty.yaml as tyaml
+import chronorender.thirdparty.yaml as tyaml
 import pprint, copy, itertools
 
 class _MDYAML(_MDReader):

@@ -1,7 +1,7 @@
-import dataprocess as dp
+import chronorender.dataprocess as dp
 
-from data.metadata import FieldMap, FieldList, Field
-from data.common import FieldError
+from chronorender.data.metadata import FieldMap, FieldList, Field
+from chronorender.data.common import FieldError
 
 class DeriveNode(dp.DataProcess):
     node_info = {

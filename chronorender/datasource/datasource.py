@@ -1,5 +1,5 @@
-from data.ds.base import DataSource
-import cr_object
+from chronorender.data.ds.base import DataSource
+import chronorender.cr_object as cr_object
 import glob, os
 # Should implement:
 # * fields

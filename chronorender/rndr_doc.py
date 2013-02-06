@@ -1,8 +1,8 @@
 # contains all assests needed to start a render job
 import glob, re, os
 
-from cr_object import Object
-import cr_utils
+from chronorender.cr_object import Object
+import chronorender.cr_utils as cr_utils
 
 from chronorender.renderobject import RenderObject
 from chronorender.renderpass import RenderPass

@@ -1,7 +1,7 @@
 import unittest
-import chronorender.rendersettings as rs
 
-from metadata import MetaData
+from chronorender.rendersettings import RenderSettings
+from chronorender.metadata import MetaData
 
 import sys, os
 
@@ -14,7 +14,7 @@ class RenderSettingsTestCase(unittest.TestCase):
         if len(settings) <= 0:
             raise Exception('invalid settings')
 
-        self.settings = rs.RenderSettings(**settings[0])
+        self.settings = RenderSettings(**settings[0])
 
     def tearDown(self):
         del self.md

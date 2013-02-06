@@ -1,7 +1,6 @@
 from renderpass import RenderPassException
 from raytrace_pass import RayTracePass
-import hider as hider
-import option as option
+import chronorender.option as option
 from chronorender.attribute import Attribute
 
 class PhotonPass(RayTracePass):

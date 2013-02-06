@@ -1,5 +1,5 @@
 import unittest
-from camera import Camera
+from chronorender.camera import Camera
 
 class CameraTestCase(unittest.TestCase):
     def test_create(self):

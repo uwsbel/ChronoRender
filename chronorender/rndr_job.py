@@ -1,7 +1,7 @@
 import datetime, os, logging, glob, __main__
 
 import chronorender.cr_object as cr_object
-import chronorender.cr_utils as crutils
+import chronorender.cr_utils as cr_utils
 import chronorender.metadata as md
 import chronorender.rndr_doc as rd
 import chronorender.renderer as cr
@@ -39,8 +39,8 @@ class RndrJob():
             os.chdir(self._rootdir)
             self._resolveAssets()
             self._render()
-        except Exception as err:
-            raise err
+        # except Exception as err:
+            # raise err
         finally:
             os.chdir(prevdir)
 
@@ -59,7 +59,7 @@ class RndrJob():
         self._stopRenderer()
 
     def _renderOptions(self):
-        cr_paths = crutils.getCRAssetPaths()
+        cr_paths = cr_utils.getCRAssetPaths()
         cr_pathsstr = reduce(lambda x, y: str(x) + ":" + str(y), cr_paths)
         cr_pathsstr += ":"
         self._renderer.Option("searchpath", {"shader":

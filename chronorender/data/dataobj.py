@@ -1,10 +1,12 @@
-from cr_object import Object
-import cr_utils
+from chronorender.cr_object import Object
+import chronorender.cr_utils as cr_utils
 
-import data
-import datasource as ds
-import dataprocess as dp
-import datatarget as dt
+# import chronorender.data
+from chronorender.data.metadata import FieldList
+from chronorender.data.streams import Stream
+import chronorender.datasource as ds
+import chronorender.dataprocess as dp
+import chronorender.datatarget as dt
 import copy, os
 
 class DataObjectException(Exception):
@@ -75,7 +77,7 @@ class DataObject(Object):
         out = self._run(srcnumber)
         if selectcondition != "":
             src= ds.RecordListSourceNode(name="tmp", a_list=out, 
-                    fields=data.FieldList(self._allfields))
+                    fields=FieldList(self._allfields))
             procs = []
             procs.append(dp.SelectNode(condition=selectcondition))
             out = DataObject._doProcs(src, procs)
@@ -121,7 +123,7 @@ class DataObject(Object):
 
         combined_data = self._combineSrcs(srcnumber)
 
-        target = ds.RecordListSourceNode(name="tmp", a_list=combined_data.data, fields=data.FieldList(self._allfields))
+        target = ds.RecordListSourceNode(name="tmp", a_list=combined_data.data, fields=FieldList(self._allfields))
         return self._doProcs(target, self._dataprocs)
 
     def _getResource(self, listnum, number):
@@ -137,7 +139,7 @@ class DataObject(Object):
 
     def _combineSrcs(self, srcnumber):
         target = dt.DataTarget()
-        target.fields = data.FieldList(self._allfields)
+        target.fields = FieldList(self._allfields)
 
         target.initialize()
         for i in range(0, len(self._datasrcs)):
@@ -159,7 +161,7 @@ class DataObject(Object):
                 }
 
         connections = DataObject._createProcGraph(nodes, procs, "in","out")
-        stream = data.Stream(nodes, connections)
+        stream = Stream(nodes, connections)
         stream.run() 
         return out.data
 

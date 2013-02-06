@@ -1,5 +1,5 @@
-from cr_renderable import Renderable
-from cr_scriptable import Scriptable
+from chronorender.cr_renderable import Renderable
+from chronorender.cr_scriptable import Scriptable
 
 import hider as hider
 import chronorender.scene as cscene

@@ -1,12 +1,12 @@
 import string
 import os
 import shutil
-from datasource import DataSource
+from chronorender.datasource import DataSource
 
 try:
     import yaml
 except:
-    from data.utils import MissingPackage
+    from chronorender.data.utils import MissingPackage
     yaml = MissingPackage("PyYAML", "YAML directory data source/target", "http://pyyaml.org/")
 
 class YamlDirectoryDataSource(DataSource):

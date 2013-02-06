@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from data.utils import get_logger
+from chronorender.data.utils import get_logger
 
 class Graph(object):
     """Data processing stream"""

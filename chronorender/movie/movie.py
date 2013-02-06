@@ -1,5 +1,5 @@
-from cr_object import Object
-from cr_types import intlist
+from chronorender.cr_object import Object
+from chronorender.cr_types import intlist
 
 class MovieException(Exception):
     def __init__(self, value):

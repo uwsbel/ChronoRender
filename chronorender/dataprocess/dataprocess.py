@@ -1,7 +1,7 @@
-import data.nodes.base
-import cr_object
+from chronorender.data.nodes.base import Node
+from chronorender.cr_object import Object
 
-class DataProcess(data.nodes.base.Node, cr_object.Object):
+class DataProcess(Node, Object):
     node_info = {
         "label" : "PassThrough (default)",
         "description" : "does nothing",
@@ -14,7 +14,8 @@ class DataProcess(data.nodes.base.Node, cr_object.Object):
         return "dataprocess"
 
     def __init__(self, name="default", *args, **kwargs):
-        super(data.nodes.base.Node, self).__init__(*args, **kwargs)
+        super(Node, self).__init__(*args, **kwargs)
+        super(Object, self).__init__(*args, **kwargs)
         self.name = name
 
     def initialize(self):

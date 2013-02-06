@@ -1,7 +1,7 @@
 import unittest
 import chronorender as cr
 
-from metadata import MetaData
+from chronorender.metadata import MetaData
 
 import sys, os
 

@@ -1,41 +1,15 @@
-import sys, os, inspect
+import os.path, cr_info
 
-# get submodule paths
-currpath = os.path.abspath(os.path.split(inspect.getfile(inspect.currentframe()))[0])
+if cr_info.cr_light:
+    # dirname = __path__[0]
+    # __path__.insert(0, os.path.join(dirname,"light"))
+    from chronorender.light.cr import ChronoRender
+else:
+    from chronorender.all.cr import ChronoRender
+# import sys, os, inspect
 
-# do select paths
-# submodpaths = [                 \
-               # 'datareader',    \
-               # 'geometry',      \
-               # 'lighting',      \
-               # 'renderobject',  \
-               # 'renderpass',    \
-               # 'rendersettings',\
-               # 'scene',         \
-               # 'shader',        \
-               # 'simulation',    \
-               # 'visualizer'     \
-               # ]
+# currpath = os.path.abspath(os.path.split(inspect.getfile(inspect.currentframe()))[0])
 # paths = [currpath]
-# for path in submodpaths:
-    # paths.append(os.path.join(currpath, path))
-
-# do all
-paths = [currpath]
-# for entry in os.listdir(currpath):
-    # if os.path.isdir(entry):
-        # paths.append(os.path.abspath(entry))
-
-for path in paths:
-    if path not in sys.path:
-        sys.path.insert(0, path)
-
-# import finder
-# import metadata
-# import rndr_job
-# import rndr_doc
-# import cr
-# import ri
-# from rndr_job import *
-# from rndr_doc import *
-from cr import ChronoRender
+# for path in paths:
+    # if path not in sys.path:
+        # sys.path.insert(0, path)

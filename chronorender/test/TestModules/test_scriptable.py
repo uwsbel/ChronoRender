@@ -1,7 +1,7 @@
 import unittest, os
 
-from camera import Camera
-from cr_scriptable import Scriptable
+from chronorender.camera import Camera
+from chronorender.cr_scriptable import Scriptable
 
 class ScriptableTestCase(unittest.TestCase):
     def test_script(self):

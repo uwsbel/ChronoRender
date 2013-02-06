@@ -1,13 +1,14 @@
-import data.ds.base
-import data.dq
+# import data.ds.base
+from chronorender.data.ds.base import Field
+from chronorender.data.dq import FieldTypeProbe
 
 try:
     import pymongo
 except ImportError:
-    from data.utils import MissingPackage
+    from chronorender.data.utils import MissingPackage
     pymongo = MissingPackage("pymongo", "MongoDB streams", "http://www.mongodb.org/downloads/")
 
-from datasource import DataSource
+from chronorender.datasource import DataSource
 
 class MongoDBDataSource(DataSource):
     @staticmethod
@@ -69,7 +70,7 @@ class MongoDBDataSource(DataSource):
                     continue
 
                 if not full_key in probes:
-                    probe = data.dq.FieldTypeProbe(full_key)
+                    probe = FieldTypeProbe(full_key)
                     probes[full_key] = probe
                     keys.append(full_key)
                 else:
@@ -83,7 +84,7 @@ class MongoDBDataSource(DataSource):
 
         for key in keys:
             probe = probes[key]
-            field = data.ds.base.Field(probe.field)
+            field = Field(probe.field)
 
             storage_type = probe.unique_storage_type
             if not storage_type:

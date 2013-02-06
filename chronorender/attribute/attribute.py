@@ -1,4 +1,4 @@
-from cr_object import Object
+from chronorender.cr_object import Object
                
 class Attribute(Object):
     @staticmethod

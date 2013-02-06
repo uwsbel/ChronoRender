@@ -1,12 +1,12 @@
-import data.ds.base
+from chronorender.data.ds.base import open_resource
 import datetime
-from data.metadata import FieldList
-from datasource import DataSource
+from chronorender.data.metadata import FieldList
+from chronorender.datasource import DataSource
 
 try:
     import xlrd
 except:
-    from data.utils import MissingPackage
+    from chronorender.data.utils import MissingPackage
     xlrd = MissingPackage("xlrd", "Reading MS Excel XLS Files", "http://pypi.python.org/pypi/xlrd")
 
 class XLSDataSource(DataSource):
@@ -42,7 +42,7 @@ class XLSDataSource(DataSource):
         """Initialize XLS source stream:
         """
 
-        self.file, self.close_file = data.ds.base.open_resource(self.resource)
+        self.file, self.close_file = open_resource(self.resource)
 
         self.workbook = xlrd.open_workbook(file_contents=self.file.read(),
                                            encoding_override=self.encoding)

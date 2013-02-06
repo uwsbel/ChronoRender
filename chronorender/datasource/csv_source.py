@@ -1,8 +1,10 @@
 import csv
 import codecs
 import cStringIO
-import data.ds.base
-import data.metadata
+# import chronorender.data.ds.base
+# import chronorender.data.metadata
+from chronorender.data.ds.base import open_resource
+from chronorender.data.metadata import FieldList
 from datasource import DataSource
 
 class UTF8Recoder(object):
@@ -161,7 +163,7 @@ class CSVDataSource(DataSource):
         
         self.close_file = False
         self.skip_rows = skip_rows
-        self.fields = data.metadata.FieldList(fields)
+        self.fields = FieldList(fields)
         
     def initialize(self):
         """Initialize CSV source stream:
@@ -182,7 +184,7 @@ class CSVDataSource(DataSource):
         `analytical_type` = ``unknown``.
         """
 
-        self.file, self.close_file = data.ds.base.open_resource(self.resource)
+        self.file, self.close_file = open_resource(self.resource)
 
         handle = None
         
@@ -230,7 +232,7 @@ class CSVDataSource(DataSource):
                                "set them manually")
 
         else:
-            self.fields = data.metadata.FieldList(self.fields)
+            self.fields = FieldList(self.fields)
 
         self.reader.set_fields(self.fields)
         

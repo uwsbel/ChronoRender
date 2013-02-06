@@ -1,4 +1,4 @@
-from distributed import Distributed
+from chronorender.distributed import Distributed
 
 import drmaa
 
