@@ -21,40 +21,40 @@ class RndrJob():
 
     def __init__(self, infile, factories):
         self.stream         = 'stdout'
+        self.typefilter     = []
+        self.frames         = None
+        self.bOptions       = True
         self._factories     = factories
         self._metadata      = md.MetaData(infile)
         self._rndrdoc       = rd.RndrDoc(self._factories, self._metadata)
         self._rootdir       = os.path.abspath(os.path.split(self._metadata.filename)[0])
         self._timecreated   = datetime.datetime.utcnow()
         self._renderer      = None
-        self._frames        = [0, 0]
         self._assetman      = RndrJobAssetManager(self._rootdir, self._rndrdoc)
 
-    def run(self, framerange=None):
+    def run(self):
         self._assetman.createOutDirs()
         prevdir = os.getcwd()
         try:
             os.chdir(self._rootdir)
-            self._resolveAssets(framerange)
+            self._resolveAssets()
             self._render()
         except Exception as err:
             raise err
         finally:
             os.chdir(prevdir)
 
-    def _resolveAssets(self, framerange=None):
+    def _resolveAssets(self):
         self._assetman.updateAssets()
         self._assetman.compileShaders(self.stream)
         self._assetman.convertTextures(self.stream)
-        self._verifyFrameRange(framerange)
-
-    def renderByType(self, vtype):
-        return
+        self._verifyFrameRange()
 
     def _render(self):
         self._renderer = RndrJob._RendererFactory.build(self.stream)
         self._startRenderer()
-        self._renderOptions()
+        if self.bOptions:
+            self._renderOptions()
         self._renderFrames()
         self._stopRenderer()
 
@@ -72,21 +72,22 @@ class RndrJob():
                 cr_pathsstr + self._assetman.getOutPathFor("archive") + ":@"})
 
     def _renderFrames(self):
-        for framenum in range(self._frames[0], self._frames[1]+1):
-            self._rndrdoc.render(self._renderer, framenum)
+        for framenum in range(self.frames[0], self.frames[1]+1):
+            self._rndrdoc.render(self._renderer, framenum, self.typefilter)
 
-    def _verifyFrameRange(self, framerange=None):
-        self._frames = self._assetman.getFrameRange()
-        if framerange:
-            if len(framerange) != 2:
-                raise RndrJobException("invalid framerange: " + str(framerange))
+    def _verifyFrameRange(self):
+        if self.frames:
+            if len(self.frames) != 2:
+                raise RndrJobException("invalid frames: " + str(self.frames))
 
-            if framerange[0] < 0 or framerange[1] < 0:
-                raise RndrJobException("invalid framerange: " + str(framerange))
+            if self.frames[0] < 0 or self.frames[1] < 0:
+                raise RndrJobException("invalid frames: " + str(self.frames))
 
-            if framerange[1] > self._frames[1]:
-                framerange[1] = self._frames[1]
-            self._frames = framerange
+            if self.frames[1] > self.frames[1]:
+                self.frames[1] = self.frames[1]
+            self.frames = self.frames
+        else:
+            self.frames = self._assetman.getFrameRange()
 
     def setOutputPath(self, path):
         self._assetman.outputpath = path
@@ -140,7 +141,7 @@ class RndrJob():
 
     def _configureProgForJob(self, prog):
         prog.args['metadata'] = self._metadata.filename
-        prog.args['framerange'] = str(self._frames[0]) + " " + str(self._frames[1])
+        prog.args['framerange'] = str(self.frames[0]) + " " + str(self.frames[1])
         prog.args['renderer'] = self.stream
         return prog
 

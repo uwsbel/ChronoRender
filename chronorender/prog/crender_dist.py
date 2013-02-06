@@ -38,7 +38,7 @@ class CRenderDist(Prog):
         parser.add_argument('-f', '--framerange',
                 nargs=2,
                 help='render the specified framerange; by default renders all frames',
-                default=None,
+                default=[0,0],
                 type=int,
                 required=False)
         return vars(parser.parse_args())
@@ -49,9 +49,11 @@ class CRenderDist(Prog):
     def startDistributedJob(self):
         md = self.verifyMetaData()
         stream = args['renderer']
+        frames = args['framerange']
 
         cr = ChronoRender()
         job = cr.createJob(md)
+        job.frames = frames
         prog = CRLocal()
         cr.submitJob(job, prog)
 

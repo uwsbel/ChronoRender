@@ -47,7 +47,8 @@ class CRenderLocal(Prog):
 
         cr = ChronoRender()
         job = cr.createJob(md)
-        cr.runRenderJob(job, frange)
+        job.frames = frange
+        cr.runRenderJob(job)
 
 if __name__ == '__main__':
     cr = CRenderLocal()

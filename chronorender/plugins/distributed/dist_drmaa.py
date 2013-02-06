@@ -1,6 +1,6 @@
 from distributed import Distributed
 
-import pbs
+import drmaa
 
 class DRMAAException(Exception):
     def __init__(self, value):
@@ -11,7 +11,7 @@ class DRMAAException(Exception):
 class DRMAA(Distributed):
     @staticmethod
     def getTypeName():
-        return "pbs"
+        return "drmaa"
 
     def __init__(self, *args, **kwargs):
         super(DRMAA, self).__init__(*args, **kwargs)

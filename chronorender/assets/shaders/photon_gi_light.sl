@@ -11,6 +11,8 @@ normal shadingnormal(normal N) {
 
 light
 photon_gi_light(
+    float samples = 64, maxvariation = 0.02;
+    color filter = color(1);
     output float __nonspecular = 1;)
 {
   normal Ns = shadingnormal(N);

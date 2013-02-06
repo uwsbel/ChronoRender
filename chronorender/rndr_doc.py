@@ -86,12 +86,6 @@ class RndrDoc():
     def getSearchPaths(self):
         return self.settings.searchpaths
 
-    # def getOutputFileDir(self):
-        # return cr_utils.getAbsPathRelativeTo(self.settings.out, self.md.filename)
-
-    #def getOutputFilePath(self, framenumber):
-        #return out + self.getPaddedFrame(framenumber) + '.'
-
     def getPaddedFrame(self, framenumber):
         frame = str(framenumber)
         while len(frame) < self.settings.padding:
@@ -101,9 +95,21 @@ class RndrDoc():
     def writeToFile(self, f):
         return
 
-    def render(self, rib, framenum, *args, **kwargs):
+    def render(self, rib, framenum, tfilter=[], *args, **kwargs):
+        if len(tfilter) > 0:
+            return self._renderByFilter(rib, tfilter, framenum, *args, **kwargs)
+        else:
+            return self._renderByPass(rib, framenum, *args, **kwargs)
+
+    def _renderByFilter(self, rib, tfilter, framenum, *args, **kwargs):
+        for robj in self.renderables:
+            cls = type(robj)
+            if cls in tfilter:
+                robj.render(rib, framenumber=framenum, *args, **kwargs)
+        return []
+
+    def _renderByPass(self, rib, framenum, *args, **kwargs):
         out = []
-        #outpath = self.getOutputFilePath(framenum)
         for passnum in range(0, len(self.rndrpasses)):
             rpass = self.rndrpasses[passnum]
             rpass.render(rib, passnum, framenum, 

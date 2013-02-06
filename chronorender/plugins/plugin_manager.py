@@ -76,7 +76,7 @@ class PluginManager():
             try:
                 conc_plugin['modules'].append(__import__(plugin))
             except Exception as e:
-              print e, "unable to load plugin: ", plugintype, typename
+              # print e, "unable to load plugin: ", plugintype, typename
               pass
             finally:
               pass

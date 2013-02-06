@@ -1,26 +1,19 @@
 #!/usr/bin/env python
-import argparse, os
+import argparse
 
 from cr_prog import Prog
 from chronorender.cr import ChronoRender
-# from chronorender.metadata import MetaData
-# from chronorender.simulation import Simulation
-# from chronorender.renderer import RendererFactory
+from chronorender.simulation import Simulation
 
 class CRenderSim(Prog):
-    _RendererFactory = RendererFactory()
+    # _RendererFactory = RendererFactory()
     def __init__(self):
         super(CRenderSim, self).__init__()
         self.path , self.name = self.getPathAndName(__file__)
-        self.sims  = []
-        self.cr   = ChronoRender()
-        self.renderer = None
 
     def main(self):
         self.args = self.parseArgs()
-        # self.loadSimulationFromMD()
-        self.renderSimulation()
-        # self.startLocalRenderJob()
+        self.renderSimulations()
 
     def getArgs(self):
         return { 'metadata' : '',
@@ -36,28 +29,16 @@ class CRenderSim(Prog):
     def verifyMetaData(self):
         return super(CRenderSim, self).verifyMetaData()
 
-    def loadSimulationFromMD(self):
-        mdfile = self.verifyMetaData()
-        md = MetaData(mdfile)
-        simdata = md.listFromType(Simulation, bRequired=True)
-        for data in simdata:
-            sim = Simulation(factories=self.cr.getFactories(), **data)
-            # sim.resolveAssets()
-            self.sims.append(sim)
-
-    def loadRenderer(self):
+    def renderSimulations(self):
         md = self.verifyMetaData()
-        stream = 'stdout'
-        frange = self.args['framerange']
+        frame = int(self.args['framenumber'])
 
-        cr = ChronoRender()
-        # cr.createAndRunRenderJob(md, stream, frange)
-        # self.renderer = CRenderSim._RendererFactory.build('stdout')
-
-    def renderSimulation(self):
-        fnum = self.args['framenumber']
-        for sim in self.sims:
-            sim.render(self.renderer, framenumber=fnum)
+        chron = ChronoRender()
+        job = chron.createJob(md)
+        job.typefilter = [Simulation]
+        job.frames = [frame, frame]
+        job.bOptions = False
+        chron.runJob(job)
 
 if __name__ == '__main__':
     cr = CRenderSim()
