@@ -1,0 +1,21 @@
+
+global proc cr_SimulationUI() 
+{
+string $selected[] = `ls -sl`;
+int $i;
+  
+for($i = 0; $i < size($selected); $i++ ) {
+    string $shp[] = `listRelatives -shapes $selected[$i]`;
+  
+    if(`nodeType $selected[$i]` == "RenderMan")
+        $shp[0] = $selected[$i];
+  
+    string $shapeName = $shp[0];
+    string $attr = `rmanGetAttrName "preShapeScript"`;
+
+    rmanAddAttr $shapeName $attr "cr_SimulationRI";
+        
+    $attr = `rmanGetAttrName "simulation_datapath"`;
+    rmanAddAttr $shapeName $attr "";
+    }
+}

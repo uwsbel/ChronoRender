@@ -1,0 +1,9 @@
+
+global proc cr_SimulationRI()
+{
+RiSphere(1, -1, 1, 360);
+RiAttribute("visibility","int camera", 0);
+RiAttribute("visibility","int diffuse", 0);
+RiAttribute("visibility","int specular", 0);
+RiAttribute("visibility","int transmission", 0);
+}

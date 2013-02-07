@@ -1,0 +1,46 @@
+/*        
+          M.Kesson  9 Oct 2011
+          Revised   16 Oct 2011, 23 Oct 2011, 5 Nov 2011 
+          23 Jan 2012 - added render layer support
+ */
+global proc batchRenderRI(string $rif, int $genrib)
+{
+    string    $rmsScriptPath = `getenv "RMS_SCRIPT_PATHS"`;
+    string    $pyScriptPath = dirname($rmsScriptPath) + "/RMS_python/ribops.py";
+    string    $projPath = `workspace -q -rootDirectory`;
+    string    $sceneName = `file -q -sceneName -shortName`;
+    string    $cmd = "python";
+    string    $arg1 = $sceneName;
+    string    $arg2 = $projPath;
+    int       $arg3 = `getAttr "defaultRenderGlobals.startFrame"`;
+    int       $arg4 = `getAttr "defaultRenderGlobals.endFrame"`;
+    int       $anim = `getAttr "defaultRenderGlobals.animation"`;
+    string    $layers[] = `treeView -query -selectItem ("RenderLayerTabRenderLayerEditor")`;
+    string    $layer = $layers[0];
+    int       $motion = `getAttr "renderManGlobals.rman__torattr___motionBlur"`;
+
+    // Single frame mode...
+    if($anim == 0) {
+        $arg3 = `currentTime -q`;
+        $arg4 = `currentTime -q`;    
+        if($motion) {
+            print("Motion blur is active.\n");
+            setAttr "defaultRenderGlobals.endFrame" ($arg4 + 1);
+        }
+    }
+    if($genrib)
+        rman genrib;    // Generate the ribs
+    print("Python script: \"" + $pyScriptPath + "\"\n");
+    print("Scene Name:    \"" + $arg1 + "\"\n");
+    print("Project Path:  \"" + $arg2 + "\"\n");
+    print("Start Frame:   \"" + $arg3 + "\"\n");
+    print("End Frame:     \"" + $arg4 + "\"\n");
+    print("Render Layer:  \"" + $layer + "\"\n");
+    print("Rif Module:    \"" + $rif + "\"\n");
+    string $fullcmd = $cmd + " " + $pyScriptPath + " " + $arg1 + " " + $arg2 +
+        " " + $arg3 + " " + $arg4 + " " + $layer;
+    if(size($rif) > 0)
+        $fullcmd = $fullcmd + " '" + $rif + "'";
+    print("Executing cmd: \"" + $fullcmd + "\"\n");
+    system ($fullcmd);
+}

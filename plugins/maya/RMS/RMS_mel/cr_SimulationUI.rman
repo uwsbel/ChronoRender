@@ -1,0 +1,10 @@
+         # Malcolm Kesson
+# Nov 16 2012
+rman "-version 1" {
+  
+Declare param {string simulation_datapath} {
+    label "Simulation Data Regex"
+    description "Regular Expression That Globs Simulation Data Files"
+    subtype file
+    }
+}

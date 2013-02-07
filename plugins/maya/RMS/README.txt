@@ -27,3 +27,14 @@ source "userSetup.mel";
 hit Cntrl-Enter
 
 this will source the remaining directories
+
+----
+
+Changing Maya's Python Version to 2.7
+
+Windows
+1) Create an environment variable PYTHONHOME and set it to point to the version of Python you want (e.g. C:\Python27).
+
+2) Copy the files from your "MayaDirectory"\Python\Lib\site-packages (e.g. C:\Program Files (x86)\Autodesk\Maya2013\Python\Lib\site-packages) and paste them in "PYTHONHOME"\Lib\site-packages (e.g. C:\Python27\Lib\site-packages).
+
+3) Restart Maya and see if everything works! You can check which Python is being used by running (from Maya's 'Script Editor'):
