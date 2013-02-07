@@ -51,7 +51,7 @@ chronorender:
                   - name: "trace"
                     float bias: 0.005
             - name: "gorb"
-              condition: "id >= 0"
+              condition: "id > 0"
               color: "0.4 0.4 0.1"
               geometry:
                   - type: "cone"

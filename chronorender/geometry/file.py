@@ -17,6 +17,9 @@ class File(Geometry):
         super(File,self)._initMembersDict()
         self._members['filename'] = [str, '']
 
+    def updateMembers(self):
+        self.setMember('filename', self.filename)
+
     def resolveAssets(self, assetman):
         out = super(File, self).resolveAssets(assetman)
 

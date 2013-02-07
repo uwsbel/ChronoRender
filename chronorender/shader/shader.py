@@ -38,6 +38,9 @@ class Shader(Renderable):
 
         self._members['name'] = [str, '']
 
+    def updateMembers(self):
+        super(Shader, self).updateMembers()
+
     def _initShaderParameters(self):
         self._parseShaderParameters()
         self._convertDefaultsToPythonTypes()

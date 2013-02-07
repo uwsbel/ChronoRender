@@ -21,6 +21,10 @@ class Geometry(Movable):
         super(Geometry, self)._initMembersDict()
         self._members[Scriptable.getTypeName()] = [Scriptable, None]
 
+    def updateMembers(self):
+        super(Geometry, self).updateMembers()
+        self.setMember(Scriptable.getTypeName(), self.script)
+
     def resolveAssets(self, assetman):
         out = []
         if self.script:

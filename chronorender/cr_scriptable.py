@@ -34,6 +34,11 @@ class Scriptable(Renderable):
         self._members['file']     = [str, '']
         self._members['function']   = [str, '']
 
+    def updateMembers(self):
+        super(Scriptable, self).updateMembers()
+        self.setMember('file', self.scriptname)
+        self.setMember('function', self.funcname)
+
     def resolveAssets(self, assetman):
         self.scriptpath = assetman.find(self.scriptname)
         self._parseModInformation()

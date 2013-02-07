@@ -4,8 +4,8 @@ from chronorender.cr_scriptable import Scriptable
 import chronorender.cr_enums as cre
 from itertools import izip
 
-import chronorender.geometry as cg
-import chronorender.shader as cs
+from chronorender.geometry import Geometry
+from chronorender.shader import Shader
 from chronorender.cr_types import intlist, floatlist
 
 class RenderObjectException(Exception):
@@ -23,9 +23,11 @@ class RenderObject(Movable):
     def __init__(self, *args, **kwargs):
         super(RenderObject,self).__init__(*args, **kwargs)
 
-        self.geometry   = self.getMember(cg.Geometry.getTypeName())
-        self.shaders    = self.getMember(cs.Shader.getTypeName())
-        self.data       = []
+        self.data         = []
+        self.multiobject  = False
+
+        self.geometry   = self.getMember(Geometry.getTypeName())
+        self.shaders    = self.getMember(Shader.getTypeName())
         self.condition  = self.getMember('condition')
         self.color      = self.getMember('color')
         self.instanced  = self.getMember('instanced')
@@ -34,15 +36,23 @@ class RenderObject(Movable):
     def _initMembersDict(self):
         super(RenderObject, self)._initMembersDict()
 
-        self._members['motionblur']     = [bool, False]
-        self._members['instanced']      = [bool, False]
-        self._members['multiobject']    = [bool, False]
-        self._members['color']          = [floatlist, [1,0,0]]
-        self._members['range']          = [intlist, [-1,-1]]
-        self._members[cg.Geometry.getTypeName()] = [cg.Geometry, []]
-        self._members[cs.Shader.getTypeName()] = [cs.Shader, []]
-        self._members['condition']      = [str, '']
+        # self._members['motionblur']     = [bool, False]
+        # self._members['range']          = [intlist, [-1,-1]]
+        self._members[Geometry.getTypeName()]   = [Geometry, []]
+        self._members[Shader.getTypeName()]     = [Shader, []]
+        self._members['condition']              = [str, '']
+        self._members['color']                  = [floatlist, [1,0,0]]
+        self._members['instanced']              = [bool, False]
         self._members[Scriptable.getTypeName()] = [Scriptable, None]
+
+    def updateMembers(self):
+        super(RenderObject, self).updateMembers()
+
+        self.setMember(Geometry.getTypeName(), self.geometry)
+        self.setMember(Shader.getTypeName(), self.shaders)
+        self.setMember('condition', self.condition)
+        self.setMember('instanced', self.instanced)
+        self.setMember(Scriptable.getTypeName(), self.script)
 
     def parseData(self, entry):
         if len(entry) < len(self.data):

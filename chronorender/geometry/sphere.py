@@ -26,6 +26,10 @@ class Sphere(Geometry):
         # self._members['zmax']       = [float, 1.0]
         self._members['thetamax']   = [float, 360.0]
 
+    def updateMembers(self):
+        self.setMember('radius', self.radius)
+        self.setMember('thetamax', self.thetamax)
+
     def render(self, rib, *args, **kwargs):
         rib.Sphere(self.radius, -self.radius, self.radius, self.thetamax)
 
