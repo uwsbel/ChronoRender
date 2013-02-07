@@ -20,16 +20,15 @@ class CRenderInit(Prog):
         parser = argparse.ArgumentParser()
         
         parser.add_argument('-o', '--outpath', help='used with init, where to \
-                generate the render files; cwd if not set', required=False)
+                generate the render files; cwd if not set', required=False,
+                default='')
 
         return vars(parser.parse_args())
 
     def initNewRenderJob(self):
-        path = self.args['outpath'] if self.args['outpath'] else os.getcwd()
-
         cr = ChronoRender()
         job = cr.createJob()
-        cr.writeJobToDisk(job, path)
+        cr.writeJobToDisk(job, self.args['outpath'])
 
 if __name__ == '__main__':
     cr = CRenderInit()

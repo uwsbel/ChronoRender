@@ -9,12 +9,13 @@ class RndrJobAssetManager(object):
         self.relative   = relative
         self.finder     = self._createAssetFinder()
         self.outputdirs = { 'root' : '',
-                            'output': 'OUTPUT', 
-                            'shader': 'SHADERS', 
-                            'script': 'SCRIPTS', 
-                            'archive': 'ARCHIVES', 
-                            'log':'LOG',
-                            'texture': 'TEXTURES' }
+                            'job'  : 'job',
+                            'output': os.path.join('job','images'),
+                            'shader': os.path.join('job','shaders'),
+                            'script': 'scripts', 
+                            'archive': os.path.join('job', 'rib'),
+                            'log':    'log',
+                            'texture': 'textures' }
 
         self._assets    = { 'shader':  [],
                             'script':  [],

@@ -30,12 +30,13 @@ class ChronoRenderBase(object):
         else:
             return self._factories.getFactory(typename)
 
-    def writeJobToDisk(self, job, dest):
-        outpath = os.path.join(dest, "RENDERMAN")
-        job.setOutputPath(outpath)
+    def writeJobToDisk(self, job, dest=''):
+        if dest == '':
+            dest = os.path.join(os.getcwd(), "RENDERMAN")
+        job.setOutputPath(dest)
         job.createOutDirs()
-        self._writeDefaultAssets()
-        self._copyJobMetaDataToPath(job, outpath)
+        self._writeDefaultAssets(job)
+        self._copyJobMetaDataToPath(job, dest)
 
     def createJob(self, mdfile=None):
         if not mdfile:
@@ -71,7 +72,7 @@ class ChronoRenderBase(object):
     def _getDefaultMetaData(self):
         return os.path.join(cr_utils.getAssetsPath(), 'default.yml')
 
-    def _writeDefaultAssets(self):
+    def _writeDefaultAssets(self, job):
         defaultscene = os.path.join(cr_utils.getAssetsPath(), 'default_scene.rib')
         job.copyAssetToDirectory(defaultscene)
         defaultcam = os.path.join(cr_utils.getAssetsPath(), 'default_camera.rib')
@@ -79,5 +80,5 @@ class ChronoRenderBase(object):
         defaultlighting = os.path.join(cr_utils.getAssetsPath(), 'default_lighting.rib')
         job.copyAssetToDirectory(defaultlighting)
 
-    def _copyJobMetaDataToPath(self, job, oupath):
+    def _copyJobMetaDataToPath(self, job, outpath):
         shutil.copy2(job.getMetaData().filename, outpath)
