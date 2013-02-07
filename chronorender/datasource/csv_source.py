@@ -128,7 +128,7 @@ class CSVDataSource(DataSource):
     def __init__(self, resource='', read_header=False, dialect=None, encoding=None,
                  detect_header=False, sample_size=200, skip_rows=None,
                  empty_as_null=True, fields=None, delim=',', **reader_args):
-        super(CSVDataSource, self).__init__(**reader_args)
+        super(CSVDataSource, self).__init__(fields=fields, **reader_args)
         """Creates a CSV data source stream.
         
         :Attributes:
@@ -163,7 +163,15 @@ class CSVDataSource(DataSource):
         
         self.close_file = False
         self.skip_rows = skip_rows
-        self.fields = FieldList(fields)
+        self.fields = self.getMember('fields')
+
+    def _initMembersDict(self):
+        super(CSVDataSource, self)._initMembersDict()
+        self._members['fields'] = [FieldList, None]
+
+    def updateMembers(self):
+        super(CSVDataSource, self).updateMembers()
+        self.setMember('fields', self.fields)
         
     def initialize(self):
         """Initialize CSV source stream:

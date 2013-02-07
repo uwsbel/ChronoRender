@@ -26,10 +26,13 @@ class DataSource(DataSource, cr_object.Object):
         super(DataSource,self).__init__(*args, **kwargs)
 
         self.name = name
-        self.resource = resource
+        self.resource = self.getMember('resource')
 
     def _initMembersDict(self):
-        return
+        self._members['resource'] = [str, '']
+
+    def updateMembers(self):
+        self.setMember('resource', self.resource)
 
     def getInputResources(self):
         path = os.path.abspath(self.resource)
