@@ -57,6 +57,8 @@ class CRRenderObject(CRInterface):
 
     def export(self):
         shape = self.getShape()
+        pm.select(shape)
+        print pm.exportSelected(shape.name(), type="RIB_Archive", shader=True)
 
 def register():
     pm.factories.registerVirtualClass(CRRenderObject, nameRequired=False)

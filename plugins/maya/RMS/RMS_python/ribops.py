@@ -24,7 +24,9 @@ def main():
 
     # We dynamically import the Rif module(s) using __import__ and 
     # getattr() because the names of the modules are known only at runtime.
-    if len(args) == 6:
+    # if len(args) == 6:
+    # TODO No Rif For Now
+    if False:
         if len(args[5]) > 0:
             rifs = job.getRifsFromString(args[5])
             rifs = rifs[1:]  # Ignore the first item

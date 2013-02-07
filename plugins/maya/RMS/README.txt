@@ -38,3 +38,15 @@ Windows
 2) Copy the files from your "MayaDirectory"\Python\Lib\site-packages (e.g. C:\Program Files (x86)\Autodesk\Maya2013\Python\Lib\site-packages) and paste them in "PYTHONHOME"\Lib\site-packages (e.g. C:\Python27\Lib\site-packages).
 
 3) Restart Maya and see if everything works! You can check which Python is being used by running (from Maya's 'Script Editor'):
+
+-----
+Batch Rendering
+1    Set the Maya project directory.
+2    Save the Maya scene.
+3    In Render Setting:
+      - set the start and end frames,
+          - set name.#.ext,
+          - set 4 digits of padding,
+          - set "Image Format" to an appropriate type.
+4    In the script editor (MEL) execute the following command,
+              batchRenderRI("", 1);
