@@ -40,6 +40,10 @@ class DataObject(Object):
         self._members[ds.DataSource.getTypeName()] = [ds.DataSource, []]
         self._members[dp.DataProcess.getTypeName()] = [dp.DataProcess, []]
 
+    def updateMembers(self):
+        self.setMember(ds.DataSource.getTypeName(), self._datasrcs)
+        self.setMember(dp.DataProcess.getTypeName(), self._dataprocs)
+
     def _initMultipleSourceResources(self):
         for i in range(0, len(self._datasrcs)):
             src = self._datasrcs[i]

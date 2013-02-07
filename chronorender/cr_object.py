@@ -116,6 +116,7 @@ class Object(object):
         return out
 
     def getSerialized(self):
+        self.updateMembers()
         objdict = {}
         for key, val in self._members.iteritems():
             if key == 'recurse':
@@ -140,6 +141,9 @@ class Object(object):
             self._params[name] = val
         else:
             raise ObjectException('no member ' + name + ' in ' + str(type(self)))
+
+    def updateMembers(self):
+        return
 
     def addParameter(self, name, val):
         self._params[name] = val

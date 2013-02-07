@@ -1,8 +1,10 @@
 from chronorender.cr_movable import Movable
 from chronorender.cr_scriptable import Scriptable
 
-import chronorender.data as dat
-import chronorender.renderobject as cro
+# import chronorender.data as dat
+# import chronorender.renderobject as cro
+from chronorender.data import DataObject
+from chronorender.renderobject import RenderObject
 
 class Simulation(Movable):
     @staticmethod
@@ -12,20 +14,27 @@ class Simulation(Movable):
     def __init__(self, *args, **kwargs):
         super(Simulation,self).__init__(*args, **kwargs)
 
-        self._data = self.getMember(dat.DataObject.getTypeName())
         self._name = self.getMember('name')
-        self._robjs = self.getMember(cro.RenderObject.getTypeName())
+        self._data = self.getMember(DataObject.getTypeName())
+        self._robjs = self.getMember(RenderObject.getTypeName())
         self.instanced = False
         self.script     = self.getMember(Scriptable.getTypeName())
 
     def _initMembersDict(self):
         super(Simulation, self)._initMembersDict()
-        self._members[dat.DataObject.getTypeName()] = [dat.DataObject, None]
         self._members['name']   = [str, 'sim']
-        self._members[cro.RenderObject.getTypeName()] = [cro.RenderObject, []]
+        self._members[DataObject.getTypeName()] = [DataObject, None]
+        self._members[RenderObject.getTypeName()] = [RenderObject, []]
         self._members[Scriptable.getTypeName()] = [Scriptable, None]
 
+    def updateMembers(self):
+        self.setMember('name', self._name)
+        self.setMember(DataObject.getTypeName(), self._data)
+        self.setMember(RenderObject.getTypeName(), self._robjs)
+        self.setMember(Scriptable.getTypeName(), self.script)
+
     def getNumFrames(self):
+        # return self._data.getNumUniqueElements()
         return self._data.getNumUniqueElements()
 
     def render(self, ri, framenumber=0, *args, **kwargs):
