@@ -44,7 +44,7 @@ class RenderObject(Movable):
         self._members[Geometry.getTypeName()]   = [Geometry, []]
         self._members[Shader.getTypeName()]     = [Shader, []]
         self._members['condition']              = [str, '']
-        self._members['color']                  = [floatlist, [1,0,0]]
+        self._members['color']                  = [floatlist, [1.0,0.0,0.0]]
         self._members['instanced']              = [bool, False]
         self._members[Scriptable.getTypeName()] = [Scriptable, None]
 

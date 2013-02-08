@@ -25,7 +25,7 @@ class Object(object):
 
     @staticmethod
     def _evalSerialParam(obj):
-        if not obj:
+        if obj == None:
             return None
         if hasattr(obj, 'getSerialized'):
             # out = obj.getSerialized()[obj.getBaseName()]
@@ -40,7 +40,7 @@ class Object(object):
                 out.append(val)
             return out
         else:
-            return str(obj)
+            return obj
 
     def getBaseName(self):
         return Object.getTypeName()
@@ -127,6 +127,8 @@ class Object(object):
         objdict = {}
         for key, val in self._members.iteritems():
             if key == 'recurse' or key == 'basename':
+                continue
+            if key == 'type' and val[1] == self.getBaseName():
                 continue
             member = Object._evalSerialParam(val[1])
             if not member:

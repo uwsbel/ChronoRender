@@ -9,7 +9,7 @@ from chronorender.metadata import MDReaderFactory
 
 class SimulationTestCase(unittest.TestCase):
     def test_simulation(self):
-        datasrc = CSVDataSource(resource='input/data/stationary/*.dat', delim=',', fields= "[[\"id\", integer], [\"pos_z\", float], [\"pos_y\", float], [\"pos_x\", float], [\"euler_x\", float], [\"euler_y\", float], [\"euler_z\", float]]")
+        datasrc = CSVDataSource(resource='input/data/stationary/*.dat', delim=',', fields= [["id", "integer"], ["pos_z", "float"], ["pos_y", "float"], ["pos_x", "float"], ["euler_x", "float"], ["euler_y", "float"], ["euler_z", "float"]])
         dataobj = DataObject()
         dataobj.addDataSource(datasrc)
 
@@ -22,3 +22,4 @@ class SimulationTestCase(unittest.TestCase):
 
         md = MDReaderFactory.build('sim.yml')
         md.addElement(Simulation.getTypeName(), sim.getSerialized())
+        md.writeToDisk()
