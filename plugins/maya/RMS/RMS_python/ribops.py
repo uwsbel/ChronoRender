@@ -5,6 +5,9 @@
 # 23 Jan 2012 - added render layer support
 # Malcolm Kesson
 import re, os, sys, prman, subprocess, time, inspect
+from MayaProjUtils import MayaProjUtils
+
+_utils = MayaProjUtils()
 
 def main():
     args = sys.argv[1:]

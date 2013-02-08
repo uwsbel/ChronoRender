@@ -1,5 +1,7 @@
+import os
 import pymel.all as pm
 from cr_interface import CRInterface
+from chronorender.geometry import Archive
 from chronorender.renderobject import RenderObject
 
 class CRRenderObject(CRInterface):
@@ -42,9 +44,8 @@ class CRRenderObject(CRInterface):
     def addAttrs(cls, node, trans, shape):
         shape.addAttr('name', dt='string')        
         shape.addAttr('condition', dt='string')        
-
-        shape.addAttr('surfaceShader', dt='string')        
-        shape.addAttr('displacementShader', dt='string')        
+        shape.setAttr('condition', 'id >= 0')
+        shape.addAttr('rib_archive', dt='string')
 
     @classmethod
     def _addHandles(cls, node, trans, shape):
@@ -58,7 +59,22 @@ class CRRenderObject(CRInterface):
     def export(self):
         shape = self.getShape()
         pm.select(shape)
-        print pm.exportSelected(shape.name(), type="RIB_Archive", shader=True)
+        self.createOutDirs()
+        path = self.getOutPathFor('archive')
+        path = os.path.join(path, shape.name())
+        out = pm.exportSelected(path, type="RIB_Archive", shader=True)
+        print out
+        # self.getShape().setAttr('rib_archive', out)
+        self.getShape().setAttr('rib_archive', shape.name())
+
+    def createCRObject(self):
+        shape = self.getShape()
+        geo=Archive(filename=str(shape.getAttr('rib_archive')))
+
+        robj = RenderObject()
+        robj.geometry = geo
+        robj.condition = str(shape.getAttr('condition'))
+        return robj
 
 def register():
     pm.factories.registerVirtualClass(CRRenderObject, nameRequired=False)

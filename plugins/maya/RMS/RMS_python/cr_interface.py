@@ -1,8 +1,12 @@
+import os
 import pymel.all as pm
+from MayaProjUtils import MayaProjUtils
 from chronorender.cr_object import Object
+from chronorender.cr_assetinfo import CRAssetInfo
 
 class CRInterface(pm.nt.PolyCube):
     _handle = "crHandle"
+    _utils = MayaProjUtils()
 
     @classmethod
     def list(cls, *args, **kwargs):
@@ -91,6 +95,17 @@ class CRInterface(pm.nt.PolyCube):
 
     def export(self):
         return
+
+    def createCRObject(self):
+        return None
+
+    def createOutDirs(self):
+        assetman = CRAssetInfo( outpath=os.path.join(CRInterface._utils.getProjPath(), 'renderman'), jobname='batchrib', relative=False)
+        assetman.createOutDirs()
+
+    def getOutPathFor(self, what):
+        assetman = CRAssetInfo( outpath=os.path.join(CRInterface._utils.getProjPath(), 'renderman'), jobname='batchrib', relative=False)
+        return assetman.getOutPathFor(what)
 
 def register():
     pm.factories.registerVirtualClass(CRInterface, nameRequired=False)

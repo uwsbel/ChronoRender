@@ -1,9 +1,13 @@
 
 global proc cr_SimulationRI()
 {
-RiSphere(1, -1, 1, 360);
-RiAttribute("visibility","int camera", 0);
-RiAttribute("visibility","int diffuse", 0);
-RiAttribute("visibility","int specular", 0);
-RiAttribute("visibility","int transmission", 0);
+int       $frame = `currentTime -q`;
+string    $rmsScriptPath = `getenv "RMS_SCRIPT_PATHS"`;
+string    $pyScriptPath = dirname($rmsScriptPath) + "/RMS_python/crender_sim.py";
+string    $cmd = "python " + $pyScriptPath;
+string    $projPath = `workspace -q -rootDirectory`;
+string    $argString = $projPath + "renderman/sim.yml " + $frame;
+// RiProcedural "RunProgram" $cmd -1e38 1e38 -1e38 1e38 -1e38 1e38 $argString;
+RiProcedural "RunProgram" $cmd -1000000 1000000 -1000000 1000000 -1000000 1000000 $argString;
+RiAttribute "visibility" "int camera" 0 "int diffuse" 0 "int specular" 0;
 }
