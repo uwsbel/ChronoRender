@@ -6,7 +6,7 @@ import os
 class RndrJobTestCase(unittest.TestCase):
     def setUp(self):
         self._cr = cr.ChronoRender()
-        self.infile = './input/metadata/yaml/job/3.yaml'
+        self.infile = './input/metadata/yaml/job/out.yml'
 
     def tearDown(self):
         del self._cr

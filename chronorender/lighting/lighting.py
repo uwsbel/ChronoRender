@@ -7,6 +7,9 @@ class Lighting(Renderable):
     def getTypeName():
         return "lighting"
 
+    def getBaseName(self):
+        return Lighting.getTypeName()
+
     def __init__(self, *args, **kwargs):
         super(Lighting,self).__init__(*args, **kwargs)
         self.filename   = self.getMember('filename')

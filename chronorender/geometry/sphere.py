@@ -15,9 +15,6 @@ class Sphere(Geometry):
         # self.zmax = self.getMember('zmax')
         self.thetamax = self.getMember('thetamax')
 
-    def __str__(self):
-        return 'sphere'
-
     def _initMembersDict(self):
         super(Sphere,self)._initMembersDict()
 

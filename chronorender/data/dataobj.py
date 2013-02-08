@@ -20,6 +20,9 @@ class DataObject(Object):
     def getTypeName():
         return "data"
 
+    def getBaseName(self):
+        return DataObject.getTypeName()
+
     def __init__(self, *args, **kwargs):
         super(DataObject, self).__init__(*args, **kwargs)
 

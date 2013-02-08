@@ -20,6 +20,9 @@ class RenderObject(Movable):
     def getTypeName():
         return "renderobject"
 
+    def getBaseName(self):
+        return RenderObject.getTypeName()
+
     def __init__(self, *args, **kwargs):
         super(RenderObject,self).__init__(*args, **kwargs)
 

@@ -16,6 +16,9 @@ class Shader(Renderable):
     def getTypeName():
         return "shader"
 
+    def getBaseName(self):
+        return Shader.getTypeName()
+
     def __init__(self, shdrpath='', *args, **kwargs):
         super(Shader,self).__init__(*args, **kwargs)
 

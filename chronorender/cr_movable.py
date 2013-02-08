@@ -8,6 +8,13 @@ class MovableException(RenderableException):
         return repr(self.value)
 
 class Movable(Renderable):
+    @staticmethod
+    def getTypeName():
+        return "movable"
+
+    def getBaseName(self):
+        return Renderable.getTypeName()
+
     def __init__(self, factories=None, *args, **kwargs):
         super(Movable,self).__init__(factories=factories, *args, **kwargs)
 

@@ -22,6 +22,9 @@ class DataSource(DataSource, cr_object.Object):
     def getTypeName():
         return "datasource"
 
+    def getBaseName(self):
+        return DataSource.getTypeName()
+
     def __init__(self, name="default", resource="", *args, **kwargs):
         super(DataSource,self).__init__(*args, **kwargs)
 

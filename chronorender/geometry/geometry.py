@@ -13,6 +13,9 @@ class Geometry(Movable):
     def getTypeName():
         return "geometry"
 
+    def getBaseName(self):
+        return Geometry.getTypeName()
+
     def __init__(self, *args, **kwargs):
         super(Geometry,self).__init__(*args, **kwargs)
         self.script     = self.getMember(Scriptable.getTypeName())

@@ -28,6 +28,9 @@ class DataTarget(TargetNode):
     def getTypeName():
         return "datatarget"
 
+    def getBaseName(self):
+        return TargetNode.getTypeName()
+
     @property
     def data(self):
         return self._data

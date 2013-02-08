@@ -6,6 +6,9 @@ class Scene(Movable):
     def getTypeName():
         return "scene"
 
+    def getBaseName(self):
+        return Scene.getTypeName()
+
     def __init__(self, *args, **kwargs):
         super(Scene,self).__init__(*args, **kwargs)
 

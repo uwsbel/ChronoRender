@@ -15,6 +15,9 @@ class RenderSettings(Object):
     def getTypeName():
         return "rendersettings"
 
+    def getBaseName(self):
+        return RenderSettings.getTypeName()
+
     def __init__(self, *args, **kwargs):
         super(RenderSettings,self).__init__(*args, **kwargs)
 

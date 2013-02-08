@@ -19,7 +19,7 @@ class RndrDoc():
 
     def __init__(self, factories, md, *args, **kwargs):
         self.md             = md
-        self.settings       = None
+        self.settings       = RenderSettings(factories=factories)
         self.rndrpasses     = []
         self.renderables    = []
         self.assetpaths     = []
@@ -37,10 +37,10 @@ class RndrDoc():
 
     def initFromMetadata(self, factories, md):
         self.md = md
-        self.settings   = RenderSettings(factories=factories,**md.singleFromType(RenderSettings))
-        if not self.settings:
-            raise RndrDocException('no ' + RenderSettings.getTypeName() 
-                    + ' found in metadata')
+        # self.settings   = RenderSettings(factories=factories,**md.singleFromType(RenderSettings, bRequired=False))
+        sett = md.singleFromType(RenderSettings, bRequired=False)
+        if sett:
+            self.settings = RenderSettings(factories=factories, **sett)
 
         self._initRenderables(factories, md)
         self._addRenderablesToRenderPasses()

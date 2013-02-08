@@ -11,6 +11,9 @@ class Simulation(Movable):
     def getTypeName():
         return "simulation"
 
+    def getBaseName(self):
+        return Simulation.getTypeName()
+
     def __init__(self, *args, **kwargs):
         super(Simulation,self).__init__(*args, **kwargs)
 
@@ -37,9 +40,15 @@ class Simulation(Movable):
         # return self._data.getNumUniqueElements()
         return self._data.getNumUniqueElements()
 
+    def setData(self, data):
+        self._data = data
+
+    def addRenderObject(self, robj):
+        self._robjs.append(robj)
+
     def render(self, ri, framenumber=0, *args, **kwargs):
         if self.script:
-            self.script.render(rib, *args, **kwargs)
+            self.script.render(ri, *args, **kwargs)
         else:
             for robj in self._robjs:
                 data = self._data.getData(framenumber, robj.condition)

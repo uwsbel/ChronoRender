@@ -19,6 +19,9 @@ class RenderPass(Renderable):
     def getTypeName():
         return "renderpass"
 
+    def getBaseName(self):
+        return RenderPass.getTypeName()
+
     def __init__(self, *args, **kwargs):
         super(RenderPass,self).__init__(*args, **kwargs)
 

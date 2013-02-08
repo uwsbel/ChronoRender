@@ -62,7 +62,7 @@ class MetaDataTestCase(unittest.TestCase):
         self.assertTrue('test' in elems)
 
     def test_Write(self):
-        infile_yaml = './input/metadata/yaml/3.yaml'
+        infile_yaml = './input/metadata/yaml/job/3.yaml'
         md = MetaData(infile_yaml)
 
         md.addElement('test', {'gorb' : 'val'})
@@ -70,7 +70,7 @@ class MetaDataTestCase(unittest.TestCase):
         md.writeToDisk('out.yml')
 
         self.assertTrue(os.path.exists('out.yml'))
-        os.remove('out.yml')
+        # os.remove('out.yml')
 
 
 def TestSuite():

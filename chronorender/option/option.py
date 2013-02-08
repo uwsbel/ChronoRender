@@ -5,6 +5,9 @@ class Option(Object):
     def getTypeName():
         return "option"
 
+    def getBaseName(self):
+        return Option.getTypeName()
+
     def __init__(self, name=None, *args, **kwargs):
         super(Option,self).__init__(*args, **kwargs)
         self._name = name if name != None else self.getMember('name')

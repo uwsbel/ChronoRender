@@ -12,6 +12,9 @@ class Scriptable(Renderable):
     def getTypeName():
         return "script"
 
+    def getBaseName(self):
+        return Renderable.getTypeName()
+
     @staticmethod
     def _exportDirToSysPath(path):
         if path not in sys.path:

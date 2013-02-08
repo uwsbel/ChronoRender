@@ -12,6 +12,13 @@ class RenderableException(ObjectException):
 class Renderable(Object):
     _instanceid = 0
 
+    @staticmethod
+    def getTypeName():
+        return "renderable"
+
+    def getBaseName(self):
+        return Object.getTypeName()
+
     def __init__(self, factories=None, *args, **kwargs):
         super(Renderable,self).__init__(factories=factories, *args, **kwargs)
 

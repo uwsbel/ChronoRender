@@ -12,6 +12,9 @@ class Movie(Object):
     def getTypeName():
         return "movie"
 
+    def getBaseName(self):
+        return Movie.getTypeName()
+
     def __init__(self, *args, **kwargs):
         super(Movie, self).__init__(*args, **kwargs)
 

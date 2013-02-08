@@ -6,6 +6,9 @@ class Camera(Movable):
     def getTypeName():
         return "camera"
 
+    def getBaseName(self):
+        return Camera.getTypeName()
+
     def __init__(self, *args, **kwargs):
         super(Camera,self).__init__(*args, **kwargs)
 

@@ -6,6 +6,9 @@ class Visualizer(Renderable):
     def getTypeName():
         return "visualizer"
 
+    def getBaseName(self):
+        return Visualizer.getTypeName()
+
     def __init__(self, *args, **kwargs):
         super(Visualizer,self).__init__(*args, **kwargs)
         self.script     = self.getMember(Scriptable.getTypeName())

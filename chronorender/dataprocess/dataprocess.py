@@ -13,6 +13,9 @@ class DataProcess(Object, Node):
     def getTypeName():
         return "dataprocess"
 
+    def getBaseName(self):
+        return DataProcess.getTypeName()
+
     def __init__(self, *args, **kwargs):
         super(DataProcess, self).__init__(*args, **kwargs)
 

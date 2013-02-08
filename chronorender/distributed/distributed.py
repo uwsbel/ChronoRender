@@ -39,6 +39,9 @@ class Distributed(Object):
     def getTypeName():
         return "distributed"
 
+    def getBaseName(self):
+        return Distributed.getTypeName()
+
     def __init__(self, *args,  **kwargs):
         super(Distributed, self).__init__(*args, **kwargs)
 
