@@ -1,7 +1,7 @@
 import xml.etree.ElementTree as ET
 from itertools import groupby
 from _mdreader import _MDReader
-import pprint
+import pprint, os.path
 
 class _MDXML(_MDReader):
     @staticmethod
@@ -68,7 +68,8 @@ class _MDXML(_MDReader):
         self._filename = inxmlfile
         self._root = None
 
-        self._parseFile(inxmlfile)
+        if os.path.exists(inxmlfile):
+          self._parseFile(inxmlfile)
 
     def __str__(self):
         return pprint.pformat(self._root)

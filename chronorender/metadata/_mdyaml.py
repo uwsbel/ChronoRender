@@ -1,7 +1,7 @@
 from _mdreader import _MDReader
 
 import chronorender.thirdparty.yaml as tyaml
-import pprint, copy, itertools
+import pprint, copy, itertools, os.path
 
 class _MDYAML(_MDReader):
     @staticmethod
@@ -37,9 +37,10 @@ class _MDYAML(_MDReader):
 
     def __init__(self, inxmlfile):
         self._filename = inxmlfile
-        self._root = []
+        self._root = {}
 
-        self._parseFile(inxmlfile)
+        if os.path.exists(inxmlfile):
+            self._parseFile(inxmlfile)
 
     def __str__(self):
         return pprint.pformat(self._root)
@@ -78,3 +79,16 @@ class _MDYAML(_MDReader):
             else:
                 out[key] = elem
         return out
+
+    def addElement(self, name, elemdict):
+        if name in self._root:
+            self._root[name].append(elemdict)
+            return
+        self._root[name] = [elemdict]
+
+    def writeToDisk(self, path=None):
+        if not path:
+            path = self._filename
+        stream = file(path, 'w')
+        out_root = {_MDReader._root_name : self._root}
+        tyaml.dump(out_root, stream)

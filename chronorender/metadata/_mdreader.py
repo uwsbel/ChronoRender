@@ -25,6 +25,12 @@ class _MDReader():
     def getElementsDict(self):
         return []
 
+    def addElement(self, name, elemdict):
+        return
+
+    def writeToDisk(self, path=None):
+        return
+
     def _parseString(self, instring):
         return
 

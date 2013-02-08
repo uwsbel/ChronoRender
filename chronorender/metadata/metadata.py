@@ -39,3 +39,9 @@ class MetaData(object):
                 raise MetaDataException('no ' + elemtype.getTypeName() + ' in metadata')
             return []
         return elems
+
+    def addElement(self, name, elemdict):
+        self._mdreader.addElement(name, elemdict)
+
+    def writeToDisk(self, path=None):
+        self._mdreader.writeToDisk(path)

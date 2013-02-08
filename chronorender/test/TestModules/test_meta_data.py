@@ -32,7 +32,7 @@ class MetaDataTestCase(unittest.TestCase):
         elems = md.getElementsDict()
         # pprint.pprint(elems)
 
-    def test_YANML(self):
+    def test_YAML(self):
         infile_yaml = './input/metadata/yaml/0.yaml'
         md = MetaData(infile_yaml)
 
@@ -51,8 +51,27 @@ class MetaDataTestCase(unittest.TestCase):
         shdr = md.findAll('shader')
         self.assertEqual(len(shdr), 1)
 
-        elems = md.getElementsDict()
+        # elems = md.getElementsDict()
         # pprint.pprint(elems)
+
+    def test_AddElem(self):
+        md = MetaData('out.yml')
+        md.addElement('test', {'gorb' : 'val'})
+
+        elems = md.getElementsDict()
+        self.assertTrue('test' in elems)
+
+    def test_Write(self):
+        infile_yaml = './input/metadata/yaml/3.yaml'
+        md = MetaData(infile_yaml)
+
+        md.addElement('test', {'gorb' : 'val'})
+
+        md.writeToDisk('out.yml')
+
+        self.assertTrue(os.path.exists('out.yml'))
+        os.remove('out.yml')
+
 
 def TestSuite():
     tests = ['test_function_parse']
