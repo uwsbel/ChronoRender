@@ -13,6 +13,10 @@ class Attribute(Object):
         super(Attribute, self)._initMembersDict()
         self._members['name']   = [str, '']
 
+    def updateMembers(self):
+        super(Attribute, self).updateMembers()
+        self.setMember('name', self._name)
+
     def render(self, rib):
         # rib.Attribute(self._name, **self._params)
         rib.Attribute(self._name, self._params)

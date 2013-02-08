@@ -163,7 +163,8 @@ class CSVDataSource(DataSource):
         
         self.close_file = False
         self.skip_rows = skip_rows
-        self.fields = self.getMember('fields')
+        self.fieldlist = fields
+        self.fields = FieldList(self.fieldlist)
 
     def _initMembersDict(self):
         super(CSVDataSource, self)._initMembersDict()
@@ -171,7 +172,7 @@ class CSVDataSource(DataSource):
 
     def updateMembers(self):
         super(CSVDataSource, self).updateMembers()
-        self.setMember('fields', self.fields)
+        self.setMember('fields', self.fieldlist)
         
     def initialize(self):
         """Initialize CSV source stream:
@@ -232,7 +233,7 @@ class CSVDataSource(DataSource):
             # header. (Issue #17 might be somehow related)
             if not self.fields:
                 fields = [ (name, "string", "default") for name in field_names]
-                self.fields = data.metadata.FieldList(fields)
+                self.fields = FieldList(fields)
 
         if not self.fields:
             raise RuntimeError("Fields are not initialized. "

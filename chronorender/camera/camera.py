@@ -17,6 +17,11 @@ class Camera(Movable):
         self._members['filename']   = [str, '']
         self._members[Scriptable.getTypeName()] = [Scriptable, None]
 
+    def updateMembers(self):
+        super(Camera, self).updateMembers()
+        self.setMember('filename', self.filename)
+        self.setMember(Scriptable.getTypeName(), self.script)
+
     def resolveAssets(self, assetman):
         out = []
         if self.script:

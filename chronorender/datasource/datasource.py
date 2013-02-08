@@ -25,13 +25,19 @@ class DataSource(DataSource, cr_object.Object):
     def __init__(self, name="default", resource="", *args, **kwargs):
         super(DataSource,self).__init__(*args, **kwargs)
 
-        self.name = name
+        self.name = self.getMember('name')
         self.resource = self.getMember('resource')
 
     def _initMembersDict(self):
+        super(DataSource, self)._initMembersDict()
+
+        self._members['name']     = [str, '']
         self._members['resource'] = [str, '']
 
     def updateMembers(self):
+        super(DataSource, self).updateMembers()
+
+        self.setMember('name', self.name)
         self.setMember('resource', self.resource)
 
     def getInputResources(self):

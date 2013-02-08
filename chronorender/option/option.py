@@ -13,6 +13,10 @@ class Option(Object):
         super(Option, self)._initMembersDict()
         self._members['name']   = [str, '']
 
+    def updateMembers(self):
+        super(Option, self).updateMembers()
+        self.setMember('name', self._name)
+
     def render(self, rib):
         rib.Option(self._name, self._params)
 

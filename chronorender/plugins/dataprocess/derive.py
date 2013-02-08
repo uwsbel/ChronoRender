@@ -65,6 +65,19 @@ class DeriveNode(dp.DataProcess):
         self.storage_type = storage_type
         self._output_fields = None
 
+
+    def _initMembersDict(self):
+        super(DeriveNode, self)._initMembersDict()
+
+        self._members['formula']    = [str, '']
+        self._members['field_name'] = [str, '']
+
+    def updateMembers(self):
+        super(DeriveNode, self).updateMembers()
+
+        self.setMember('formula', self.formula)
+        self.setMember('field_name', self.field_name)
+
     @property
     def output_fields(self):
         return self._output_fields

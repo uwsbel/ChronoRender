@@ -17,8 +17,10 @@ chronorender:
         range: 0 100
     renderpass:
         name: "gorb"
-        scene: "default_scene.rib"
-        lighting: "default_lighting.rib"
+        scene: 
+            filename: "default_scene.rib"
+        lighting: 
+            filename: "default_lighting.rib"
         resolution: 640 480
         settings:
             name: "pass gorb"
@@ -47,9 +49,10 @@ chronorender:
                         ["euler_z", float]]
               delim: ","
         dataprocess:
-            - name: "select"
+            - type: "select"
+              name: "nonneg"
               condition: "id > 0"
             - type: "derive"
-              name: "idsmall"
+              name: "gorbthis"
               formula: "id * 10"
               field_name: "gorb" 

@@ -38,7 +38,7 @@ class DataTarget(TargetNode):
         self._data = []
 
     def _initMembersDict(self):
-        return
+        super(DataTarget, self)._initMembersDict()
 
     def append(self, obj):
         self._data.append(obj)

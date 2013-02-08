@@ -73,7 +73,6 @@ class Object(object):
 
     def _initMembersDict(self):
         self._members['recurse'] = [bool, False]
-        return
 
     def _initFromNamedArgs(self, args):
         for key, val in args.iteritems():
@@ -83,11 +82,10 @@ class Object(object):
                 out = self._evalParamType(vtype, val)
                 if isinstance(self._members[key][1], list):
                     if isinstance(out, list):
-                        # TODO
                         if len(self._members[key][1]) > 0:
                             self._members[key][1] = out
                         else:
-                            self._members[key][1] += out
+                            self._members[key][1].extend(out)
                     else:
                         self._members[key][1].append(out)
                 else:
@@ -119,7 +117,7 @@ class Object(object):
         self.updateMembers()
         objdict = {}
         for key, val in self._members.iteritems():
-            if key == 'recurse':
+            if key == 'recurse' or key == 'basename':
                 continue
             objdict[key] = Object._evalSerialParam(val[1])
         for key, val in self._params.iteritems():

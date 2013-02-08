@@ -27,7 +27,7 @@ class DataObjectTestCase(unittest.TestCase):
 
     # load a data source with globbed files, checks that gets all data for
     # each frame
-    def test_multpileResources(self):
+    def test_multipleResources(self):
         cr = ChronoRender()
         meta = md.MetaData('./input/metadata/yaml/1.yaml')
         args = meta.singleFromType(dat.DataObject)

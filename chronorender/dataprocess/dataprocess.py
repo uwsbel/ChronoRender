@@ -1,7 +1,7 @@
 from chronorender.data.nodes.base import Node
 from chronorender.cr_object import Object
 
-class DataProcess(Node, Object):
+class DataProcess(Object, Node):
     node_info = {
         "label" : "PassThrough (default)",
         "description" : "does nothing",
@@ -13,10 +13,20 @@ class DataProcess(Node, Object):
     def getTypeName():
         return "dataprocess"
 
-    def __init__(self, name="default", *args, **kwargs):
-        super(Node, self).__init__(*args, **kwargs)
-        super(Object, self).__init__(*args, **kwargs)
-        self.name = name
+    def __init__(self, *args, **kwargs):
+        super(DataProcess, self).__init__(*args, **kwargs)
+
+        self.name = self.getMember('name')
+
+    def _initMembersDict(self):
+        super(DataProcess, self)._initMembersDict()
+
+        self._members['name'] = [str, 'default']
+
+    def updateMembers(self):
+        super(DataProcess, self).updateMembers()
+
+        self.setMember('name', self.name)
 
     def initialize(self):
         return

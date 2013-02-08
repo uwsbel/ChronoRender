@@ -1,6 +1,6 @@
 from chronorender.cr_renderable import Renderable
 from chronorender.cr_scriptable import Scriptable
-import chronorender.shader as cs
+from chronorender.shader import Shader
                
 class Lighting(Renderable):
     @staticmethod
@@ -10,14 +10,20 @@ class Lighting(Renderable):
     def __init__(self, *args, **kwargs):
         super(Lighting,self).__init__(*args, **kwargs)
         self.filename   = self.getMember('filename')
-        self.shaders    = self.getMember(cs.Shader.getTypeName())
+        self.shaders    = self.getMember(Shader.getTypeName())
         self.script     = self.getMember(Scriptable.getTypeName())
 
     def _initMembersDict(self):
         super(Lighting, self)._initMembersDict()
         self._members['filename']                 = [str, '']
         self._members[Scriptable.getTypeName()]   = [Scriptable, None]
-        self._members[cs.Shader.getTypeName()]    = [cs.Shader, []]
+        self._members[Shader.getTypeName()]       = [Shader, []]
+
+    def updateMembers(self):
+        super(Lighting, self).updateMembers()
+        self.setMember('filename', self.filename)
+        self.setMember(Scriptable.getTypeName(), self.script)
+        self.setMember(Shader.getTypeName(), self.shaders)
 
     def resolveAssets(self, assetman):
         out = []

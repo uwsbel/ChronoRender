@@ -14,3 +14,5 @@ class SerializeTestCase(unittest.TestCase):
         job = chron.createJob(self.infile)
         for robj in job._rndrdoc.renderables:
             print robj
+        for rpass in job._rndrdoc.rndrpasses:
+            print rpass

@@ -167,7 +167,7 @@ class Node(object):
 
     .. abstract_node
     """
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         """Creates a new data processing node.
 
         :Attributes:
@@ -375,7 +375,7 @@ class SourceNode(Node):
     .. abstract_node
 
     """
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         super(SourceNode, self).__init__()
 
     @property
@@ -391,7 +391,7 @@ class TargetNode(Node):
     .. abstract_node
 
     """
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         super(TargetNode, self).__init__()
         self.fields = None
 

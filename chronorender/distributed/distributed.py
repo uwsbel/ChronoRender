@@ -61,6 +61,17 @@ class Distributed(Object):
         self._members['execpath']   = [str, Distributed.execpath]
         self._members['execcall']   = [str, Distributed.execcall]
 
+    def updateMembers(self):
+        super(Distributed, self).updateMembers()
+
+        self.setMember('walltime', self._walltime)
+        self.setMember('nodes', self._nodes)
+        self.setMember('ppn', self._ppn)
+        self.setMember('queue', self._queue)
+        self.setMember('devicecmds', self._devicecmds)
+        self.setMember('execpath', self._execpath)
+        self.setMember('execcall', self._execcall)
+
     def initialize(self):
         raise DistributedException('not implemented')
 

@@ -28,13 +28,17 @@ class SelectNode(dp.DataProcess):
         """
         super(SelectNode, self).__init__(**kwargs)
         # self.condition = condition
-        self.condition = self.getMember('condition')
+        self.condition = condition
         self.discard = discard
 
     def _initMembersDict(self):
         super(SelectNode, self)._initMembersDict()
 
         self._members['condition'] = [str,'']
+
+    def updateMembers(self):
+        super(SelectNode, self).updateMembers()
+        self.setMember('condition', self.condition)
 
 
     def initialize(self):
