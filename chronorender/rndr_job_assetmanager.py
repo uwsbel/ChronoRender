@@ -3,24 +3,25 @@ import chronorender.ri.rmanlibutil as riutil
 from chronorender.finder import FinderFactory, AssetNotFoundException
 
 class RndrJobAssetManager(object):
-    job = 'job'
-    outputdirs = { 'root' : '',
-                        'job'  : job,
-                        'data' :  os.path.join(job, 'data'),
-                        'output': os.path.join(job,'images'),
-                        'shader': os.path.join(job,'shaders'),
-                        'rib'   : os.path.join(job, 'rib'),
-                        'script': 'scripts', 
-                        'archive': 'ribarchives',
-                        'log':    'log',
-                        'texture': 'textures' }
-
-
-    def __init__(self, outpath, rndrdoc, relative=True):
+    def __init__(self, outpath, rndrdoc, relative=True, jobname='job'):
         self.outputpath = outpath
         self.rndrdoc    = rndrdoc
         self.relative   = relative
         self.finder     = self._createAssetFinder()
+
+        self.jobname = jobname
+        self.outputdirs = { 'root' : '',
+                            'job'  : self.jobname,
+                            'data' :  os.path.join(self.jobname, 'data'),
+                            'output': os.path.join(self.jobname,'images'),
+                            'shader': os.path.join(self.jobname,'shaders'),
+                            'rib'   : os.path.join(self.jobname, 'rib'),
+                            'script': 'scripts', 
+                            # 'archive': os.path.join('job', 'rib'),
+                            'archive': 'ribarchives',
+                            'log':    'log',
+                            'texture': 'textures' }
+
 
         self._assets    = { 'data': [],
                             'shader':  [],
@@ -62,9 +63,9 @@ class RndrJobAssetManager(object):
 
     def getOutPathFor(self, typename):
         if self.relative:
-            return RndrJobAssetManager.outputdirs[typename]
+            return self.outputdirs[typename]
         else: 
-            return os.path.join(self.outputpath, RndrJobAssetManager.outputdirs[typename])
+            return os.path.join(self.outputpath, self.outputdirs[typename])
 
     def getFrameRange(self):
         return self.rndrdoc.getFrameRange()
@@ -74,7 +75,7 @@ class RndrJobAssetManager(object):
             os.makedirs(self.outputpath)
 
         dirs = []
-        for key, val in RndrJobAssetManager.outputdirs.iteritems():
+        for key, val in self.outputdirs.iteritems():
             dirs.append(os.path.join(self.outputpath,val))
         for di in dirs:
             if not os.path.exists(di):
