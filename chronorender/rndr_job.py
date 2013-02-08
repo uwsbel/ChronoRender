@@ -90,7 +90,7 @@ class RndrJob():
             self.frames = self._assetman.getFrameRange()
 
     def setOutputPath(self, path):
-        self._assetman.outputpath = path
+        self._assetman.setOutPath(path)
 
     def createOutDirs(self):
         self._assetman.createOutDirs()
@@ -102,7 +102,7 @@ class RndrJob():
         self._assetman.updateAssets()
 
     def copyAssetToDirectory(self, asset):
-        self._assetman._copyAssetToDirectory(asset)
+        self._assetman.copyAssetToDirectory(asset)
 
     def submit(self, prog):
         prevdir = os.getcwd()

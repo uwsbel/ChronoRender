@@ -1,46 +1,18 @@
 import os, shutil, imghdr, subprocess, glob
-import chronorender.ri.rmanlibutil as riutil
-from chronorender.finder import FinderFactory, AssetNotFoundException
+from chronorender.cr_assetinfo import CRAssetInfo
 
 class RndrJobAssetManager(object):
     def __init__(self, outpath, rndrdoc, relative=True, jobname='job'):
-        self.outputpath = outpath
-        self.rndrdoc    = rndrdoc
         self.relative   = relative
-        self.finder     = self._createAssetFinder()
-
-        self.jobname = jobname
-        self.outputdirs = { 'root' : '',
-                            'job'  : self.jobname,
-                            'data' :  os.path.join(self.jobname, 'data'),
-                            'output': os.path.join(self.jobname,'images'),
-                            'shader': os.path.join(self.jobname,'shaders'),
-                            'rib'   : os.path.join(self.jobname, 'rib'),
-                            'script': 'scripts', 
-                            # 'archive': os.path.join('job', 'rib'),
-                            'archive': 'ribarchives',
-                            'log':    'log',
-                            'texture': 'textures' }
-
+        self.assetinfo  = CRAssetInfo(outpath=outpath, relative=self.relative, jobname=jobname)
+        self.rndrdoc    = rndrdoc
+        self.finder     = self.assetinfo.createAssetFinder(rndrdoc.getSearchPaths())
 
         self._assets    = { 'data': [],
                             'shader':  [],
                             'script':  [],
                             'archive': [],
                             'texture': [] }
-
-    @staticmethod
-    def _getFileType(asset):
-        filename, ext = os.path.splitext(asset)
-        if ext == ".sl":
-            return 'shader'
-        elif ext == ".py":
-            return 'script'
-        elif ext == ".rib":
-            return 'archive'
-        elif imghdr.what(asset) != None:
-            return 'texture'
-        return ''
 
     class Helper(object):
         def __init__(self, findfunc, outfunc, outpath):
@@ -61,25 +33,20 @@ class RndrJobAssetManager(object):
     def find(self, filename):
         return self.finder.find(filename)
 
-    def getOutPathFor(self, typename):
-        if self.relative:
-            return self.outputdirs[typename]
-        else: 
-            return os.path.join(self.outputpath, self.outputdirs[typename])
-
     def getFrameRange(self):
         return self.rndrdoc.getFrameRange()
 
-    def createOutDirs(self):
-        if not os.path.exists(self.outputpath): 
-            os.makedirs(self.outputpath)
+    def getOutPathFor(self, typename):
+        return self.assetinfo.getOutPathFor(typename)
 
-        dirs = []
-        for key, val in self.outputdirs.iteritems():
-            dirs.append(os.path.join(self.outputpath,val))
-        for di in dirs:
-            if not os.path.exists(di):
-                os.makedirs(di)
+    def setOutPath(self, path):
+        self.assetinfo.outputpath = path
+
+    def copyAssetToDirectory(self, asset):
+        self.assetinfo.copyAssetToDirectory(asset)
+
+    def createOutDirs(self):
+        self.assetinfo.createOutDirs()
 
     def makeAssetsRelative(self):
         self._updateAssets()
@@ -88,100 +55,27 @@ class RndrJobAssetManager(object):
         prevdir = os.getcwd()
 
         try:
-            os.chdir(self.outputpath)
+            os.chdir(self.assetinfo.outputpath)
             helper = RndrJobAssetManager.Helper(
                     self.finder.find, 
-                    self.getOutPathFor,
-                    self.outputpath)
+                    self.assetinfo.getOutPathFor,
+                    self.assetinfo.outputpath)
             paths = self.rndrdoc.resolveAssets(helper)
             self._initManagerAssetsDict(paths)
-            self._copyAssetsToJobDir(paths)
+            self.assetinfo.copyAssetsToJobDir(paths)
         finally:
             os.chdir(prevdir)
 
     def compileShaders(self, renderer):
-        if renderer == None:
-            return
-
-        sdrc = riutil.sdrcFromRenderer(renderer)
-        if not sdrc:
-            return
-
-        prevdir = os.getcwd()
-        try:
-            os.chdir(self.outputpath)
-            os.chdir(self.getOutPathFor('shader'))
-            shdrs = glob.glob('./*.sl')
-            prog = [sdrc]
-            prog.extend(shdrs)
-            subprocess.call(prog)
-        finally:
-            os.chdir(prevdir)
+        self.assetinfo.compileShaders(renderer)
 
     def convertTextures(self, renderer):
-        if renderer == None:
-            return
-
-        txmk = riutil.txmkFromRenderer(renderer)
-        if not txmk:
-            return
-
-        prevdir = os.getcwd()
-        try:
-            os.chdir(self.outputpath)
-            os.chdir(self.getOutPathFor('texture'))
-            texs = glob.glob('./*')
-            intexs = []
-            for tex in texs:
-                path, f = os.path.split(tex)
-                name, ext = os.path.splitext(f)
-                if ext != '.tex':
-                    intexs.append([tex, name + '.tex'])
-            for tex in intexs:
-                exe = [txmk]
-                exe.extend(tex)
-                subprocess.call(exe)
-        finally:
-            os.chdir(prevdir)
-
-    def _createAssetFinder(self):
-        if self.relative:
-            return FinderFactory.build(self.rndrdoc.getSearchPaths(), self.outputpath)
-        return FinderFactory.build(self.rndrdoc.getSearchPaths())
-
-    def _copyAssetToDirectory(self, asset):
-        filename, ext = os.path.splitext(asset)
-        try:
-            atype = RndrJobAssetManager._getFileType(asset)
-            path = self.getOutPathFor(atype)
-            shutil.copy2(asset, path)
-        except:
-            pass
-
-    def _getCurrentAssets(self):
-        out = []
-        out.extend(self._dirWalkToList(self.getOutPathFor('shader')))
-        out.extend(self._dirWalkToList(self.getOutPathFor('script')))
-        out.extend(self._dirWalkToList(self.getOutPathFor('archive')))
-        out.extend(self._dirWalkToList(self.getOutPathFor('texture')))
-        return out
-
-    def _dirWalkToList(self, path):
-        out = []
-        for root, dirs, files in os.walk(path):
-            out.extend([os.path.join(root,f) for f in files])
-        return out
-
-    def _copyAssetsToJobDir(self, paths):
-        currassets = self._getCurrentAssets()
-        for path in paths:
-            if path not in currassets:
-                self._copyAssetToDirectory(path)
+        self.assetinfo.convertTextures(renderer)
 
     def _initManagerAssetsDict(self, paths):
         self._clearManagerAssetsDict()
         for asset in paths:
-            atype = RndrJobAssetManager._getFileType(asset)
+            atype = CRAssetInfo._getFileType(asset)
             self._assets[atype].append(asset)
 
     def _clearManagerAssetsDict(self):
