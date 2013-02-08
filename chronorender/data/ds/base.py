@@ -43,7 +43,7 @@ def open_resource(resource, mode = None):
     if type(resource) == str or type(resource) == unicode:
         should_close = True
         parts = urlparse.urlparse(resource)
-        if parts.scheme == '' or parts.scheme == 'file':
+        if parts.scheme == '' or parts.scheme == 'file' or (len(str(parts.scheme)) == 1 and str(parts.scheme).isalpha()):
             if mode:
                 handle = open(resource, mode=mode)
             else:
