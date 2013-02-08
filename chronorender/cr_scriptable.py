@@ -57,7 +57,7 @@ class Scriptable(Renderable):
             # self._func(rib, *args, **kwargs)
 
     def _parseModInformation(self):
-        self.scriptname = os.path.split(self.scriptpath)[1]
+        # self.scriptname = os.path.split(self.scriptpath)[1]
         self._modname = os.path.splitext(self.scriptname)[0]
 
 

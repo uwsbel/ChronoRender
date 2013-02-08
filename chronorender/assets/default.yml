@@ -1,7 +1,6 @@
 chronorender:
     rendersettings:
         searchpaths: "./"
-        framerange: 0 0
     camera:
         - filename: "default_camera.rib"
         # script:
