@@ -69,6 +69,8 @@ class ChronoRender(ChronoRenderBase):
         self._builtinPlugins = [dp.SelectNode,
                           ds.CSVDataSource,
                           geo.Sphere,
+                          geo.Archive,
+                          geo.Cube,
                           mov.FFMPEG,
                           rp.RayTracePass,
                           rp.OcclusionPass]

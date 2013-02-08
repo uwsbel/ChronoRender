@@ -1,12 +1,17 @@
 import unittest, os, shutil
 from chronorender import ChronoRender
-from chronorender.geometry import Geometry, Sphere
+from chronorender.renderer import Stdout
+from chronorender.geometry import Geometry, Sphere, Archive
 # from chronorender.geometry import File
 
 class GeometryTestCase(unittest.TestCase):
     def test_geoSphere(self):
         sph = Sphere()
         self.assertEqual(sph.getTypeName(), Sphere.getTypeName())
+
+    def test_Archive(self):
+        arch = Archive(filename='default_scene.rib')
+        return True
 
     # def test_geoFile(self):
         # expected_dir = './output'

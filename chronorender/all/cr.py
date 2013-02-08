@@ -68,6 +68,7 @@ class ChronoRender(ChronoRenderBase):
                           ds.CSVDataSource,
                           geo.Sphere,
                           geo.File,
+                          geo.Archive,
                           mov.FFMPEG,
                           rp.RayTracePass,
                           rp.OcclusionPass]
