@@ -25,8 +25,8 @@ class CRenderSim(Prog):
                 self.args = {'metadata' : str(words[1]), 'framenumber' : int(words[2])}
                 self.renderSimulations()
                 line = sys.stdin.readline()
-        except Exception:
-            pass
+        except Exception as e:
+            sys.stderr.write(str(e))
         finally:
             f.close()
 

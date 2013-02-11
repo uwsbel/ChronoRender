@@ -7,6 +7,18 @@ Windows and Linux:
 RMS_SCRIPT_PATHS=$MAYA_APP_DIR/projects/RMS_ini
 MAYA_SCRIPT_PATH=$MAYA_APP_DIR/projects/RMS_mel
 
+Also For
+Pixar/RMS_DIR/etc/RMSWorkspace.ini
+
+ADD '.' to the following
+
+SetPref WSSearchPaths.procedural \
+    [list \\\${RMSTREE}/lib/plugins \\\${RMANTREE}/etc @ .]
+SetPref WSSearchPaths.shader \
+    [concat $stdplaces [list \\\${RMSTREE}/lib/shaders/ @ .]]
+SetPref WSSearchPaths.texture \
+    [concat $stdplaces [list \\\${RMSTREE}/lib/textures/ @ .]]
+
 2) it.ini
 change paths for your machine
 
@@ -50,3 +62,11 @@ Batch Rendering
           - set "Image Format" to an appropriate type.
 4    In the script editor (MEL) execute the following command,
               batchRenderRI("", 1);
+
+------
+TIPS
+
+1) Make sure to attach shaders to RenderObjects before export, otherwise the geometry won't be exported
+
+2) Make sure to check Export Shaders on RIB_Archive export:
+  - go to File-> Export-> RIB_Archive

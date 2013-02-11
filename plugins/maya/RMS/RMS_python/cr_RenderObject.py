@@ -1,92 +1,121 @@
 import os
 import pymel.all as pm
-from cr_interface import CRInterface
+import cr_interface as crinterface
 from chronorender.geometry import Archive
 from chronorender.renderobject import RenderObject
 
-class CRRenderObject(CRInterface):
-    _handle = "robjHandle"
-
-    @classmethod
-    def list(cls, *args, **kwargs):
-        kwargs['type'] = cls.__melnode__
-        return [node for node in pm.ls(*args, **kwargs) if isinstance(node, cls)]
+class CRRenderObject(pm.nt.Mesh):
+# class CRRenderObject(pm.nt.PolyCube):
+    _handle = "robj"
+    _counter = 0
 
     @classmethod
     def _isVirtual(cls, obj, name):
         fn = pm.api.MFnDependencyNode(obj)
         try:
-            if fn.hasAttribute(CRRenderObject._handle):
-                return True
-        except:
-            pass
+            return fn.hasAttribute(CRRenderObject._handle)
+        except: pass
         return False
 
     @classmethod
     def _preCreateVirtual(cls, **kwargs ):
+        if 'name' not in kwargs and 'n' not in kwargs:
+            kwargs['name'] = CRRenderObject._handle
         return kwargs
 
     @classmethod
     def _postCreateVirtual(cls, newNode ):
-        CRInterface._postCreateVirtual(newNode)
+        crinterface.addRootHandle(newNode)
+        newNode.addAttr(CRRenderObject._handle, dt='string', h=True)
 
-        trans = newNode.listConnections()[0]
-        shape = trans.getShape()
+        # trans = newNode.listConnections()[0]
+        # shape = trans.getShape()
 
-        CRRenderObject._addHandles(newNode, trans, shape)
-        name = newNode.rename('robj')
-        trans.rename(name+'_Transform')
-        shape.rename(name+'_Shape')
+        # shape.addAttr(CRRenderObject._handle, dt='string', h=True)
 
-        CRRenderObject.addAttrs(newNode, trans, shape)
+        # trans.addAttr(CRRenderObject._handle, dt='string', h=True)
+        # shape.addAttr(CRRenderObject._handle, dt='string', h=True)
+        # name = shape.rename('robjShape')
+
+        CRRenderObject.addAttrs(newNode, None, None)
 
     @classmethod
     def addAttrs(cls, node, trans, shape):
-        shape.addAttr('name', dt='string')        
-        shape.addAttr('condition', dt='string')        
-        shape.setAttr('condition', 'id >= 0')
-        shape.addAttr('rib_archive', dt='string')
+        node.addAttr('parent', at='message')
+        node.addAttr('name', dt='string')        
+        node.addAttr('condition', dt='string')        
+        node.setAttr('condition', 'id >= 0')
+        node.addAttr('rib_archive', dt='string')
 
-    @classmethod
-    def _addHandles(cls, node, trans, shape):
-        node.addAttr(CRRenderObject._handle, dt='string', h=True)
-        node.setAttr(CRRenderObject._handle, CRRenderObject._handle)
-        trans.addAttr(CRRenderObject._handle, dt='string', h=True)
-        trans.setAttr(CRRenderObject._handle, CRRenderObject._handle)
-        shape.addAttr(CRRenderObject._handle, dt='string', h=True)
-        shape.setAttr(CRRenderObject._handle, CRRenderObject._handle)
+    def export(self, md):
+        crinterface.createOutDirs()
 
-    def export(self):
-        shape = self.getShape()
-        pm.select(shape)
-        self.createOutDirs()
-        path = self.getOutPathFor('archive')
-        path = os.path.join(path, shape.name())
-        out = pm.exportSelected(path, type="RIB_Archive", shader=True)
-        print out
-        # self.getShape().setAttr('rib_archive', out)
-        self.getShape().setAttr('rib_archive', shape.name())
+        # pm.select(self.getParent())
+        trans = self.getParent()
+        x, y, z = trans.getAttr('translateX'), trans.getAttr('translateY'), trans.getAttr('translateZ')
+        trans.setAttr('translateX', 0.0)
+        trans.setAttr('translateY', 0.0)
+        trans.setAttr('translateZ', 0.0)
+        self.setAttr('primaryVisibility', True)
+        self.setAttr('castsShadows', True)
+        self.setAttr('receiveShadows', True)
+
+        path = crinterface.getOutPathFor('archive')
+        path = os.path.join(path, self.name())
+        pm.select(self)
+        # out = pm.exportSelected(path, type="RIB_Archive", shader=True, force=True)
+        # option string for exporting only single RIB Archive
+        out = pm.exportSelected(path, type="RIB_Archive", shader=True, force=True, options="rmanExportRIBCompression=0;rmanExportFullPaths=1;rmanExportGlobalLights=0;rmanExportLocalLights=0;rmanExportCoordinateSystems=0;rmanExportShaders=0;rmanExportAttributeBlock=0;rmanExportMultipleFrames=0;rmanExportStartFrame=1;rmanExportEndFrame=10;rmanExportByFrame=1")
+        out = os.path.relpath(out)       
+        out = out.replace('\\', '/')
+
+        self.setAttr('rib_archive', out)
+        trans.setAttr('translateX', x)
+        trans.setAttr('translateY', y)
+        trans.setAttr('translateZ', z)
+        self.setAttr('castsShadows', False)
+        self.setAttr('primaryVisibility', False)
+        self.setAttr('receiveShadows', False)
 
     def createCRObject(self):
-        shape = self.getShape()
-        geo=Archive(filename=str(shape.getAttr('rib_archive')))
+        geo=Archive(filename=str(self.getAttr('rib_archive')))
 
         robj = RenderObject()
         robj.geometry = geo
-        robj.condition = str(shape.getAttr('condition'))
+        robj.condition = str(self.getAttr('condition'))
         return robj
+
+    def attachMesh(self, mesh):
+        # delete current connection
+        currmesh = crinterface.getMesh(self)
+        if currmesh:
+            pm.delete(currmesh.name())
+
+        pm.disconnectAttr(self.name() + '.inMesh')
+        pm.connectAttr(mesh.name()+'.output', self.name()+'.inMesh')
+
+    def attachShader(self, shader):
+        return
+
+    def init(self):
+        cube = pm.polyCube()
+        trans, mesh = cube[0], cube[1]
+        self.attachMesh(mesh)
+        pm.delete(trans.name())
+        trans = self.getParent()
+        pm.rename(trans.name(), CRRenderObject._handle+str(CRRenderObject._counter))
+        CRRenderObject._counter += 1
+        self.rename(trans.name()+"Shape")
+
+        self.setAttr('primaryVisibility', False)
+        self.setAttr('castsShadows', False)
+        self.setAttr('receiveShadows', False)
 
 def register():
     pm.factories.registerVirtualClass(CRRenderObject, nameRequired=False)
 
 def build():
-    CRRenderObject()
-
-def main():
     register()
-    build()
-
-def export():
-    nodes = CRInterface.getAll(CRRenderObject._handle)
-    for node in nodes:
-        node.export()
+    robj = CRRenderObject()
+    robj.init()
+    return robj

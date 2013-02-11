@@ -1,0 +1,18 @@
+global proc cr_InterfaceUI_Menu()
+{
+global string $showMyMenuCtrl;
+if (`menu -exists $showMyMenuCtrl`)
+   deleteUI $showMyMenuCtrl;
+string $name = "Chrono::Render";
+global string $gMainWindow;
+$showMyMenuCtrl = `menu -p $gMainWindow -to true -l $name`;
+menuItem -p $showMyMenuCtrl -l "Add Simulation" -c ("source cr_Simulation_Add.mel; ");
+menuItem -divider true;
+menuItem -p $showMyMenuCtrl -l "Edit Selected" -c ("source cr_Interface_Edit.mel; ");
+menuItem -p $showMyMenuCtrl -l "Export Selected" -c ("source cr_Interface_Export.mel; ");
+menuItem -divider true;
+menuItem -p $showMyMenuCtrl -l "Attach Mesh" -c ("source cr_Interface_AttachMesh.mel; ");
+}
+
+cr_InterfaceUI_Menu;
+setFocus `paneLayout -query -pane1 viewPanes`;

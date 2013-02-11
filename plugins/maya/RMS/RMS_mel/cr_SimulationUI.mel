@@ -19,3 +19,23 @@ for($i = 0; $i < size($selected); $i++ ) {
     rmanAddAttr $shapeName $attr "";
     }
 }
+           	
+/* global proc addSphereUI() 
+{
+string $sel[] = `ls -sl`;
+string $attr;
+for($i=0;$i < size($sel);$i++)
+    {
+    // 1. Get the full name of a RMS attribute called "postTransformScript"
+    $attr = `rmanGetAttrName "postTransformScript"`; 
+
+    // 2. Add it to the selection and set its value
+    rmanAddAttr $sel[$i] $attr "addSphereRI"; 
+
+    // 3. Get the full name of an attribute defined in a .rman file
+    $attr = `rmanGetAttrName "asRad"`;
+
+    // 4. Add it to the selection and set its value
+    rmanAddAttr $sel[$i] $attr "1.5";
+    }
+} */
