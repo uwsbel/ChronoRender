@@ -22,7 +22,7 @@ class CRSimulation(pm.nt.PolyCube):
     def _isVirtual(cls, obj, name):
         fn = pm.api.MFnDependencyNode(obj)
         try:
-            if fn.hasAttribute(CRSimulation._handle):
+            if fn.hasAttribute(crinterface._simHandle):
                 return True
         except:
             pass
@@ -31,13 +31,13 @@ class CRSimulation(pm.nt.PolyCube):
     @classmethod
     def _preCreateVirtual(cls, **kwargs ):
         if 'name' not in kwargs and 'n' not in kwargs:
-            kwargs['name'] = CRSimulation._handle
+            kwargs['name'] = crinterface._simHandle
         return kwargs
 
     @classmethod
     def _postCreateVirtual(cls, newNode ):
         crinterface.addRootHandle(newNode)
-        newNode.addAttr(CRSimulation._handle, dt='string', h=True)
+        newNode.addAttr(crinterface._simHandle, dt='string', h=True)
 
         trans = newNode.listConnections()[0]
         shape = trans.getShape()
@@ -68,6 +68,12 @@ class CRSimulation(pm.nt.PolyCube):
 
     def getTransform(self):
         return self.listConnections()[0]
+
+    def getPreShapeScript(self):
+        return self.getShape().getAttr('rman__torattr___preShapeScript')
+
+    def setPreShapeScript(self, script):
+        return self.getShape().setAttr('rman__torattr___preShapeScript', script)
 
     def export(self, md):
         sim = self.createCRObject()
@@ -267,6 +273,6 @@ def main():
     build()
 
 def export():
-    nodes = crinterface.getSelected(CRSimulation._handle)
+    nodes = crinterface.getSelected(crinterface._simHandle)
     for node in nodes:
         node.export()

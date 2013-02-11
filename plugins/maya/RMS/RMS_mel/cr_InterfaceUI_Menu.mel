@@ -13,7 +13,11 @@ menuItem -p $showMyMenuCtrl -l "Export Selected" -c ("source cr_Interface_Export
 menuItem -divider true;
 menuItem -p $showMyMenuCtrl -l "Attach Mesh" -c ("source cr_Interface_AttachMesh.mel; ");
 menuItem -divider true;
+menuItem -p $showMyMenuCtrl -l "Batch RI Windows" -c ("source cr_Interface_BatchRI_Win.mel; ");
+menuItem -p $showMyMenuCtrl -l "Batch RI Linux" -c ("source cr_Interface_BatchRI_Linux.mel; ");
 menuItem -p $showMyMenuCtrl -l "Toggle Rif" -c ("source cr_Interface_toggleRif.mel; ");
+menuItem -divider true;
+menuItem -p $showMyMenuCtrl -l "ReImport (Dev)" -c ("source cr_Interface_Source.mel; ");
 }
 
 cr_InterfaceUI_Menu;

@@ -1,0 +1,2 @@
+python("import cr_interface");
+python("cr_interface.batchRI('posix')");

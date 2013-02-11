@@ -92,7 +92,7 @@ class CRRenderObject(pm.nt.Mesh):
             pm.delete(currmesh.name())
 
         pm.disconnectAttr(self.name() + '.inMesh')
-        pm.connectAttr(mesh.name()+'.output', self.name()+'.inMesh')
+        pm.connectAttr(mesh.name()+'.outMesh', self.name()+'.inMesh')
 
     def attachShader(self, shader):
         return
@@ -100,16 +100,17 @@ class CRRenderObject(pm.nt.Mesh):
     def init(self):
         cube = pm.polyCube()
         trans, mesh = cube[0], cube[1]
-        self.attachMesh(mesh)
-        pm.delete(trans.name())
-        trans = self.getParent()
-        pm.rename(trans.name(), CRRenderObject._handle+str(CRRenderObject._counter))
-        CRRenderObject._counter += 1
-        self.rename(trans.name()+"Shape")
+        self.attachMesh(trans.getShape())
+        ptrans = self.getParent()
+        ptrans.rename(CRRenderObject._handle+str(CRRenderObject._counter))
+        self.rename(ptrans.name()+"Shape")
 
         self.setAttr('primaryVisibility', False)
         self.setAttr('castsShadows', False)
         self.setAttr('receiveShadows', False)
+
+        pm.select(self)
+        CRRenderObject._counter += 1
 
 def register():
     pm.factories.registerVirtualClass(CRRenderObject, nameRequired=False)
