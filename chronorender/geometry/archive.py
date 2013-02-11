@@ -19,8 +19,8 @@ class Archive(Geometry):
 
     def resolveAssets(self, assetman):
         out = super(Archive, self).resolveAssets(assetman)
-        self.filepath = assetman.find(self.filename)
-        return [self.filepath]
+        # self.filepath = assetman.find(self.filename)
+        return [self.filename]
 
     def render(self, rib, *args, **kwargs):
         rib.ReadArchive(self.filename)
