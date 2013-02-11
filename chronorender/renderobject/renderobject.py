@@ -44,7 +44,7 @@ class RenderObject(Movable):
         self._members[Geometry.getTypeName()]   = [Geometry, []]
         self._members[Shader.getTypeName()]     = [Shader, []]
         self._members['condition']              = [str, '']
-        self._members['color']                  = [floatlist, [1.0,0.0,0.0]]
+        self._members['color']                  = [floatlist, []]
         self._members['instanced']              = [bool, False]
         self._members[Scriptable.getTypeName()] = [Scriptable, None]
 
@@ -117,7 +117,8 @@ class RenderObject(Movable):
             rib.Rotate(record[cre.EULER_Z], 0, 0, 1)
 
     def renderShape(self, rib, rendershaders=True, **kwargs):
-        rib.Color(self.color)
+        if len(self.color) == 3:
+            rib.Color(self.color)
         
         if rendershaders:
             for shdr in self.shaders: 
