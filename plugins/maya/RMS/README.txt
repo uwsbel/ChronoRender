@@ -1,3 +1,6 @@
+REQUIRES:
+Python 2.7  or greater
+
 0) Copy all of the RMS_* dirs to your maya/projects directory
 
 1) Set Environment Variables For MAYA and RMS, in:
@@ -40,16 +43,11 @@ hit Cntrl-Enter
 
 this will source the remaining directories
 
-----
+7) Make Sure The RenderMan_for_Maya plugin
 
-Changing Maya's Python Version to 2.7
-
-Windows
-1) Create an environment variable PYTHONHOME and set it to point to the version of Python you want (e.g. C:\Python27).
-
-2) Copy the files from your "MayaDirectory"\Python\Lib\site-packages (e.g. C:\Program Files (x86)\Autodesk\Maya2013\Python\Lib\site-packages) and paste them in "PYTHONHOME"\Lib\site-packages (e.g. C:\Python27\Lib\site-packages).
-
-3) Restart Maya and see if everything works! You can check which Python is being used by running (from Maya's 'Script Editor'):
+MAKE SURE TO ADD THE FOLLOWING ENV VARIABLES:
+1) CRENDER_PATH=path_to_ChronoRender_root
+2) PYTHONPATH=$PYTHONPATH:$CRENDER_PATH
 
 -----
 Batch Rendering

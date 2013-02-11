@@ -3,6 +3,7 @@ import pymel.all as pm
 import cr_interface as crinterface
 from chronorender.geometry import Archive
 from chronorender.renderobject import RenderObject
+from chronorender import Scriptable
 
 class CRRenderObject(pm.nt.Mesh):
 # class CRRenderObject(pm.nt.PolyCube):
@@ -27,30 +28,21 @@ class CRRenderObject(pm.nt.Mesh):
     def _postCreateVirtual(cls, newNode ):
         crinterface.addRootHandle(newNode)
         newNode.addAttr(CRRenderObject._handle, dt='string', h=True)
-
-        # trans = newNode.listConnections()[0]
-        # shape = trans.getShape()
-
-        # shape.addAttr(CRRenderObject._handle, dt='string', h=True)
-
-        # trans.addAttr(CRRenderObject._handle, dt='string', h=True)
-        # shape.addAttr(CRRenderObject._handle, dt='string', h=True)
-        # name = shape.rename('robjShape')
-
-        CRRenderObject.addAttrs(newNode, None, None)
+        CRRenderObject.addAttrs(newNode)
 
     @classmethod
-    def addAttrs(cls, node, trans, shape):
+    def addAttrs(cls, node):
         node.addAttr('parent', at='message')
         node.addAttr('name', dt='string')        
         node.addAttr('condition', dt='string')        
         node.setAttr('condition', 'id >= 0')
         node.addAttr('rib_archive', dt='string')
+        node.addAttr('py_script', dt='string')
+        node.addAttr('py_function', dt='string')
 
     def export(self, md):
         crinterface.createOutDirs()
 
-        # pm.select(self.getParent())
         trans = self.getParent()
         x, y, z = trans.getAttr('translateX'), trans.getAttr('translateY'), trans.getAttr('translateZ')
         trans.setAttr('translateX', 0.0)
@@ -63,7 +55,7 @@ class CRRenderObject(pm.nt.Mesh):
         path = crinterface.getOutPathFor('archive')
         path = os.path.join(path, self.name())
         pm.select(self)
-        # out = pm.exportSelected(path, type="RIB_Archive", shader=True, force=True)
+
         # option string for exporting only single RIB Archive
         out = pm.exportSelected(path, type="RIB_Archive", shader=True, force=True, options="rmanExportRIBCompression=0;rmanExportFullPaths=1;rmanExportGlobalLights=0;rmanExportLocalLights=0;rmanExportCoordinateSystems=0;rmanExportShaders=0;rmanExportAttributeBlock=0;rmanExportMultipleFrames=0;rmanExportStartFrame=1;rmanExportEndFrame=10;rmanExportByFrame=1")
         out = os.path.relpath(out)       
@@ -83,6 +75,10 @@ class CRRenderObject(pm.nt.Mesh):
         robj = RenderObject()
         robj.geometry = geo
         robj.condition = str(self.getAttr('condition'))
+        robj.script = Scriptable(
+            file=self.getAttr('py_script'),
+            function=self.getAttr('py_function'))
+
         return robj
 
     def attachMesh(self, mesh):

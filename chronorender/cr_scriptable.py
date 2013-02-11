@@ -1,12 +1,6 @@
 from cr_renderable import Renderable
 import imp, sys, os
 
-class ScriptableException(Exception):
-    def __init__(self, value):
-        self.value = value
-    def __str__(self):
-        return repr(self.value)
-
 class Scriptable(Renderable):
     @staticmethod
     def getTypeName():
@@ -23,8 +17,8 @@ class Scriptable(Renderable):
     def __init__(self, *args, **kwargs):
         super(Scriptable,self).__init__(*args, **kwargs)
 
-        self.scriptname = self.getMember('file')
-        self.funcname   = self.getMember('function')
+        self.scriptname = self.getVar('file', kwargs)
+        self.function   = self.getVar('function', kwargs)
         self.scriptpath = ""
         self._modname   = ""
         self._mod       = None
@@ -40,7 +34,7 @@ class Scriptable(Renderable):
     def updateMembers(self):
         super(Scriptable, self).updateMembers()
         self.setMember('file', self.scriptname)
-        self.setMember('function', self.funcname)
+        self.setMember('function', self.function)
 
     def resolveAssets(self, assetman):
         self.scriptpath = assetman.find(self.scriptname)
@@ -75,16 +69,16 @@ class Scriptable(Renderable):
             return imp.load_source(self._modname, self.scriptpath)
         except ImportError as error:
             print error
-            raise ScriptableException('could not load module: ' + self._modname)
+            raise ImportError('could not load module: ' + self._modname)
             return none
 
     def _loadFunction(self, mod):
-        # if not hasattr(self._mod, self.funcname):
-        if not hasattr(mod, self.funcname):
-            raise ScriptableException('function \"' + self.funcname + '\" not found in script: ' + self.scriptpath)
+        # if not hasattr(self._mod, self.function):
+        if not hasattr(mod, self.function):
+            raise ImportError('function \"' + self.function + '\" not found in script: ' + self.scriptpath)
 
-        # self._func = getattr(self._mod, self.funcname)
-        return getattr(mod, self.funcname)
+        # self._func = getattr(self._mod, self.function)
+        return getattr(mod, self.function)
 
 def build(**kwargs):
     return Scriptable(**kwargs)

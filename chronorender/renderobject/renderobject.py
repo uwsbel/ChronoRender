@@ -8,12 +8,6 @@ from chronorender.geometry import Geometry
 from chronorender.shader import Shader
 from chronorender.cr_types import intlist, floatlist
 
-class RenderObjectException(Exception):
-    def __init__(self, value):
-        self.value = value
-    def __str__(self):
-        return repr(self.value)
-
 class RenderObject(Movable):
 
     @staticmethod
@@ -62,7 +56,7 @@ class RenderObject(Movable):
             msg = 'invalid data entry for ' + self.name +\
                     '\n  expected: ' + str(self.data) +\
                     '\n  got: ' + str(entry)
-            raise RenderObjectException(msg)
+            raise Exception(msg)
 
         ientry = iter(entry)
         idata = iter(self.data)
@@ -86,8 +80,11 @@ class RenderObject(Movable):
             shdr.setAsset(assetname, obj)
 
     def render(self, rib, data=[], *args, **kwargs):
-        if self.script:
-            self.script.render(rib, *args, **kwargs)
+        print 'script', self.script, 'name', self.script.scriptname
+        if self.script and self.script.scriptpath:
+            rargs = {'data' : data, 'robj' : self}
+            rargs = dict(rargs, **kwargs)
+            self.script.render(rib, *args, **rargs)
         else:
             for entry in data:
                 self._renderSingleObject(rib, record=entry, **kwargs)
