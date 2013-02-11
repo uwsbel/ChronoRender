@@ -3,7 +3,7 @@ import pymel.all as pm
 import cr_interface as crinterface
 from chronorender.geometry import Archive
 from chronorender.renderobject import RenderObject
-from chronorender import Scriptable
+from chronorender.cr_scriptable import Scriptable
 
 class CRRenderObject(pm.nt.Mesh):
 # class CRRenderObject(pm.nt.PolyCube):
@@ -76,7 +76,7 @@ class CRRenderObject(pm.nt.Mesh):
         robj.geometry = geo
         robj.condition = str(self.getAttr('condition'))
         robj.script = Scriptable(
-            file=self.getAttr('py_script'),
+            scriptname=self.getAttr('py_script'),
             function=self.getAttr('py_function'))
 
         return robj

@@ -1,7 +1,8 @@
 	
 if(`about -windows` || `about -linux`) {
-    python("import sys");
-    python("sys.path.append('Z:/VM_Shared/arch_shared/RMS/RMS_python')");
+    python("import sys, os");
+    python("crpath = os.environ['CRENDER_PATH']");
+    python("sys.path.append(crpath + '/plugins/maya/RMS/RMS_python')");
     }
 
 cr_InterfaceUI_Menu;
