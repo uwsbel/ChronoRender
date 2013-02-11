@@ -70,6 +70,8 @@ class CRRenderObject(pm.nt.Mesh):
         self.setAttr('receiveShadows', False)
 
     def createCRObject(self):
+        print "CREATE"
+        print self.hasAttr('rib_archive')
         geo=Archive(filename=str(self.getAttr('rib_archive')))
 
         robj = RenderObject()
@@ -82,6 +84,11 @@ class CRRenderObject(pm.nt.Mesh):
             function= str(func) if func else "")
 
         return robj
+
+    def attachRIBArchive(self, archive):
+        pm.disconnectAttr(self.name() + '.rib_archive')
+        pm.connectAttr(archive.name()+'.filename', self.name()+'.rib_archive')
+
 
     def attachMesh(self, mesh):
         # delete current connection

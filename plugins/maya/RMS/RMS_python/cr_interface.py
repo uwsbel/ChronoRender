@@ -40,6 +40,20 @@ def toggleRif():
     else: _bRif = 0
     pm.mel.eval('rman setPref DisableRifShaderAttachment ' + str(_bRif))
 
+def attachRIBArchive():
+    nodes = _getAndVerifyByAttr('attachMesh')
+    select = pm.selected()
+    archives = []
+    for sel in select:
+        if sel.hasAttr('filename'):
+            archives.append(sel)
+
+    if len(archives) != 1:
+        raise Exception('not 1 RIBArchive selected')
+
+    for node in nodes:
+        node.attachRIBArchive(archives[0])
+
 def attachMesh():
     nodes = _getAndVerifyByAttr('attachMesh')
     nodemeshs = _getAndVerifyByType('mesh')
