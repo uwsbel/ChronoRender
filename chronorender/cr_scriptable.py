@@ -17,7 +17,7 @@ class Scriptable(Renderable):
     def __init__(self, *args, **kwargs):
         super(Scriptable,self).__init__(*args, **kwargs)
 
-        self.scriptname = self.getVar('file', kwargs)
+        self.scriptname = self.getVar('scriptname', kwargs)
         self.function   = self.getVar('function', kwargs)
         self.scriptpath = ""
         self._modname   = ""
@@ -28,16 +28,19 @@ class Scriptable(Renderable):
 
     def _initMembersDict(self):
         super(Scriptable,self)._initMembersDict()
-        self._members['file']     = [str, '']
+        self._members['scriptname']     = [str, '']
         self._members['function']   = [str, '']
 
     def updateMembers(self):
         super(Scriptable, self).updateMembers()
-        self.setMember('file', self.scriptname)
+        self.setMember('scriptname', self.scriptname)
         self.setMember('function', self.function)
 
     def resolveAssets(self, assetman):
-        self.scriptpath = assetman.find(self.scriptname)
+        try:
+            self.scriptpath = assetman.find(self.scriptname)
+        except Exception:
+            pass
         self._parseModInformation()
         self._resolvedAssetPaths = True
 
@@ -50,13 +53,9 @@ class Scriptable(Renderable):
         func = self._loadFunction(self._loadModule())
         if func:
             func(rib, *args, **kwargs)
-        # if self._func:
-            # self._func(rib, *args, **kwargs)
 
     def _parseModInformation(self):
-        # self.scriptname = os.path.split(self.scriptpath)[1]
         self._modname = os.path.splitext(self.scriptname)[0]
-
 
     def _loadModule(self):
         try:
@@ -65,7 +64,6 @@ class Scriptable(Renderable):
             pass
 
         try:
-            # self._mod = imp.load_source(self._modname, self.scriptpath)
             return imp.load_source(self._modname, self.scriptpath)
         except ImportError as error:
             print error
@@ -73,11 +71,9 @@ class Scriptable(Renderable):
             return none
 
     def _loadFunction(self, mod):
-        # if not hasattr(self._mod, self.function):
         if not hasattr(mod, self.function):
             raise ImportError('function \"' + self.function + '\" not found in script: ' + self.scriptpath)
 
-        # self._func = getattr(self._mod, self.function)
         return getattr(mod, self.function)
 
 def build(**kwargs):

@@ -19,14 +19,14 @@ class Finder(object):
 
     def find(self, assetname):
         if os.path.exists(assetname): return assetname
-        for path in self._searchpaths:
-            # TODO GOOD idea to walk recursively?
+        assetname = os.path.basename(assetname)
+        cwd = os.getcwd()
+        paths = [os.getcwd()]
+        paths.extend(self._searchpaths)
+        for path in paths:
             for root, dirs, files in os.walk(path):
                 if assetname in files:
                     return os.path.join(root, assetname)
-            # testpath = os.path.join(path,assetname)
-            # if os.path.exists(testpath):
-                # return testpath
         raise AssetNotFoundException(self, 'could not find: ' + assetname)
 
     def addPathsStr(self, path_string, delim=':'):

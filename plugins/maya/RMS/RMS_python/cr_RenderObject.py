@@ -75,9 +75,11 @@ class CRRenderObject(pm.nt.Mesh):
         robj = RenderObject()
         robj.geometry = geo
         robj.condition = str(self.getAttr('condition'))
+        script = self.getAttr('py_script')
+        func =self.getAttr('py_function')
         robj.script = Scriptable(
-            scriptname=self.getAttr('py_script'),
-            function=self.getAttr('py_function'))
+            scriptname= str(script) if script else "",
+            function= str(func) if func else "")
 
         return robj
 

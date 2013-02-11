@@ -69,6 +69,7 @@ class RenderObject(Movable):
             out.extend(geo.resolveAssets(assetman))
         for shdr in self.shaders:
             out.extend(shdr.resolveAssets(assetman))
+        out.extend(self.script.resolveAssets(assetman))
         self._resolvedAssetPaths = True
         return out
 
@@ -80,8 +81,7 @@ class RenderObject(Movable):
             shdr.setAsset(assetname, obj)
 
     def render(self, rib, data=[], *args, **kwargs):
-        print 'script', self.script, 'name', self.script.scriptname
-        if self.script and self.script.scriptpath:
+        if self.script and self.script.scriptname:
             rargs = {'data' : data, 'robj' : self}
             rargs = dict(rargs, **kwargs)
             self.script.render(rib, *args, **rargs)
