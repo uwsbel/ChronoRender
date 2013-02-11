@@ -5,10 +5,13 @@ from chronorender.cr_assetinfo import CRAssetInfo
 from chronorender.metadata import MDReaderFactory
 
 _crHandle = "chronorender"
+_bRif = 0
 utils = MayaProjUtils()
 
 # set working dir to project path to handle relative paths
 os.chdir(utils.getProjPath())
+# disable rifs so can render without RMS
+toggleRif()
 
 def getSelected(addt_attr=None):
     if not addt_attr:
@@ -71,6 +74,12 @@ def edit():
         window = node.createGUI()
         pm.showWindow(window)
 
+def toggleRif():
+    global _bRif
+    if _bRif == 0: _bRif = 1
+    else: _bRif = 0
+    pm.mel.eval('rman setPref DisableRifShaderAttachment ' + str(_bRif))
+
 def attachMesh():
     nodes = _getAndVerifyByAttr('attachMesh')
     nodemeshs = _getAndVerifyByType('mesh')
@@ -90,6 +99,7 @@ def attachMesh():
 
 def getMesh(node):
     inMesh = node.listConnections()
+    inMesh.extend(node.listRelatives())
     for m in inMesh:
         if m.hasAttr('output'):
             return m

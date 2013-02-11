@@ -12,6 +12,8 @@ menuItem -p $showMyMenuCtrl -l "Edit Selected" -c ("source cr_Interface_Edit.mel
 menuItem -p $showMyMenuCtrl -l "Export Selected" -c ("source cr_Interface_Export.mel; ");
 menuItem -divider true;
 menuItem -p $showMyMenuCtrl -l "Attach Mesh" -c ("source cr_Interface_AttachMesh.mel; ");
+menuItem -divider true;
+menuItem -p $showMyMenuCtrl -l "Toggle Rif" -c ("source cr_Interface_toggleRif.mel; ");
 }
 
 cr_InterfaceUI_Menu;

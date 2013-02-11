@@ -2,16 +2,14 @@
 global proc cr_SimulationRI()
 {
 int       $frame = `currentTime -q`;
-string    $rmsScriptPath = `getenv "RMS_SCRIPT_PATHS"`;
 string    $crPath = `getenv "CRENDER_PATH"`;
-// string    $pyScriptPath = $crPath + "/bin/crender_sim.py";
 string    $pyScriptPath = "${CRENDER_PATH}/bin/crender_sim.py";
 
 string    $cmd = "python " + $pyScriptPath;
 string    $argString = "renderman/sim.yml " + $frame;
-// RiIfBegin("!defined(CRENDER_PATH)");
-// RiOption "user" "string CRENDER_PATH" $crPath;
-// RiIfEnd();
+RiIfBegin("!defined(CRENDER_PATH)");
+RiOption "user" "string CRENDER_PATH" $crPath;
+RiIfEnd();
 RiProcedural "RunProgram" $cmd -1000000 1000000 -1000000 1000000 -1000000 1000000 $argString;
 RiAttribute "visibility" "int camera" 0 "int diffuse" 0 "int specular" 0;
 }
