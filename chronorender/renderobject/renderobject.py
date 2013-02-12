@@ -69,7 +69,8 @@ class RenderObject(Movable):
             out.extend(geo.resolveAssets(assetman))
         for shdr in self.shaders:
             out.extend(shdr.resolveAssets(assetman))
-        out.extend(self.script.resolveAssets(assetman))
+        if self.script:
+            out.extend(self.script.resolveAssets(assetman))
         self._resolvedAssetPaths = True
         return out
 

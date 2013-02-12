@@ -33,12 +33,18 @@ class DataObject(Object):
         self._maxindex      = 0
         self._resolved      = False
 
+    def resolveAssets(self, assetman):
+        out = []
+        for src in self._datasrcs:
+            out.extend(src.resolveAssets(assetman))
+        self._resolveSources()
+        return out
 
-    def resolveSources(self):
+    def _resolveSources(self):
         self._initMultipleSourceResources()
         self._initCrossSrcFields()
         self._resolved = True
- 
+
     def _initMembersDict(self):
         self._members[ds.DataSource.getTypeName()] = [ds.DataSource, []]
         self._members[dp.DataProcess.getTypeName()] = [dp.DataProcess, []]

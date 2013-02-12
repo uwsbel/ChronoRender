@@ -1,4 +1,5 @@
 from chronorender.data.ds.base import DataSource
+from chronorender.cr_scriptable import Scriptable
 import chronorender.cr_object as cr_object
 import glob, os
 # Should implement:
@@ -30,18 +31,27 @@ class DataSource(DataSource, cr_object.Object):
 
         self.name = self.getMember('name')
         self.resource = self.getMember('resource')
+        self.script     = self.getMember(Scriptable.getTypeName())
 
     def _initMembersDict(self):
         super(DataSource, self)._initMembersDict()
 
         self._members['name']     = [str, '']
         self._members['resource'] = [str, '']
+        self._members[Scriptable.getTypeName()] = [Scriptable, None]
 
     def updateMembers(self):
         super(DataSource, self).updateMembers()
 
         self.setMember('name', self.name)
         self.setMember('resource', self.resource)
+        self.setMember(Scriptable.getTypeName(), self.script)
+
+    def resolveAssets(self, assetman):
+        out = []
+        # if self.script:
+            # out.extend(self.script.resolveAssets(assetman))
+        return out
 
     def getInputResources(self):
         path = os.path.abspath(self.resource)

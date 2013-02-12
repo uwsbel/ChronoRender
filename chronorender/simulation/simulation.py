@@ -55,8 +55,7 @@ class Simulation(Movable):
                 robj.render(ri, data, *args, **kwargs)
 
     def resolveAssets(self, assetman):
-
-        self._data.resolveSources()
+        self._data.resolveAssets(assetman)
 
         out = []
         for robj in self._robjs:

@@ -32,7 +32,7 @@ class DataObjectTestCase(unittest.TestCase):
         meta = md.MetaData('./input/metadata/yaml/1.yaml')
         args = meta.singleFromType(dat.DataObject)
         dataobj = dat.DataObject(cr._factories, **args)
-        dataobj.resolveSources()
+        dataobj._resolveSources()
 
         poses = []
         for i in range(0, 3):

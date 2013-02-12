@@ -1,1 +1,2 @@
 python("import cr_Source");
+python("cr_Source.main()");
