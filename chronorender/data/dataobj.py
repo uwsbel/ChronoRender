@@ -94,9 +94,9 @@ class DataObject(Object):
             out = DataObject._doProcs(src, procs)
 
         datasrc = self._getResource(0, srcnumber)
-        # if datasrc.script:
-            # print "SCRIPT", datasrc
-
+        if datasrc.script and datasrc.script.isGood():
+            args = {'data' : out}
+            out = datasrc.script.run(**args)
         return out
 
     def incrDataSourceCounter(self):

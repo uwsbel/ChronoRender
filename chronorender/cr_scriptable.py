@@ -17,7 +17,7 @@ class Scriptable(Renderable):
     def __init__(self, *args, **kwargs):
         super(Scriptable,self).__init__(*args, **kwargs)
 
-        self.scriptname = self.getVar('scriptname', kwargs)
+        self.scriptname = self.getVar('file', kwargs)
         self.function   = self.getVar('function', kwargs)
         self.scriptpath = ""
         self._modname   = ""
@@ -28,12 +28,12 @@ class Scriptable(Renderable):
 
     def _initMembersDict(self):
         super(Scriptable,self)._initMembersDict()
-        self._members['scriptname']     = [str, '']
+        self._members['file']     = [str, '']
         self._members['function']   = [str, '']
 
     def updateMembers(self):
         super(Scriptable, self).updateMembers()
-        self.setMember('scriptname', self.scriptname)
+        self.setMember('file', self.scriptname)
         self.setMember('function', self.function)
 
     def resolveAssets(self, assetman):
@@ -53,6 +53,17 @@ class Scriptable(Renderable):
         func = self._loadFunction(self._loadModule())
         if func:
             func(rib, *args, **kwargs)
+
+    def run(self, *args, **kwargs):
+        func = self._loadFunction(self._loadModule())
+        if func:
+            return func(*args, **kwargs)
+        return None
+
+    def isGood(self):
+        if self.scriptname:
+            return True
+        return False
 
     def _parseModInformation(self):
         self._modname = os.path.splitext(self.scriptname)[0]

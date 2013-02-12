@@ -1,5 +1,6 @@
 import unittest
 from chronorender import ChronoRender
+from chronorender.finder import FinderFactory
 
 import chronorender.data as dat
 import chronorender.datasource as ds
@@ -42,7 +43,8 @@ class DataObjectTestCase(unittest.TestCase):
         meta = md.MetaData('./input/metadata/yaml/datasrc_script.yml')
         args = meta.singleFromType(dat.DataObject)
         dataobj = dat.DataObject(cr._factories, **args)
-        dataobj._resolveSources()
+        finder = FinderFactory.build('./input')
+        dataobj.resolveAssets(finder)
 
         poses = []
         for i in range(0, 3):

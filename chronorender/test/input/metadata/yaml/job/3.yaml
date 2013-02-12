@@ -30,6 +30,9 @@ chronorender:
                             ["euler_y", float], 
                             ["euler_z", float]]
                   delim: ","
+                  script:
+                    file: "convert_data.py"
+                    function: "convert"
         renderobject:
             - name: "tank"
               condition: "id >= 0"

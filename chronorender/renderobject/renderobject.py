@@ -82,7 +82,7 @@ class RenderObject(Movable):
             shdr.setAsset(assetname, obj)
 
     def render(self, rib, data=[], *args, **kwargs):
-        if self.script and self.script.scriptname:
+        if self.script and self.script.isGood():
             rargs = {'data' : data, 'robj' : self}
             rargs = dict(rargs, **kwargs)
             self.script.render(rib, *args, **rargs)
