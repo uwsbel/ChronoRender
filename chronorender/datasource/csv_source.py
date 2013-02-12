@@ -166,7 +166,6 @@ class CSVDataSource(DataSource):
         self.delim = self.getVar('delim', reader_args)
         self.fieldlist = self.getVar('fields', reader_args)
         self.fields = FieldList(self.fieldlist)
-        print self.getSerialized()
 
     def _initMembersDict(self):
         super(CSVDataSource, self)._initMembersDict()
