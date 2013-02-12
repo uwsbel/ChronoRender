@@ -9,6 +9,7 @@ from chronorender.data import DataObject
 from chronorender.datasource import CSVDataSource
 from chronorender.metadata import MDReaderFactory
 from chronorender.simulation import Simulation
+from chronorender.cr_scriptable import Scriptable
 
 class CRSimulation(pm.nt.PolyCube):
     _handle = "simulation"
@@ -43,7 +44,6 @@ class CRSimulation(pm.nt.PolyCube):
         shape = trans.getShape()
         # trans.addAttr(crinterface._crHandle, dt='string', h=True)
         # shape.addAttr(crinterface._crHandle, dt='string', h=True)
-
         name = newNode.rename('sim')
         CRSimulation.addAttrs(newNode, trans, shape)
         CRSimulation.addRManAttrs(newNode, trans, shape)
@@ -53,6 +53,9 @@ class CRSimulation(pm.nt.PolyCube):
         node.addAttr('dataregex', dt='string')
         node.addAttr('delim', dt='string')
         node.setAttr('delim', ',')
+        node.addAttr('py_script', dt='string')
+        node.addAttr('py_function', dt='string')
+
         # shape.addAttr('scriptname', dt='string')
         # shape.addAttr('scriptfunc', dt='string')
 
@@ -91,6 +94,13 @@ class CRSimulation(pm.nt.PolyCube):
         datasrc = CSVDataSource(resource=str(self.getAttr('dataregex')),
                 delim=str(self.getAttr('delim')),
                 fields=self.getFields())
+        script = self.getAttr('py_script')
+        func =self.getAttr('py_function')
+        robj.script = Scriptable(
+            scriptname= str(script) if script else "",
+            function= str(func) if func else "")
+        datasrc.script = script
+
         data = DataObject()
         data.addDataSource(datasrc)
         rsim.setData(data)
