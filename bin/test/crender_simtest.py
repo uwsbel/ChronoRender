@@ -2,6 +2,7 @@
 import sys, string
 import argparse
 
+import chronorender
 from chronorender import ChronoRender
 from chronorender.prog import Prog
 from chronorender.simulation import Simulation

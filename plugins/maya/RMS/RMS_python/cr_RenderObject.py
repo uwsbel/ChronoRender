@@ -37,8 +37,8 @@ class CRRenderObject(pm.nt.Mesh):
         node.addAttr('condition', dt='string')        
         node.setAttr('condition', 'id >= 0')
         node.addAttr('rib_archive', dt='string')
-        node.addAttr('py_script', dt='string')
-        node.addAttr('py_function', dt='string')
+        node.addAttr('render_script', dt='string')
+        node.addAttr('render_function', dt='string')
 
     def export(self, md):
         crinterface.createOutDirs()
@@ -70,18 +70,16 @@ class CRRenderObject(pm.nt.Mesh):
         self.setAttr('receiveShadows', False)
 
     def createCRObject(self):
-        print "CREATE"
-        print self.hasAttr('rib_archive')
         geo=Archive(filename=str(self.getAttr('rib_archive')))
 
         robj = RenderObject()
         robj.geometry = geo
         robj.condition = str(self.getAttr('condition'))
-        script = self.getAttr('py_script')
-        func =self.getAttr('py_function')
+        rscript = self.getAttr('render_script')
+        rfunc =self.getAttr('render_function')
         robj.script = Scriptable(
-            scriptname= str(script) if script else "",
-            function= str(func) if func else "")
+            file= str(rscript) if rscript else "",
+            function= str(rfunc) if rfunc else "")
 
         return robj
 

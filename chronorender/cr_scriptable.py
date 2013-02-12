@@ -39,12 +39,14 @@ class Scriptable(Renderable):
     def resolveAssets(self, assetman):
         try:
             self.scriptpath = assetman.find(self.scriptname)
+            self._parseModInformation()
+            self._resolvedAssetPaths = True
+            return [self.scriptpath]
         except Exception:
+            self._resolvedAssetPaths = False
             pass
-        self._parseModInformation()
-        self._resolvedAssetPaths = True
 
-        return [self.scriptpath]
+        return []
 
     def setAsset(self, assetname, obj):
         return

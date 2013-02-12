@@ -23,6 +23,7 @@ import chronorender.visualizer as visualizer
 import chronorender.cr_scriptable as scriptable
 
 class ChronoRender(ChronoRenderBase):
+
     def __init__(self):
         self._baseClasses = [attr.Attribute,
                         cam.Camera,

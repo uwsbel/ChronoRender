@@ -53,8 +53,8 @@ class CRSimulation(pm.nt.PolyCube):
         node.addAttr('dataregex', dt='string')
         node.addAttr('delim', dt='string')
         node.setAttr('delim', ',')
-        node.addAttr('py_script', dt='string')
-        node.addAttr('py_function', dt='string')
+        node.addAttr('conversion_script', dt='string')
+        node.addAttr('conversion_function', dt='string')
 
         # shape.addAttr('scriptname', dt='string')
         # shape.addAttr('scriptfunc', dt='string')
@@ -94,12 +94,12 @@ class CRSimulation(pm.nt.PolyCube):
         datasrc = CSVDataSource(resource=str(self.getAttr('dataregex')),
                 delim=str(self.getAttr('delim')),
                 fields=self.getFields())
-        script = self.getAttr('py_script')
-        func =self.getAttr('py_function')
-        robj.script = Scriptable(
-            scriptname= str(script) if script else "",
+        script = self.getAttr('conversion_script')
+        func =self.getAttr('conversion_function')
+        print "SCRIPT", script, "FUNC", func
+        datasrc.script = Scriptable(
+            file= str(script) if script else "",
             function= str(func) if func else "")
-        datasrc.script = script
 
         data = DataObject()
         data.addDataSource(datasrc)
