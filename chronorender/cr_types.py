@@ -27,6 +27,9 @@ class intlist(_crlist):
 class strlist(_crlist):
     _type = str
 
+class listlist(_crlist):
+    _type = list
+
 # TODO Incomplete
 class _crlist3(object):
     _type = list

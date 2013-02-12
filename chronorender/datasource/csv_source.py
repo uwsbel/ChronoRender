@@ -1,11 +1,9 @@
 import csv
 import codecs
 import cStringIO
-# import chronorender.data.ds.base
-# import chronorender.data.metadata
 from chronorender.data.ds.base import open_resource
 from chronorender.data.metadata import FieldList
-from datasource import DataSource
+from chronorender.datasource import DataSource
 
 class UTF8Recoder(object):
     """
@@ -33,10 +31,13 @@ def to_bool(value):
 storage_conversion = {
     "unknown": None,
     "string": None,
+    "str": None,
     "text": None,
     "integer": int,
+    "int": int,
     "float": float,
     "boolean": to_bool,
+    "bool": to_bool,
     "date": None
 }
 
@@ -159,20 +160,26 @@ class CSVDataSource(DataSource):
         self.reader_args = reader_args
         self.reader = None
         self.dialect = dialect
-        self.delim = delim
         
         self.close_file = False
         self.skip_rows = skip_rows
-        self.fieldlist = fields
+        self.delim = self.getVar('delim', reader_args)
+        self.fieldlist = self.getVar('fields', reader_args)
         self.fields = FieldList(self.fieldlist)
+        print self.getSerialized()
 
     def _initMembersDict(self):
         super(CSVDataSource, self)._initMembersDict()
-        self._members['fields'] = [FieldList, None]
+        self._members['fields'] = [str, [
+          ['id', 'integer'], ['pos_x', 'float'], ['pos_y','float'], ['pos_z', 'float'], 
+          ['euler_x', 'float'], ['euler_y', 'float'], ['euler_z', 'float']]
+          ]
+        self._members['delim'] = [str, ","]
 
     def updateMembers(self):
         super(CSVDataSource, self).updateMembers()
         self.setMember('fields', self.fieldlist)
+        self.setMember('delim', self.delim)
         
     def initialize(self):
         """Initialize CSV source stream:
