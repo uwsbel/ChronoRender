@@ -13,6 +13,7 @@ from chronorender.cr_scriptable import Scriptable
 
 class CRSimulation(pm.nt.PolyCube):
     _handle = "simulation"
+    _srcFactories = crinterface.Factories.getFactory(DataSource.getTypeName())
 
     @classmethod
     def list(cls, *args, **kwargs):
@@ -55,6 +56,7 @@ class CRSimulation(pm.nt.PolyCube):
         node.setAttr('delim', ',')
         node.addAttr('conversion_script', dt='string')
         node.addAttr('conversion_function', dt='string')
+        node.addAttr('src_type', dt='string')
 
         # shape.addAttr('scriptname', dt='string')
         # shape.addAttr('scriptfunc', dt='string')
@@ -106,9 +108,12 @@ class CRSimulation(pm.nt.PolyCube):
 
         return rsim
 
-    def setAttrFromFileDialog(self, attrname):
-        text = pm.fileDialog()
-        self.setAttr(attrname, text)
+    # GUI STUFF###############################################3333
+    def refreshGUI(self):
+        if hasattr(self, 'window') and self.window:
+            pm.deleteUI(self.window)
+            self.window = self.createGUI()
+            pm.showWindow(self.window)
 
     def createGUI(self):
         form_name = self.name()+"_form"
@@ -116,21 +121,26 @@ class CRSimulation(pm.nt.PolyCube):
         self.menu   = pm.menu(label='File', tearOff=True)
         self.layout = pm.scrollLayout(form_name)
 
+        self._createDataSource_GUI()
+        self._createRObj_GUI()
+        return self.window
+
+    def _createDataSource_GUI(self):
         pm.columnLayout( columnAttach=('left', 5), rowSpacing=10, columnWidth=250 )
-        factories = crinterface.Factories.getFactory(DataSource.getTypeName())
-        print factories
         pm.text( label='Data Source' ) 
-        pm.attrEnumOptionMenuGrp( l='Output Format', 
-                             at='defaultRenderGlobals.imageFormat',
-                             ei=[(0, 'GIF'),(1, 'SoftImage'), (2, 'RLA'),
-                                 (3, 'TIFF'), (4, 'TIFF16'), (5, 'SGI'),
-                                 (6, 'Alias PIX'), (7, 'Maya IFF'), (8, 'JPEG'),
-                                 (9, 'EPS'), (10, 'Maya16 IFF'), (11, 'Cineon'),
-                                 (12, 'Quantel'), (13, 'SGI16'), (19, 'Targa'),
-                                 (20, 'BMP') ] )
+
+        src_enums = []
+        classes = CRSimulation._srcFactories.getClasses()
+        for i in range(0, len(classes)):
+            en = (i, classes[i].getTypeName())
+            src_enums.append(en)
+        pm.attrEnumOptionMenuGrp( l='Format', 
+                             at=self.name() + '.src_type',
+                             ei=src_enums)
+
         # pm.rowColumnLayout( columnAlign=(5, 'left'), columnAttach=(5, 'left', 5), numberOfColumns=2 )
         pm.attrControlGrp(attribute=self.name()+'.dataregex')
-        pm.button(label="Find", w=128, c= lambda *args: self.setAttrFromFileDialog('dataregex'))
+        pm.button(label="Find", w=128, c= lambda *args: gui.setAttrFromFileDialog(self, 'dataregex'))
         pm.attrControlGrp(attribute=self.name()+'.delim' )
 
         pm.columnLayout( columnAttach=('left', 5), rowSpacing=10, columnWidth=250 )
@@ -144,20 +154,13 @@ class CRSimulation(pm.nt.PolyCube):
             # pm.textFieldButtonGrp(text=dataelem, editable=True, buttonLabel='Remove',
                     # buttonCommand = pm.Callback(self.removeDataElem, dataelem))
 
+    def _createRObj_GUI(self):
         pm.columnLayout( columnAttach=('left', 5), rowSpacing=10, columnWidth=250 )
         pm.text( label='Render Objects' )
         pm.button(label="Add Robj", w=64, c= lambda *args: self.addRObj())
         for robj in self.getAttrsByPrefix(CRSimulation._robjprefix):
             pm.textFieldButtonGrp(text=robj, editable=False, buttonLabel='Remove',
                     buttonCommand = pm.Callback(self.removeRObj, robj))
-
-        return self.window
-
-    def refreshGUI(self):
-        if hasattr(self, 'window') and self.window:
-            pm.deleteUI(self.window)
-            self.window = self.createGUI()
-            pm.showWindow(self.window)
 
     # ATTR STUFF###############################################3333
     def getAttrsByPrefix(self, prefix):
@@ -250,6 +253,9 @@ class CRSimulation(pm.nt.PolyCube):
             self.refreshGUI()
             return
 
+
+    ##init
+
     def init(self):
         self.setAttr('dataregex', 'data/*.dat')
         self._initDataElems()
@@ -284,12 +290,6 @@ def build():
     register()
     crsim = CRSimulation()
     crsim.init()
-
-    factories = crinterface.Factories.getFactory(DataSource.getTypeName())
-    mods = factories._classes
-    print factories
-    for mod in mods:
-        print mod.getTypeName()
 
     return crsim
 
