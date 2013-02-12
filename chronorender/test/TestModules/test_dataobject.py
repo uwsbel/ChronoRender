@@ -22,14 +22,24 @@ class DataObjectTestCase(unittest.TestCase):
             self.assertTrue(len(dobj._datasrcs) > 0)
             self.assertTrue(len(dobj._dataprocs) > 0)
 
-    def test_run(self):
-        return True
-
-    # load a data source with globbed files, checks that gets all data for
-    # each frame
     def test_multipleResources(self):
         cr = ChronoRender()
         meta = md.MetaData('./input/metadata/yaml/1.yaml')
+        args = meta.singleFromType(dat.DataObject)
+        dataobj = dat.DataObject(cr._factories, **args)
+        dataobj._resolveSources()
+
+        poses = []
+        for i in range(0, 3):
+            for row in dataobj.getData(i):
+                poses.append(row['pos_x'])
+        self.assertTrue(0.0 in poses)
+        self.assertTrue(1.0 in poses)
+        self.assertTrue(2.0 in poses)
+
+    def test_datasrcScript(self):
+        cr = ChronoRender()
+        meta = md.MetaData('./input/metadata/yaml/datasrc_script.yml')
         args = meta.singleFromType(dat.DataObject)
         dataobj = dat.DataObject(cr._factories, **args)
         dataobj._resolveSources()

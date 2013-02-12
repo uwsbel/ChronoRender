@@ -1,7 +1,8 @@
 from chronorender.data.ds.base import DataSource
 from chronorender.cr_scriptable import Scriptable
-import chronorender.cr_object as cr_object
+from chronorender.cr_object import Object
 import glob, os
+import pdb
 # Should implement:
 # * fields
 # * prepare()
@@ -14,7 +15,7 @@ class DataSourceException(Exception):
     def __str__(self):
         return repr(self.value)
 
-class DataSource(DataSource, cr_object.Object):
+class DataSource(Object, DataSource):
     @staticmethod
     def getInstanceQualifier():
         return "type"
@@ -27,6 +28,7 @@ class DataSource(DataSource, cr_object.Object):
         return DataSource.getTypeName()
 
     def __init__(self, name="default", resource="", *args, **kwargs):
+        # super(DataSource,self).__init__(*args, **kwargs)
         super(DataSource,self).__init__(*args, **kwargs)
 
         self.name = self.getMember('name')
@@ -49,8 +51,8 @@ class DataSource(DataSource, cr_object.Object):
 
     def resolveAssets(self, assetman):
         out = []
-        # if self.script:
-            # out.extend(self.script.resolveAssets(assetman))
+        if self.script:
+            out.extend(self.script.resolveAssets(assetman))
         return out
 
     def getInputResources(self):

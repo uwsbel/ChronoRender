@@ -83,9 +83,7 @@ class DataObject(Object):
             srcnumber = self._currindex
             self.incrDataSourceCounter()
 
-        if srcnumber >= self._maxindex:
-            return None
-
+        if srcnumber >= self._maxindex: return None
 
         out = self._run(srcnumber)
         if selectcondition != "":
@@ -94,6 +92,11 @@ class DataObject(Object):
             procs = []
             procs.append(dp.SelectNode(condition=selectcondition))
             out = DataObject._doProcs(src, procs)
+
+        datasrc = self._getResource(0, srcnumber)
+        # if datasrc.script:
+            # print "SCRIPT", datasrc
+
         return out
 
     def incrDataSourceCounter(self):

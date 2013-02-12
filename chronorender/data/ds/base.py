@@ -128,7 +128,7 @@ class DataSource(DataStream):
 
     def __init__(self, *args, **kwargs):
         """Abstrac class for data sources."""
-        super(DataSource, self).__init__()
+        super(DataSource, self).__init__(*args, **kwargs)
 
     def rows(self):
         """Return iterable object with tuples. This is one of two methods for reading from
@@ -217,7 +217,7 @@ class DataTarget(DataStream):
     """
     def __init__(self, *args, **kwargs):
         """Abstrac class for data targets."""
-        super(DataTarget, self).__init__()
+        super(DataTarget, self).__init__(*args, **kwargs)
 
     def append(self, object):
         """Append an object into dataset. Object can be a tuple, array or a dict object. If tuple
