@@ -21,8 +21,9 @@ class PluginManager():
 
     def _initPlugins(self, inyaml):
         f = open(inyaml)
-        self._plugins.update(yaml.safe_load(f))
+        data = yaml.safe_load(f)
         f.close()
+        self._plugins.update(data)
 
     def _findDefaultConfigFile(self):
         self._configpath = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))

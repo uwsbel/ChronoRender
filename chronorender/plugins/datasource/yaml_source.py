@@ -10,6 +10,9 @@ except:
     yaml = MissingPackage("PyYAML", "YAML directory data source/target", "http://pyyaml.org/")
 
 class YamlDirectoryDataSource(DataSource):
+    @staticmethod
+    def getTypeName():
+        return "yamldir"
     """docstring for ClassName
     """
     def __init__(self, path="", extension="yml", expand=False, filename_field=None):

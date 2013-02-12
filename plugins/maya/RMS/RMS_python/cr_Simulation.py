@@ -6,7 +6,7 @@ import cr_interface as crinterface
 import cr_RenderObject as crrobj
 
 from chronorender.data import DataObject
-from chronorender.datasource import CSVDataSource
+from chronorender.datasource import DataSource, CSVDataSource
 from chronorender.metadata import MDReaderFactory
 from chronorender.simulation import Simulation
 from chronorender.cr_scriptable import Scriptable
@@ -96,7 +96,6 @@ class CRSimulation(pm.nt.PolyCube):
                 fields=self.getFields())
         script = self.getAttr('conversion_script')
         func =self.getAttr('conversion_function')
-        print "SCRIPT", script, "FUNC", func
         datasrc.script = Scriptable(
             file= str(script) if script else "",
             function= str(func) if func else "")
@@ -118,7 +117,17 @@ class CRSimulation(pm.nt.PolyCube):
         self.layout = pm.scrollLayout(form_name)
 
         pm.columnLayout( columnAttach=('left', 5), rowSpacing=10, columnWidth=250 )
-        pm.text( label='Data Source' )
+        factories = crinterface.Factories.getFactory(DataSource.getTypeName())
+        print factories
+        pm.text( label='Data Source' ) 
+        pm.attrEnumOptionMenuGrp( l='Output Format', 
+                             at='defaultRenderGlobals.imageFormat',
+                             ei=[(0, 'GIF'),(1, 'SoftImage'), (2, 'RLA'),
+                                 (3, 'TIFF'), (4, 'TIFF16'), (5, 'SGI'),
+                                 (6, 'Alias PIX'), (7, 'Maya IFF'), (8, 'JPEG'),
+                                 (9, 'EPS'), (10, 'Maya16 IFF'), (11, 'Cineon'),
+                                 (12, 'Quantel'), (13, 'SGI16'), (19, 'Targa'),
+                                 (20, 'BMP') ] )
         # pm.rowColumnLayout( columnAlign=(5, 'left'), columnAttach=(5, 'left', 5), numberOfColumns=2 )
         pm.attrControlGrp(attribute=self.name()+'.dataregex')
         pm.button(label="Find", w=128, c= lambda *args: self.setAttrFromFileDialog('dataregex'))
@@ -275,6 +284,12 @@ def build():
     register()
     crsim = CRSimulation()
     crsim.init()
+
+    factories = crinterface.Factories.getFactory(DataSource.getTypeName())
+    mods = factories._classes
+    print factories
+    for mod in mods:
+        print mod.getTypeName()
 
     return crsim
 

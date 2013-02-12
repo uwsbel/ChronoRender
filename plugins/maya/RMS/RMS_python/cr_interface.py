@@ -1,18 +1,22 @@
 import os, sys
 import pymel.all as pm
 from MayaProjUtils import MayaProjUtils
+
+from chronorender import ChronoRender
 from chronorender.cr_assetinfo import CRAssetInfo
 from chronorender.metadata import MDReaderFactory
 
 _crHandle = "chronorender"
 _simHandle = "simulation"
 _bRif = 0
-utils = MayaProjUtils()
-simRenderScript = 'cr_SimulationRI_Win' if sys.platform == 'win32' else 'cr_SimulationRI_Linux'
+
+Utils = MayaProjUtils()
+SimRenderScript = 'cr_SimulationRI_Win' if sys.platform == 'win32' else 'cr_SimulationRI_Linux'
+Factories = ChronoRender().getFactories()
 
 #==========================CMDS============================
 def export():
-    os.chdir(utils.getProjPath())
+    os.chdir(Utils.getProjPath())
 
     createOutDirs()
     path = getOutPathFor('root')
@@ -84,7 +88,7 @@ def batchRI(platform):
     pm.mel.eval('batchRenderRI("", 1)')
 
     for sim in sims:
-        sim.setPreShapeScript(simRenderScript)
+        sim.setPreShapeScript(SimRenderScript)
 
 def source():
   return
@@ -122,11 +126,11 @@ def addRootHandle(node):
     node.addAttr(_crHandle, dt='string', h=True)
 
 def createOutDirs():
-    assetman = CRAssetInfo( outpath=os.path.join(utils.getProjPath(), 'renderman'), jobname=utils.getSceneName(), relative=False)
+    assetman = CRAssetInfo( outpath=os.path.join(Utils.getProjPath(), 'renderman'), jobname=Utils.getSceneName(), relative=False)
     assetman.createOutDirs()
 
 def getOutPathFor(what):
-    assetman = CRAssetInfo( outpath=os.path.join(utils.getProjPath(), 'renderman'), jobname=utils.getSceneName(), relative=False)
+    assetman = CRAssetInfo( outpath=os.path.join(Utils.getProjPath(), 'renderman'), jobname=Utils.getSceneName(), relative=False)
     return assetman.getOutPathFor(what)
 
 def getMesh(node):
@@ -158,6 +162,6 @@ def _getNodesByType(nodes, nodetype):
     return expnodes
 
 # set working dir to project path to handle relative paths
-os.chdir(utils.getProjPath())
+os.chdir(Utils.getProjPath())
 # disable rifs so can render without RMS
 toggleRif()

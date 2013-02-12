@@ -2,6 +2,8 @@ import unittest
 
 from chronorender.factory import Factory
 import chronorender.plugins as pm
+from chronorender import ChronoRender
+from chronorender.datasource import DataSource
 
 class FactoryTestCase(unittest.TestCase):
     def setUp(self):

@@ -6,6 +6,7 @@ class Factory():
         return "factory"
 
     def __init__(self, objtype):
+        self._classes               = []
         self._objectconstructors    = {}
         self._modules               = []
         self._objtype               = objtype
@@ -13,13 +14,15 @@ class Factory():
     def _loadObjects(self):
         for mod in self._modules:
             clsmembers = inspect.getmembers(sys.modules[mod.__name__], inspect.isclass)
-            newclasses = []
+            modclasses = []
             for cls in clsmembers:
                 if cls[1].__module__ == mod.__name__:
-                    newclasses.append(cls[1])
+                    modclasses.append(cls[1])
 
-            for cls in newclasses:
+            for cls in modclasses:
                 if hasattr(cls, 'getTypeName'):
+                    if cls not in self._classes:
+                        self._classes.append(cls)
                     self._objectconstructors[cls.getTypeName()] = mod.build
 
 
@@ -28,6 +31,12 @@ class Factory():
 
     def getFactoryType(self):
         return self._objtype
+
+    def getClasses(self):
+        return self._classes
+
+    def getModules(self):
+        return self._modules
 
     def setModules(self, modules):
         if isinstance(modules, list):
