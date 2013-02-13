@@ -1,3 +1,4 @@
+import os
 import chronorender.cr_types as cr_types
 from chronorender.cr_assetinfo import CRAssetInfo
 from MayaProjUtils import MayaProjUtils

@@ -1,3 +1,4 @@
+import ast
 import pymel.all as pm
 import cr_Utils
 import cr_GUI as gui
@@ -54,7 +55,12 @@ class CRObject(object):
                 val = self._getInstanceDict(val)
                 out[mem_name] = val
                 continue
-            out[mem_name] = typ(self.node.getAttr(attrname))
+            if isinstance(val, list):
+                out[mem_name] = ast.literal_eval(self.node.getAttr(attrname))
+            else:
+                if typ == cr_types.url:
+                    typ = str
+                out[mem_name] = typ(self.node.getAttr(attrname))
         return out
 
     # add to attr dict {typname: {obj_name : [], obj2_name : []}}

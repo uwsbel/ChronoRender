@@ -1,8 +1,11 @@
+
 import os, sys
+print "OS", os
+print os.path.exists('/')
 import pymel.all as pm
+
 import cr_Utils
 from MayaProjUtils import MayaProjUtils
-
 from chronorender import ChronoRender
 from chronorender.metadata import MDReaderFactory
 from cr_Simulation import CRSimulation
@@ -15,20 +18,21 @@ Utils = MayaProjUtils()
 SimRenderScript = 'cr_SimulationRI_Win' if sys.platform == 'win32' else 'cr_SimulationRI_Linux'
 Factories = ChronoRender().getFactories()
 
-objs = []
+gObjs = []
 
 #==========================CMDS============================
 def build():
     updateNodes()
     sim = CRSimulation(Factories)
-    objs.append(sim)
+    gObjs.append(sim)
 
 def updateNodes():
-    global objs
-    objs = [obj for obj in objs if obj.node]
+    global gObjs
+    gObjs = [obj for obj in gObjs if obj.node]
 
 def export():
     updateNodes()
+    global gObjs
     os.chdir(Utils.getProjPath())
 
     cr_Utils.createOutDirs()
@@ -36,15 +40,12 @@ def export():
     path = os.path.join(path, 'sim.yml')
     if os.path.exists(path):
         os.remove(path)
+
     md = MDReaderFactory.build(path)
 
     selected = sel()
     for obj in selected:
         obj.export(md)
-
-    # nodes = _getAndVerifyByAttr('export')
-    # for node in nodes:
-        # node.export(md)
 
     md.writeToDisk()
     del md
@@ -67,7 +68,7 @@ def sel(addt_attr=None):
 
     out = []
     selected = pm.selected()
-    for obj in objs:
+    for obj in gObjs:
         if obj.node not in selected:
             continue
         if obj.node.hasAttr(addt_attr):

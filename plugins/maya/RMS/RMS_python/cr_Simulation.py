@@ -297,6 +297,7 @@ class CRSimulation(CRObject):
         super(CRSimulation, self).__init__(factories)
         self.node = CRSimulation_Node()
         self.datasrcs = []
+        self.sim_factories = self.factories.getFactory(Simulation.getTypeName())
         self.src_factories = self.factories.getFactory(DataSource.getTypeName())
         self.numsrcs = 0
         self.robjs = []
@@ -306,14 +307,11 @@ class CRSimulation(CRObject):
         pm.select(self.node)
 
     def export(self, md):
-        self.node.export(md)
-
         attrdict = self.attrs2Dict()
-        sim = self.src_factories.build(**attrdict)
-        print "SIM", sim
-        # sim = self.createCRObject()
-        # md.addElement(Simulation.getTypeName(), sim.getSerialized())
-        # del sim
+        simdict = {Simulation.getTypeName() : attrdict}
+        sim = self.sim_factories.build(Simulation.getTypeName(), **attrdict)
+        md.addElement(Simulation.getTypeName(), sim.getSerialized())
+        del sim
 
     def addDataSource(self):
         self.numsrcs += 1
@@ -328,11 +326,9 @@ class CRSimulation(CRObject):
         self.refreshGUI()
 
         attrdict = self.attrs2Dict()
-        print "ATTR", attrdict
         srcs = attrdict[DataSource.getTypeName()]
         for src in srcs:
             sim = self.src_factories.buildFromKwargs(**src)
-            print "SRC", sim
             del sim
 
     def addRenderObject(self):
