@@ -1,6 +1,7 @@
 from chronorender.data.ds.base import DataSource
 from chronorender.cr_scriptable import Scriptable
 from chronorender.cr_object import Object
+import chronorender.cr_types as cr_types
 import glob, os
 import pdb
 # Should implement:
@@ -27,19 +28,18 @@ class DataSource(Object, DataSource):
     def getBaseName(self):
         return DataSource.getTypeName()
 
-    def __init__(self, name="default", resource="", *args, **kwargs):
-        # super(DataSource,self).__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
         super(DataSource,self).__init__(*args, **kwargs)
 
-        self.name = self.getMember('name')
-        self.resource = self.getMember('resource')
+        self.name = self.getVar('name', kwargs)
+        self.resource = self.getVar('resource', kwargs)
         self.script     = self.getMember(Scriptable.getTypeName())
 
     def _initMembersDict(self):
         super(DataSource, self)._initMembersDict()
 
-        self._members['name']     = [str, '']
-        self._members['resource'] = [str, '']
+        self._members['name']     = [str, 'default']
+        self._members['resource'] = [cr_types.url, '']
         self._members[Scriptable.getTypeName()] = [Scriptable, None]
 
     def updateMembers(self):

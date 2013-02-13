@@ -3,8 +3,10 @@ import pymel.all as pm
 from MayaProjUtils import MayaProjUtils
 
 from chronorender import ChronoRender
+import chronorender.cr_types as cr_types
 from chronorender.cr_assetinfo import CRAssetInfo
 from chronorender.metadata import MDReaderFactory
+from cr_Simulation import CRSimulation
 
 _crHandle = "chronorender"
 _simHandle = "simulation"
@@ -14,8 +16,20 @@ Utils = MayaProjUtils()
 SimRenderScript = 'cr_SimulationRI_Win' if sys.platform == 'win32' else 'cr_SimulationRI_Linux'
 Factories = ChronoRender().getFactories()
 
+objs = []
+
 #==========================CMDS============================
+def build():
+    updateNodes()
+    sim = CRSimulation()
+    objs.append(sim)
+
+def updateNodes():
+    global objs
+    objs = [obj for obj in objs if obj.node]
+
 def export():
+    updateNodes()
     os.chdir(Utils.getProjPath())
 
     createOutDirs()
@@ -25,18 +39,36 @@ def export():
         os.remove(path)
     md = MDReaderFactory.build(path)
 
-    nodes = _getAndVerifyByAttr('export')
-    for node in nodes:
-        node.export(md)
+    selected = sel()
+    for obj in selected:
+        obj.export(md)
+
+    # nodes = _getAndVerifyByAttr('export')
+    # for node in nodes:
+        # node.export(md)
 
     md.writeToDisk()
     del md
 
 def edit():
+    updateNodes()
     nodes = _getAndVerifyByAttr('createGUI')
     for node in nodes:
         window = node.createGUI()
         pm.showWindow(window)
+
+def sel(addt_attr=None):
+    if not addt_attr:
+        addt_attr = _crHandle
+
+    out = []
+    selected = pm.selected()
+    for obj in objs:
+        if obj.node not in selected:
+            continue
+        if obj.node.hasAttr(addt_attr):
+            out.append(obj)
+    return out
 
 def toggleRif():
     global _bRif
@@ -94,6 +126,16 @@ def source():
   return
 
 #==========================UTILS============================
+
+def crType2Maya(typ):
+    if typ == str or typ == cr_types.url:
+        return 'string'
+    elif typ == float:
+        return 'float'
+    elif typ == bool:
+        return 'bool'
+    elif typ == list:
+        return
 
 def getSelected(addt_attr=None):
     if not addt_attr:

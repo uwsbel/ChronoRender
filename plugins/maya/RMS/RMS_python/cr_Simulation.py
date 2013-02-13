@@ -2,7 +2,8 @@ import os, copy, string
 import pymel.all as pm
 
 import cr_GUI as gui
-import cr_interface as crinterface
+from cr_Object import CRObject
+# import cr_interface as crinterface
 import cr_RenderObject as crrobj
 
 from chronorender.data import DataObject
@@ -11,9 +12,10 @@ from chronorender.metadata import MDReaderFactory
 from chronorender.simulation import Simulation
 from chronorender.cr_scriptable import Scriptable
 
-class CRSimulation(pm.nt.PolyCube):
+class CRSimulation_Node(pm.nt.PolyCube):
     _handle = "simulation"
-    _srcFactories = crinterface.Factories.getFactory(DataSource.getTypeName())
+    _dataSrcTypeAttr = "src_type"
+    # _srcFactories = crinterface.Factories.getFactory(DataSource.getTypeName())
 
     @classmethod
     def list(cls, *args, **kwargs):
@@ -24,7 +26,7 @@ class CRSimulation(pm.nt.PolyCube):
     def _isVirtual(cls, obj, name):
         fn = pm.api.MFnDependencyNode(obj)
         try:
-            if fn.hasAttribute(crinterface._simHandle):
+            if fn.hasAttribute('simulation'):
                 return True
         except:
             pass
@@ -33,21 +35,23 @@ class CRSimulation(pm.nt.PolyCube):
     @classmethod
     def _preCreateVirtual(cls, **kwargs ):
         if 'name' not in kwargs and 'n' not in kwargs:
-            kwargs['name'] = crinterface._simHandle
+            # kwargs['name'] = crinterface._simHandle
+            kwargs['name'] = 'simulation'
         return kwargs
 
     @classmethod
     def _postCreateVirtual(cls, newNode ):
-        crinterface.addRootHandle(newNode)
-        newNode.addAttr(crinterface._simHandle, dt='string', h=True)
+        # crinterface.addRootHandle(newNode)
+        newNode.addAttr('chronorender', dt='string', h=True)
+        newNode.addAttr('simulation', dt='string', h=True)
 
         trans = newNode.listConnections()[0]
         shape = trans.getShape()
         # trans.addAttr(crinterface._crHandle, dt='string', h=True)
         # shape.addAttr(crinterface._crHandle, dt='string', h=True)
         name = newNode.rename('sim')
-        CRSimulation.addAttrs(newNode, trans, shape)
-        CRSimulation.addRManAttrs(newNode, trans, shape)
+        CRSimulation_Node.addAttrs(newNode, trans, shape)
+        CRSimulation_Node.addRManAttrs(newNode, trans, shape)
 
     @classmethod
     def addAttrs(cls, node, trans, shape):
@@ -56,7 +60,7 @@ class CRSimulation(pm.nt.PolyCube):
         node.setAttr('delim', ',')
         node.addAttr('conversion_script', dt='string')
         node.addAttr('conversion_function', dt='string')
-        node.addAttr('src_type', dt='string')
+        node.addAttr(CRSimulation_Node._dataSrcTypeAttr, dt='string')
 
         # shape.addAttr('scriptname', dt='string')
         # shape.addAttr('scriptfunc', dt='string')
@@ -88,7 +92,7 @@ class CRSimulation(pm.nt.PolyCube):
     def createCRObject(self):
         rsim = Simulation()
 
-        nodes = self.getAttrs(CRSimulation._robjprefix)
+        nodes = self.getAttrs(CRSimulation_Node._robjprefix)
         for node in nodes:
             robj = node.createCRObject()
             rsim.addRenderObject(robj)
@@ -129,36 +133,31 @@ class CRSimulation(pm.nt.PolyCube):
         pm.columnLayout( columnAttach=('left', 5), rowSpacing=10, columnWidth=250 )
         pm.text( label='Data Source' ) 
 
-        src_enums = []
-        classes = CRSimulation._srcFactories.getClasses()
-        for i in range(0, len(classes)):
-            en = (i, classes[i].getTypeName())
-            src_enums.append(en)
         pm.attrEnumOptionMenuGrp( l='Format', 
-                             at=self.name() + '.src_type',
-                             ei=src_enums)
+                             at=self.name() +
+                             '.'+CRSimulation_Node._dataSrcTypeAttr,
+                             ei=self.src_enums)
 
-        # pm.rowColumnLayout( columnAlign=(5, 'left'), columnAttach=(5, 'left', 5), numberOfColumns=2 )
-        pm.attrControlGrp(attribute=self.name()+'.dataregex')
-        pm.button(label="Find", w=128, c= lambda *args: gui.setAttrFromFileDialog(self, 'dataregex'))
-        pm.attrControlGrp(attribute=self.name()+'.delim' )
+        pm.button(label="Add DataSource", w=128, c= lambda *args: self.addDataSource())
 
-        pm.columnLayout( columnAttach=('left', 5), rowSpacing=10, columnWidth=250 )
-        pm.text( label='Data Fields' )
-        pm.button(label="Add DataElement", w=128, c= lambda *args: self.addDataElem())
-        pm.rowColumnLayout( columnAttach=(5, 'left', 5), numberOfColumns=2, rowSpacing=(10,10), columnWidth=(250,124))
-        elems = self.getAttrsByPrefix(CRSimulation._dataelemprefix)
-        for dataelem in self.getAttrsByPrefix(CRSimulation._dataelemprefix):
-            pm.attrControlGrp(attribute=self.name()+'.'+dataelem)
-            pm.button(label="Remove", w=64, c=pm.Callback(self.removeDataElem, dataelem))
-            # pm.textFieldButtonGrp(text=dataelem, editable=True, buttonLabel='Remove',
-                    # buttonCommand = pm.Callback(self.removeDataElem, dataelem))
+        # pm.attrControlGrp(attribute=self.name()+'.dataregex')
+        # pm.button(label="Find", w=128, c= lambda *args: gui.setAttrFromFileDialog(self, 'dataregex'))
+        # pm.attrControlGrp(attribute=self.name()+'.delim' )
+
+        # pm.columnLayout( columnAttach=('left', 5), rowSpacing=10, columnWidth=250 )
+        # pm.text( label='Data Fields' )
+        # pm.button(label="Add DataElement", w=128, c= lambda *args: self.addDataElem())
+        # pm.rowColumnLayout( columnAttach=(5, 'left', 5), numberOfColumns=2, rowSpacing=(10,10), columnWidth=(250,124))
+        # elems = self.getAttrsByPrefix(CRSimulation_Node._dataelemprefix)
+        # for dataelem in self.getAttrsByPrefix(CRSimulation_Node._dataelemprefix):
+            # pm.attrControlGrp(attribute=self.name()+'.'+dataelem)
+            # pm.button(label="Remove", w=64, c=pm.Callback(self.removeDataElem, dataelem))
 
     def _createRObj_GUI(self):
         pm.columnLayout( columnAttach=('left', 5), rowSpacing=10, columnWidth=250 )
         pm.text( label='Render Objects' )
         pm.button(label="Add Robj", w=64, c= lambda *args: self.addRObj())
-        for robj in self.getAttrsByPrefix(CRSimulation._robjprefix):
+        for robj in self.getAttrsByPrefix(CRSimulation_Node._robjprefix):
             pm.textFieldButtonGrp(text=robj, editable=False, buttonLabel='Remove',
                     buttonCommand = pm.Callback(self.removeRObj, robj))
 
@@ -191,18 +190,22 @@ class CRSimulation(pm.nt.PolyCube):
     _numdataelems = 0
     _dataelemprefix = "dataelem_"
 
+    def addDataSource(self):
+        srctype = self.getAttr(CRSimulation_Node._dataSrcTypeAttr)
+        print "TYPE", srctype
+
     def addDataElem(self):
-        elemname = CRSimulation._dataelemprefix +str(CRSimulation._numdataelems)
-        CRSimulation._numdataelems += 1
+        elemname = CRSimulation_Node._dataelemprefix +str(CRSimulation_Node._numdataelems)
+        CRSimulation_Node._numdataelems += 1
 
         self.addAttr(elemname, dt='string')
-        valstring = 'val_'+str(CRSimulation._numdataelems)+',float'
+        valstring = 'val_'+str(CRSimulation_Node._numdataelems)+',float'
         self.setAttr(elemname, valstring)
 
         self.refreshGUI()
 
     def removeDataElem(self, name):
-        elems = self.getAttrsByPrefix(CRSimulation._dataelemprefix)
+        elems = self.getAttrsByPrefix(CRSimulation_Node._dataelemprefix)
 
         for elem in elems:
             if name != elem: continue
@@ -213,7 +216,7 @@ class CRSimulation(pm.nt.PolyCube):
         self.refreshGUI()
 
     def getDataElems(self):
-        return self.getAttrsByPrefix(CRSimulation._dataelemprefix)
+        return self.getAttrsByPrefix(CRSimulation_Node._dataelemprefix)
 
     def getFields(self):
         attrs = self.getDataElems()
@@ -229,8 +232,8 @@ class CRSimulation(pm.nt.PolyCube):
     _robjprefix = "robj_"
 
     def addRObj(self):
-        objname = CRSimulation._robjprefix + str(CRSimulation._numrobjs)
-        CRSimulation._numrobjs += 1
+        objname = CRSimulation_Node._robjprefix + str(CRSimulation_Node._numrobjs)
+        CRSimulation_Node._numrobjs += 1
 
         robj = crrobj.build()
         pm.parent(robj.name(), self.getShape().name())
@@ -240,7 +243,7 @@ class CRSimulation(pm.nt.PolyCube):
         self.refreshGUI()
 
     def removeRObj(self, name):
-        robjs = self.getAttrsByPrefix(CRSimulation._robjprefix)
+        robjs = self.getAttrsByPrefix(CRSimulation_Node._robjprefix)
         for robj in robjs:
             if name != robj:
                 continue
@@ -259,6 +262,15 @@ class CRSimulation(pm.nt.PolyCube):
     def init(self):
         self.setAttr('dataregex', 'data/*.dat')
         self._initDataElems()
+
+        self.datasrcs = []
+        # self.src_enums = []
+        self.addAttr('src_enums', dt=list)
+        # classes = CRSimulation_Node._srcFactories.getClasses()
+        # for i in range(0, len(classes)):
+            # en = (i, classes[i].getTypeName())
+            # self.src_enums.append(en)
+        # print "ENUMS", self.src_enums
 
     def _initDataElems(self):
         numelems = 7
@@ -283,12 +295,25 @@ class CRSimulation(pm.nt.PolyCube):
             elif i == 6:
                 self.setAttr(elem, 'euler_z,float')
 
+pm.factories.registerVirtualClass(CRSimulation_Node, nameRequired=False)
+
+class CRSimulation(CRObject):
+    def __init__(self):
+        super(CRSimulation, self).__init__()
+        self.node = CRSimulation_Node()
+
+    def export(self, md):
+        self.node.export(md)
+
+    def createGUI(self):
+        self.node.createGUI()
+
 def register():
-    pm.factories.registerVirtualClass(CRSimulation, nameRequired=False)
+    pm.factories.registerVirtualClass(CRSimulation_Node, nameRequired=False)
 
 def build():
     register()
-    crsim = CRSimulation()
+    crsim = CRSimulation_Node()
     crsim.init()
 
     return crsim
@@ -297,7 +322,7 @@ def main():
     register()
     build()
 
-def export():
-    nodes = crinterface.getSelected(crinterface._simHandle)
-    for node in nodes:
-        node.export()
+# def export():
+    # nodes = crinterface.getSelected(crinterface._simHandle)
+    # for node in nodes:
+        # node.export()

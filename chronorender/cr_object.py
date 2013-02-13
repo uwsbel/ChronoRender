@@ -123,11 +123,9 @@ class Object(object):
         return out
 
     def getSerialized(self):
-        self.updateMembers()
+        members = self.getMembers()
         objdict = {}
-        for key, val in self._members.iteritems():
-            if key == 'recurse' or key == 'basename':
-                continue
+        for key, val in members.iteritems():
             if key == 'type' and val[1] == self.getBaseName():
                 continue
             member = Object._evalSerialParam(val[1])
@@ -140,13 +138,31 @@ class Object(object):
         # return {self.getBaseName() : objdict}
         return objdict
 
+    def getMembers(self):
+        self.updateMembers()
+        out = {}
+        for key, val in self._members.iteritems():
+            if not Object._isPrivateMember(key):
+                out[key] = val
+        return out
+
+    @staticmethod
+    def _isPrivateMember(name):
+        if name == 'recurse' or name == 'basename':
+            return True
+        return False
+
     def getMember(self, name):
         if name in self._members:
             return self._members[name][1]
         elif name in self._params:
             return self._params[name]
-        else:
-            raise ObjectException('no member ' + name + ' in ' + str(type(self)))
+        raise ObjectException('no member ' + name + ' in ' + str(type(self)))
+
+    def getMemberType(self, name):
+        if name in self._members:
+            return self._members[name][0]
+        raise ObjectException('no member ' + name + ' in ' + str(type(self)))
 
     def setMember(self, name, val):
         if name in self._members:

@@ -126,10 +126,10 @@ class CSVDataSource(DataSource):
     def getTypeName():
         return "csv"
 
-    def __init__(self, resource='', read_header=False, dialect=None, encoding=None,
+    def __init__(self, read_header=False, dialect=None, encoding=None,
                  detect_header=False, sample_size=200, skip_rows=None,
-                 empty_as_null=True, fields=None, delim=',', **reader_args):
-        super(CSVDataSource, self).__init__(fields=fields, **reader_args)
+                 empty_as_null=True, **reader_args):
+        super(CSVDataSource, self).__init__(**reader_args)
         """Creates a CSV data source stream.
         
         :Attributes:
@@ -156,7 +156,6 @@ class CSVDataSource(DataSource):
         self.empty_as_null = empty_as_null
         
         self.sample_size = sample_size
-        self.resource = resource
         self.reader_args = reader_args
         self.reader = None
         self.dialect = dialect

@@ -53,3 +53,10 @@ class _crlist3(object):
 
 class floatlist3(_crlist3):
     _type = float
+
+# typedefs
+class url(str):
+    pass
+
+class directory(str):
+    pass
