@@ -1,6 +1,6 @@
 import os
 import pymel.all as pm
-import cr_interface as crinterface
+import cr_Utils
 from chronorender.geometry import Archive
 from chronorender.renderobject import RenderObject
 from chronorender.cr_scriptable import Scriptable
@@ -26,7 +26,7 @@ class CRRenderObject(pm.nt.Mesh):
 
     @classmethod
     def _postCreateVirtual(cls, newNode ):
-        crinterface.addRootHandle(newNode)
+        newNode.addAttr('chronorender', dt='string', h=True)
         newNode.addAttr(CRRenderObject._handle, dt='string', h=True)
         CRRenderObject.addAttrs(newNode)
 
@@ -41,8 +41,6 @@ class CRRenderObject(pm.nt.Mesh):
         node.addAttr('render_function', dt='string')
 
     def export(self, md):
-        crinterface.createOutDirs()
-
         trans = self.getParent()
         x, y, z = trans.getAttr('translateX'), trans.getAttr('translateY'), trans.getAttr('translateZ')
         trans.setAttr('translateX', 0.0)
@@ -52,7 +50,7 @@ class CRRenderObject(pm.nt.Mesh):
         self.setAttr('castsShadows', True)
         self.setAttr('receiveShadows', True)
 
-        path = crinterface.getOutPathFor('archive')
+        path = cr_Utils.getOutPathFor('archive')
         path = os.path.join(path, self.name())
         pm.select(self)
 
@@ -90,9 +88,9 @@ class CRRenderObject(pm.nt.Mesh):
 
     def attachMesh(self, mesh):
         # delete current connection
-        currmesh = crinterface.getMesh(self)
-        if currmesh:
-            pm.delete(currmesh.name())
+        # currmesh = crinterface.getMesh(self)
+        # if currmesh:
+            # pm.delete(currmesh.name())
 
         pm.disconnectAttr(self.name() + '.inMesh')
         pm.connectAttr(mesh.name()+'.outMesh', self.name()+'.inMesh')

@@ -18,6 +18,7 @@ class ESDataSource(DataSource):
     """
     def __init__(self, document_type='', database=None, host=None, port=None,
                  expand=False, **elasticsearch_args):
+        super(ESDataSource, self).__init__(**elasticsearch_args)
         """Creates a ElasticSearch data source stream.
 
         :Attributes:
@@ -28,14 +29,28 @@ class ESDataSource(DataSource):
             * expand: expand dictionary values and treat children as top-level keys with dot '.'
                 separated key path to the child..
         """
-        self.document_type = document_type
-        self.database_name = database
-        self.host = host
-        self.port = port
+        self.document_type = self.getVar('document_type')
+        self.database_name = self.getVar('database')
+        self.host = self.getVar('host')
+        self.port = self.getVar('port')
         self.elasticsearch_args = elasticsearch_args
         self.expand = expand
         self.connection = None
         self._fields = None
+
+    def _initMembersDict(self):
+        super(ESDataSource, self)._initMembersDict()
+        self._members['document_type'] = [str, ""]
+        self._members['database'] = [str ""]
+        self._members['host'] = [str, None]
+        self._members['port'] = [str, None]
+
+    def updateMembers(self):
+        super(ESDataSource, self).updateMembers()
+        self.setMember('document_type', self.document_type)
+        self.setMember('database_name', self.database_name)
+        self.setMember('port', self.port)
+        self.setMember('host', self.host)
 
     def initialize(self):
         """Initialize ElasticSearch source stream:

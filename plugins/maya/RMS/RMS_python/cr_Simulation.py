@@ -7,14 +7,16 @@ from cr_Object import CRObject
 import cr_RenderObject as crrobj
 
 from chronorender.data import DataObject
-from chronorender.datasource import DataSource, CSVDataSource
+from chronorender.datasource import DataSource
 from chronorender.metadata import MDReaderFactory
+from chronorender.renderobject import RenderObject
 from chronorender.simulation import Simulation
 from chronorender.cr_scriptable import Scriptable
 
 class CRSimulation_Node(pm.nt.PolyCube):
     _handle = "simulation"
     _dataSrcTypeAttr = "src_type"
+    _robjTypeAttr    = "robj_type"
     # _srcFactories = crinterface.Factories.getFactory(DataSource.getTypeName())
 
     @classmethod
@@ -55,12 +57,13 @@ class CRSimulation_Node(pm.nt.PolyCube):
 
     @classmethod
     def addAttrs(cls, node, trans, shape):
-        node.addAttr('dataregex', dt='string')
-        node.addAttr('delim', dt='string')
-        node.setAttr('delim', ',')
-        node.addAttr('conversion_script', dt='string')
-        node.addAttr('conversion_function', dt='string')
-        node.addAttr(CRSimulation_Node._dataSrcTypeAttr, dt='string')
+        # node.addAttr('dataregex', dt='string')
+        # node.addAttr('delim', dt='string')
+        # node.setAttr('delim', ',')
+        # node.addAttr('conversion_script', dt='string')
+        # node.addAttr('conversion_function', dt='string')
+        node.addAttr(CRSimulation_Node._dataSrcTypeAttr, dt='string', h=True)
+        node.addAttr(CRSimulation_Node._robjTypeAttr, dt='string', h=True)
 
         # shape.addAttr('scriptname', dt='string')
         # shape.addAttr('scriptfunc', dt='string')
@@ -192,7 +195,7 @@ class CRSimulation_Node(pm.nt.PolyCube):
 
     def addDataSource(self):
         srctype = self.getAttr(CRSimulation_Node._dataSrcTypeAttr)
-        print "TYPE", srctype
+        print "Added " + srctype
 
     def addDataElem(self):
         elemname = CRSimulation_Node._dataelemprefix +str(CRSimulation_Node._numdataelems)
@@ -263,15 +266,6 @@ class CRSimulation_Node(pm.nt.PolyCube):
         self.setAttr('dataregex', 'data/*.dat')
         self._initDataElems()
 
-        self.datasrcs = []
-        # self.src_enums = []
-        self.addAttr('src_enums', dt=list)
-        # classes = CRSimulation_Node._srcFactories.getClasses()
-        # for i in range(0, len(classes)):
-            # en = (i, classes[i].getTypeName())
-            # self.src_enums.append(en)
-        # print "ENUMS", self.src_enums
-
     def _initDataElems(self):
         numelems = 7
         for i in range(0, numelems):
@@ -298,15 +292,82 @@ class CRSimulation_Node(pm.nt.PolyCube):
 pm.factories.registerVirtualClass(CRSimulation_Node, nameRequired=False)
 
 class CRSimulation(CRObject):
-    def __init__(self):
-        super(CRSimulation, self).__init__()
+
+    def __init__(self, factories):
+        super(CRSimulation, self).__init__(factories)
         self.node = CRSimulation_Node()
+        self.datasrcs = []
+        self.src_factories = self.factories.getFactory(DataSource.getTypeName())
+        self.numsrcs = 0
+        self.robjs = []
+        self.robj_factories = self.factories.getFactory(RenderObject.getTypeName())
+        self.numrobjs = 0
+
+        pm.select(self.node)
 
     def export(self, md):
         self.node.export(md)
 
+        attrdict = self.attrs2Dict()
+        sim = self.src_factories.build(**attrdict)
+        print "SIM", sim
+        # sim = self.createCRObject()
+        # md.addElement(Simulation.getTypeName(), sim.getSerialized())
+        # del sim
+
+    def addDataSource(self):
+        self.numsrcs += 1
+        srctype = self._getTypeFromEnum(DataSource,
+                CRSimulation_Node._dataSrcTypeAttr)
+
+        src = self.src_factories.build(srctype)
+        src.name = 'src'+str(self.numsrcs)
+        self.datasrcs.append(src)
+        self.addCRObject(DataSource, src, prefix=src.name)
+
+        self.refreshGUI()
+
+        attrdict = self.attrs2Dict()
+        print "ATTR", attrdict
+        srcs = attrdict[DataSource.getTypeName()]
+        for src in srcs:
+            sim = self.src_factories.buildFromKwargs(**src)
+            print "SRC", sim
+            del sim
+
+    def addRenderObject(self):
+        self.numrobjs += 1
+        robjtype = self._getTypeFromEnum(RenderObject,
+                CRSimulation_Node._robjTypeAttr)
+
+        robj = self.robj_factories.build(robjtype)
+        robj.name = 'robj'+str(self.numrobjs)
+        self.robjs.append(robj)
+        self.addCRObject(RenderObject, robj, prefix=robj.name)
+        self.refreshGUI()
+
     def createGUI(self):
-        self.node.createGUI()
+        form_name = self.node.name()+"_form"
+        self.window = pm.window(height=512, menuBar=True)
+        menu   = pm.menu(label='File', tearOff=True)
+        layout = pm.scrollLayout(form_name)
+
+        self._createDataSource_GUI()
+        return self.window
+
+    def _createDataSource_GUI(self):
+        pm.columnLayout( columnAttach=('left', 5), rowSpacing=10, columnWidth=250 )
+        pm.text( label='Data Source' ) 
+
+        pm.attrEnumOptionMenuGrp( l='Format', 
+                             at=self.node.name() +
+                             '.'+CRSimulation_Node._dataSrcTypeAttr,
+                             ei=self._genEnumsFor(DataSource))
+
+        pm.button(label="Add DataSource", w=128, c= lambda *args: self.addDataSource())
+        pm.button(label="Add RenderObject", w=128, c= lambda *args:
+                self.addRenderObject())
+        self.generateAttrGUI()
 
 def register():
     pm.factories.registerVirtualClass(CRSimulation_Node, nameRequired=False)

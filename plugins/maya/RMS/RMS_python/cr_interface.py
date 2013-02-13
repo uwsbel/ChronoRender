@@ -1,10 +1,9 @@
 import os, sys
 import pymel.all as pm
+import cr_Utils
 from MayaProjUtils import MayaProjUtils
 
 from chronorender import ChronoRender
-import chronorender.cr_types as cr_types
-from chronorender.cr_assetinfo import CRAssetInfo
 from chronorender.metadata import MDReaderFactory
 from cr_Simulation import CRSimulation
 
@@ -21,7 +20,7 @@ objs = []
 #==========================CMDS============================
 def build():
     updateNodes()
-    sim = CRSimulation()
+    sim = CRSimulation(Factories)
     objs.append(sim)
 
 def updateNodes():
@@ -32,8 +31,8 @@ def export():
     updateNodes()
     os.chdir(Utils.getProjPath())
 
-    createOutDirs()
-    path = getOutPathFor('root')
+    cr_Utils.createOutDirs()
+    path = cr_Utils.getOutPathFor('root')
     path = os.path.join(path, 'sim.yml')
     if os.path.exists(path):
         os.remove(path)
@@ -52,10 +51,15 @@ def export():
 
 def edit():
     updateNodes()
-    nodes = _getAndVerifyByAttr('createGUI')
+
+    nodes = sel()
     for node in nodes:
         window = node.createGUI()
         pm.showWindow(window)
+    # nodes = _getAndVerifyByAttr('createGUI')
+    # for node in nodes:
+        # window = node.createGUI()
+        # pm.showWindow(window)
 
 def sel(addt_attr=None):
     if not addt_attr:
@@ -127,16 +131,6 @@ def source():
 
 #==========================UTILS============================
 
-def crType2Maya(typ):
-    if typ == str or typ == cr_types.url:
-        return 'string'
-    elif typ == float:
-        return 'float'
-    elif typ == bool:
-        return 'bool'
-    elif typ == list:
-        return
-
 def getSelected(addt_attr=None):
     if not addt_attr:
         addt_attr = _crHandle
@@ -166,14 +160,6 @@ def _conglomerateNodes(node):
 
 def addRootHandle(node):
     node.addAttr(_crHandle, dt='string', h=True)
-
-def createOutDirs():
-    assetman = CRAssetInfo( outpath=os.path.join(Utils.getProjPath(), 'renderman'), jobname=Utils.getSceneName(), relative=False)
-    assetman.createOutDirs()
-
-def getOutPathFor(what):
-    assetman = CRAssetInfo( outpath=os.path.join(Utils.getProjPath(), 'renderman'), jobname=Utils.getSceneName(), relative=False)
-    return assetman.getOutPathFor(what)
 
 def getMesh(node):
     inMesh = node.listConnections()

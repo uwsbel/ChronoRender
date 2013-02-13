@@ -61,3 +61,9 @@ class Factory():
             raise Exception('no object ' + str(typename) + ' for factory type ' + self.getFactoryType())
 
         return self._objectconstructors[typename](**kwargs)
+
+    def buildFromKwargs(self, **kwargs):
+        if 'type' not in kwargs:
+            raise Exception('no object type in kwargs')
+        return self.build(kwargs['type'], **kwargs)
+

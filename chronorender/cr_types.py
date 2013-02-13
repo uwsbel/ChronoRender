@@ -60,3 +60,7 @@ class url(str):
 
 class directory(str):
     pass
+
+builtins = [int, float, long, complex, str, list, 
+        dict, tuple, set, frozenset, file, bool, 
+        url, directory, floatlist, intlist, strlist, listlist]

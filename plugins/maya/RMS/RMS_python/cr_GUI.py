@@ -7,4 +7,3 @@ def setTextBoxText(tb):
 def setAttrFromFileDialog(obj, attrname):
     text = pm.fileDialog()
     obj.setAttr(attrname, text)
-
