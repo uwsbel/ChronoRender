@@ -1,9 +1,9 @@
 import os
 import pymel.all as pm
 
-# import cr_Utils
+import cr_Utils
 import cr_GUI as gui
-from cr_Object import CRObject
+from cr_Object import CRObject, CRObject_Node
 
 from chronorender.geometry import Archive, Geometry
 from chronorender.shader import Shader
@@ -11,7 +11,7 @@ from chronorender.renderobject import RenderObject
 from chronorender.cr_scriptable import Scriptable
 
 # class CRRenderObject_Node(pm.nt.Mesh):
-class CRRenderObject_Node(pm.nt.PolyCube):
+class CRRenderObject_Node(CRObject_Node):
     _handle = "robj"
     _counter = 0
 
@@ -130,6 +130,7 @@ pm.factories.registerVirtualClass(CRRenderObject_Node, nameRequired=False)
 class CRRenderObject(CRObject):
     def __init__(self, factories):
         super(CRRenderObject, self).__init__(factories)
+        self.node = CRRenderObject_Node()
 
 def register():
     pm.factories.registerVirtualClass(CRRenderObject, nameRequired=False)

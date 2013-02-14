@@ -5,10 +5,11 @@ import cr_Utils
 from MayaProjUtils import MayaProjUtils
 from chronorender import ChronoRender
 from chronorender.metadata import MDReaderFactory
+from cr_Object import CRObject, CRObject_Node
 from cr_Simulation import CRSimulation
 from cr_RenderObject import CRRenderObject
 
-_crHandle = "chronorender"
+_crHandle = CRObject_Node._root
 _simHandle = "simulation"
 _bRif = 0
 

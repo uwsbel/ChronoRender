@@ -7,6 +7,50 @@ from chronorender.attribute import Attribute
 from chronorender.option import Option
 import chronorender.cr_types as cr_types
 
+class CRObject_Node(pm.nt.PolyCube):
+    _handle = "chronorender"
+    _root = "cr"
+
+    @classmethod
+    def list(cls, *args, **kwargs):
+        kwargs['type'] = cls.__melnode__
+        return [node for node in pm.ls(*args, **kwargs) if isinstance(node, cls)]
+
+    @classmethod
+    def _isVirtual(cls, obj, name):
+        fn = pm.api.MFnDependencyNode(obj)
+        try:
+            if fn.hasAttribute(cls._handle):
+                return True
+        except:
+            pass
+        return False
+
+    @classmethod
+    def _preCreateVirtual(cls, **kwargs ):
+        if 'name' not in kwargs and 'n' not in kwargs:
+            kwargs['name'] = cls._handle
+        return kwargs
+
+    @classmethod
+    def _postCreateVirtual(cls, newNode ):
+        newNode.addAttr(CRObject_Node._root, dt='string', h=True)
+
+    def getShape(self):
+        return self.getTransform().getShape()
+
+    def getTransform(self):
+        return self.listConnections()[0]
+
+    def getPreShapeScript(self):
+        return self.getShape().getAttr('rman__torattr___preShapeScript')
+
+    def setPreShapeScript(self, script):
+        return self.getShape().setAttr('rman__torattr___preShapeScript', script)
+
+pm.factories.registerVirtualClass(CRObject_Node, nameRequired=False)
+
+
 class CRObject(object):
     def __init__(self, factories):
         self.node       = pm.polyCube()
@@ -14,7 +58,7 @@ class CRObject(object):
         self.window     = None
         self.attrs      = {}
         self.children   = {}
-        self.parents    = []
+        self.parents    = {}
 
     def export(self, md):
         return
@@ -73,12 +117,13 @@ class CRObject(object):
         return out
 
     def addCRNode(self, obj):
-        pm.parent(obj.node.name(), self.node.name())
+        node = obj.node
+        pm.parent(node.getTransform().name(), self.node.getTransform().name())
         conn = self._getNodeConnectionAttr(obj)
         self.children[obj] = conn
         parent = obj.addParent(self)
         pm.mel.eval("connectAttr " + self.node.name()+ '.' + conn + ' ' +
-                obj.node.name() + parent)
+                node.name() + '.' + parent)
         return conn
 
     def addParent(self, obj):
@@ -89,7 +134,7 @@ class CRObject(object):
     def _getNodeConnectionAttr(self, obj):
         name = obj.node.name()
         if not self.node.hasAttr(name):
-            self.addAttr(name, at='message')
+            self.node.addAttr(name, at='message')
         return name
 
     # add to attr dict {typname: {obj_name : [], obj2_name : []}}

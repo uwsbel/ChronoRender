@@ -2,7 +2,7 @@ import os, copy, string
 import pymel.all as pm
 
 import cr_GUI as gui
-from cr_Object import CRObject
+from cr_Object import CRObject, CRObject_Node
 from cr_RenderObject import CRRenderObject
 
 from chronorender.data import DataObject
@@ -12,39 +12,15 @@ from chronorender.renderobject import RenderObject
 from chronorender.simulation import Simulation
 from chronorender.cr_scriptable import Scriptable
 
-class CRSimulation_Node(pm.nt.PolyCube):
+class CRSimulation_Node(CRObject_Node):
     _handle = "simulation"
     _dataSrcTypeAttr = "src_type"
     _robjTypeAttr    = "robj_type"
-    # _srcFactories = crinterface.Factories.getFactory(DataSource.getTypeName())
-
-    @classmethod
-    def list(cls, *args, **kwargs):
-        kwargs['type'] = cls.__melnode__
-        return [node for node in pm.ls(*args, **kwargs) if isinstance(node, cls)]
-
-    @classmethod
-    def _isVirtual(cls, obj, name):
-        fn = pm.api.MFnDependencyNode(obj)
-        try:
-            if fn.hasAttribute('simulation'):
-                return True
-        except:
-            pass
-        return False
-
-    @classmethod
-    def _preCreateVirtual(cls, **kwargs ):
-        if 'name' not in kwargs and 'n' not in kwargs:
-            # kwargs['name'] = crinterface._simHandle
-            kwargs['name'] = 'simulation'
-        return kwargs
 
     @classmethod
     def _postCreateVirtual(cls, newNode ):
-        # crinterface.addRootHandle(newNode)
-        newNode.addAttr('chronorender', dt='string', h=True)
-        newNode.addAttr('simulation', dt='string', h=True)
+        CRObject_Node._postCreateVirtual(newNode)
+        newNode.addAttr(cls._handle, dt='string', h=True)
 
         trans = newNode.listConnections()[0]
         shape = trans.getShape()
@@ -63,18 +39,6 @@ class CRSimulation_Node(pm.nt.PolyCube):
         pm.mel.eval('$attr = `rmanGetAttrName \"preShapeScript\"`;')
         melstr = 'rmanAddAttr ' + shape.name() + ' $attr \"cr_SimulationRI\";'
         pm.mel.eval(melstr)
-
-    def getShape(self):
-        return self.getTransform().getShape()
-
-    def getTransform(self):
-        return self.listConnections()[0]
-
-    def getPreShapeScript(self):
-        return self.getShape().getAttr('rman__torattr___preShapeScript')
-
-    def setPreShapeScript(self, script):
-        return self.getShape().setAttr('rman__torattr___preShapeScript', script)
 
 pm.factories.registerVirtualClass(CRSimulation_Node, nameRequired=False)
 
