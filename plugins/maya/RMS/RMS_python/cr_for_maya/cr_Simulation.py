@@ -33,7 +33,6 @@ class CRSimulation_Node(CRObject_Node):
         node.addAttr(CRSimulation_Node._dataSrcTypeAttr, dt='string', h=True)
         node.addAttr(CRSimulation_Node._robjTypeAttr, dt='string', h=True)
 
-
     @classmethod
     def addRManAttrs(cls, node, trans, shape):
         pm.mel.eval('$attr = `rmanGetAttrName \"preShapeScript\"`;')
@@ -52,13 +51,19 @@ class CRSimulation(CRObject):
         self.src_factories = self.factories.getFactory(DataSource.getTypeName())
         self.numsrcs = 0
         self.robjs = []
-        self.robj_factories = self.factories.getFactory(RenderObject.getTypeName())
         self.numrobjs = 0
 
         pm.select(self.node)
 
     def export(self, md):
         attrdict = self.attrs2Dict()
+        robjlist = []
+        for robj in self.robjs:
+            d = robj.attrs2Dict()[RenderObject.getTypeName()]
+            robjlist.extend(d)
+        attrdict[RenderObject.getTypeName()] = robjlist
+
+        print attrdict
         simdict = {Simulation.getTypeName() : attrdict}
         sim = self.sim_factories.build(Simulation.getTypeName(), **attrdict)
         md.addElement(Simulation.getTypeName(), sim.getSerialized())
@@ -80,25 +85,10 @@ class CRSimulation(CRObject):
         self.numrobjs += 1
         robjtype = self._getTypeFromEnum(RenderObject,
                 CRSimulation_Node._robjTypeAttr)
-
-        # robj = self.robj_factories.build(robjtype)
-        # robj.name = 'robj'+str(self.numrobjs)
-        # self.robjs.append(robj)
         robj = CRRenderObject(self.factories)
-        # self.addCRObject(RenderObject, robj, prefix=robj.name)
-        print "ADD NODE"
         self.addCRNode(robj)
-
+        self.robjs.append(robj)
         self.refreshGUI()
-        # objname = CRSimulation_Node._robjprefix + str(CRSimulation_Node._numrobjs)
-        # CRSimulation_Node._numrobjs += 1
-
-        # robj = crrobj.build()
-        # pm.parent(robj.name(), self.getShape().name())
-        # self.addAttr(objname, at='message')
-        # pm.mel.eval("connectAttr " + self.name() + '.' + objname + ' ' + robj.name() + '.parent')
-
-        # self.refreshGUI()
 
     def createGUI(self):
         form_name = self.node.name()+"_form"
@@ -122,17 +112,3 @@ class CRSimulation(CRObject):
         pm.button(label="Add RenderObject", w=128, c= lambda *args:
                 self.addRenderObject())
         self.generateAttrGUI()
-        
-def register():
-    pm.factories.registerVirtualClass(CRSimulation_Node, nameRequired=False)
-
-def build():
-    register()
-    crsim = CRSimulation_Node()
-    crsim.init()
-
-    return crsim
-
-def main():
-    register()
-    build()

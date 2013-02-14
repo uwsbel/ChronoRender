@@ -16,24 +16,12 @@ class CRRenderObject_Node(CRObject_Node):
     _counter = 0
 
     @classmethod
-    def _isVirtual(cls, obj, name):
-        fn = pm.api.MFnDependencyNode(obj)
-        try:
-            return fn.hasAttribute(CRRenderObject_Node._handle)
-        except: pass
-        return False
-
-    @classmethod
-    def _preCreateVirtual(cls, **kwargs ):
-        if 'name' not in kwargs and 'n' not in kwargs:
-            kwargs['name'] = CRRenderObject_Node._handle
-        return kwargs
-
-    @classmethod
     def _postCreateVirtual(cls, newNode ):
-        newNode.addAttr('chronorender', dt='string', h=True)
-        newNode.addAttr(CRRenderObject_Node._handle, dt='string', h=True)
-        CRRenderObject_Node.addAttrs(newNode)
+        CRObject_Node._postCreateVirtual(newNode)
+        newNode.addAttr(cls._handle, dt='string', h=True)
+        name = newNode.rename(cls._handle)
+
+        # CRRenderObject_Node.addAttrs(newNode)
 
     @classmethod
     def addAttrs(cls, node):
@@ -72,36 +60,13 @@ class CRRenderObject_Node(CRObject_Node):
         self.setAttr('primaryVisibility', False)
         self.setAttr('receiveShadows', False)
 
-    def createCRObject(self):
-        geo=Archive(filename=str(self.getAttr('rib_archive')))
-
-        robj = RenderObject()
-        robj.geometry = geo
-        robj.condition = str(self.getAttr('condition'))
-        rscript = self.getAttr('render_script')
-        rfunc =self.getAttr('render_function')
-        robj.script = Scriptable(
-            file= str(rscript) if rscript else "",
-            function= str(rfunc) if rfunc else "")
-
-        return robj
-
     def attachRIBArchive(self, archive):
         pm.disconnectAttr(self.name() + '.rib_archive')
         pm.connectAttr(archive.name()+'.filename', self.name()+'.rib_archive')
 
-
     def attachMesh(self, mesh):
-        # delete current connection
-        # currmesh = crinterface.getMesh(self)
-        # if currmesh:
-            # pm.delete(currmesh.name())
-
         pm.disconnectAttr(self.name() + '.inMesh')
         pm.connectAttr(mesh.name()+'.outMesh', self.name()+'.inMesh')
-
-    def attachShader(self, shader):
-        return
 
     def init(self):
         cube = pm.polyCube()
@@ -120,23 +85,19 @@ class CRRenderObject_Node(CRObject_Node):
 
 pm.factories.registerVirtualClass(CRRenderObject_Node, nameRequired=False)
         
-# class CRRenderObject(CRObject):
-
-    # def __init__(self, factories):
-        # print "FACOREIS"
-        # super(CRRenderObject, self).__init__(factories)
-        # self.node = CRRenderObject_Node()
-        # pm.select(self.node)
 class CRRenderObject(CRObject):
     def __init__(self, factories):
         super(CRRenderObject, self).__init__(factories)
         self.node = CRRenderObject_Node()
+        self.robj_factories = self.factories.getFactory(RenderObject.getTypeName())
 
-def register():
-    pm.factories.registerVirtualClass(CRRenderObject, nameRequired=False)
+        robj = self.robj_factories.build(RenderObject.getTypeName())
+        self.addCRObject(RenderObject, robj, prefix='default')
 
-def build():
-    # register()
-    robj = CRRenderObject()
-    robj.init()
-    return robj
+
+    def createGUI(self):
+        form_name = self.node.name()+"_form"
+        self.window = pm.window(height=512, menuBar=True)
+        menu   = pm.menu(label='File', tearOff=True)
+        layout = pm.scrollLayout(form_name)
+        return self.window
