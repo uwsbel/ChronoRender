@@ -13,6 +13,8 @@ class CRObject(object):
         self.factories  = factories
         self.window     = None
         self.attrs      = {}
+        self.children   = {}
+        self.parents    = []
 
     def export(self, md):
         return
@@ -35,6 +37,9 @@ class CRObject(object):
             if con not in out:
                 out.append(con.name())
 
+    def addRManAttrs(self):
+        return
+
     def attrs2Dict(self):
         out = {}
         for obj_type, obj_vals in self.attrs.iteritems():
@@ -56,12 +61,36 @@ class CRObject(object):
                 out[mem_name] = val
                 continue
             if isinstance(val, list):
-                out[mem_name] = ast.literal_eval(self.node.getAttr(attrname))
+                listval = self.node.getAttr(attrname)
+                if listval:
+                    out[mem_name] = ast.literal_eval(listval)
+                else:
+                    out[mem_name] = []
             else:
                 if typ == cr_types.url:
                     typ = str
                 out[mem_name] = typ(self.node.getAttr(attrname))
         return out
+
+    def addCRNode(self, obj):
+        pm.parent(obj.node.name(), self.node.name())
+        conn = self._getNodeConnectionAttr(obj)
+        self.children[obj] = conn
+        parent = obj.addParent(self)
+        pm.mel.eval("connectAttr " + self.node.name()+ '.' + conn + ' ' +
+                obj.node.name() + parent)
+        return conn
+
+    def addParent(self, obj):
+        conn = self._getNodeConnectionAttr(obj)
+        self.parents[obj] = conn
+        return conn
+
+    def _getNodeConnectionAttr(self, obj):
+        name = obj.node.name()
+        if not self.node.hasAttr(name):
+            self.addAttr(name, at='message')
+        return name
 
     # add to attr dict {typname: {obj_name : [], obj2_name : []}}
     def addCRObject(self, typ, obj, prefix=''):
@@ -136,13 +165,28 @@ class CRObject(object):
         for vals in inst_vals:
             attrname, typ, val, mem_name = vals[0], vals[1], vals[2], vals[3]
             if typ not in cr_types.builtins:
-                crobjs.append((mem_name,val))
+                crobjs.append(vals)
                 continue
 
             self._genTypeGUI(attrname, typ, val)
 
-        for obj in crobjs:
-            self._genInstanceGUI(obj[0], obj[1])
+        for vals in crobjs:
+            attrname, typ, val, mem_name = vals[0], vals[1], vals[2], vals[3]
+            if isinstance(val, list):
+                if typ not in cr_types.builtins:
+                    if self._ignore(typ.getTypeName()): return
+                    enum_attr = self._getTypeEnumAttrName(typ)
+                    pm.attrEnumOptionMenuGrp( l='Type', at=self.node.name()+'.'+enum_attr, ei=self._genEnumsFor(typ))
+                    pm.button(label="Add", w=64, c=pm.Callback(self._addEnumeratedObject, typ, enum_attr))
+            self._genInstanceGUI(mem_name, val)
+
+    def _addEnumeratedObject(self, typ, enum_attr):
+        fact = self.factories.getFactory(typ.getTypeName())
+        srctype = self._getTypeFromEnum(typ, enum_attr)
+        obj = fact.build(srctype)
+        self.addCRObject(typ, obj)
+
+        self.refreshGUI()
 
     # emit a GUI element for specific types
     def _genTypeGUI(self, attrname, typ, val):
@@ -156,14 +200,9 @@ class CRObject(object):
         else:
             pm.attrControlGrp(attribute=self.node.name()+'.'+attrname)
 
-        if isinstance(val, list):
-            if typ not in cr_types.builtins:
-                if self._ignore(typ.getTypeName()): return
-                pm.attrEnumOptionMenuGrp( l='Type', 
-                                     at=self.node.name()+'.'+self._getTypeEnumAttrName(typ),
-                                     ei=self._genEnumsFor(typ))
+        # if isinstance(val, list):
             # pm.button(label="Add", w=64, c=pm.Callback(self._addAttrGUI,
-                # attrname, typ, val, prefix))
+                # attrname, typ, val, ''))
 
     def _addAttrGUI(self, name, typ, val, prefix='', concrete=''):
         self._addAttr(self, name, typ, val, prefix='', concrete='')
@@ -179,7 +218,10 @@ class CRObject(object):
         return enums
 
     def _getTypeEnumAttrName(self, typ):
-        return typ.getTypeName() + '_type'
+        name = typ.getTypeName() + '_type'
+        if not self.node.hasAttr(name):
+            self.node.addAttr(name, dt='string', h=True)
+        return name
 
     def _getTypeFromEnum(self, typ, enum_attr):
         srctype = self.node.getAttr(enum_attr)

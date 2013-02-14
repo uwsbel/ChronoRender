@@ -1,7 +1,4 @@
-
 import os, sys
-print "OS", os
-print os.path.exists('/')
 import pymel.all as pm
 
 import cr_Utils
@@ -9,6 +6,7 @@ from MayaProjUtils import MayaProjUtils
 from chronorender import ChronoRender
 from chronorender.metadata import MDReaderFactory
 from cr_Simulation import CRSimulation
+from cr_RenderObject import CRRenderObject
 
 _crHandle = "chronorender"
 _simHandle = "simulation"
@@ -18,21 +16,20 @@ Utils = MayaProjUtils()
 SimRenderScript = 'cr_SimulationRI_Win' if sys.platform == 'win32' else 'cr_SimulationRI_Linux'
 Factories = ChronoRender().getFactories()
 
-gObjs = []
+gNodes = []
 
 #==========================CMDS============================
-def build():
-    updateNodes()
-    sim = CRSimulation(Factories)
-    gObjs.append(sim)
-
-def updateNodes():
-    global gObjs
-    gObjs = [obj for obj in gObjs if obj.node]
+def build(typename=None):
+    print "BUILD"
+    _updateNodes()
+    node = None
+    if not typename or typename == CRSimulation.getTypeName():
+        node = CRSimulation(Factories)
+    gNodes.append(node)
 
 def export():
-    updateNodes()
-    global gObjs
+    _updateNodes()
+    global gNodes
     os.chdir(Utils.getProjPath())
 
     cr_Utils.createOutDirs()
@@ -51,7 +48,7 @@ def export():
     del md
 
 def edit():
-    updateNodes()
+    _updateNodes()
 
     nodes = sel()
     for node in nodes:
@@ -63,12 +60,13 @@ def edit():
         # pm.showWindow(window)
 
 def sel(addt_attr=None):
+    _updateNodes()
     if not addt_attr:
         addt_attr = _crHandle
 
     out = []
     selected = pm.selected()
-    for obj in gObjs:
+    for obj in gNodes:
         if obj.node not in selected:
             continue
         if obj.node.hasAttr(addt_attr):
@@ -82,6 +80,7 @@ def toggleRif():
     pm.mel.eval('rman setPref DisableRifShaderAttachment ' + str(_bRif))
 
 def attachRIBArchive():
+    _updateNodes()
     nodes = _getAndVerifyByAttr('attachMesh')
     select = pm.selected()
     archives = []
@@ -96,6 +95,7 @@ def attachRIBArchive():
         node.attachRIBArchive(archives[0])
 
 def attachMesh():
+    _updateNodes()
     nodes = _getAndVerifyByAttr('attachMesh')
     nodemeshs = _getAndVerifyByType('mesh')
 
@@ -112,6 +112,7 @@ def attachMesh():
         node.attachMesh(mesh)
 
 def batchRI(platform):
+    _updateNodes()
     script = 'cr_SimulationRI_Win'
     if platform == 'posix':
       script = 'cr_SimulationRI_Linux'
@@ -131,6 +132,9 @@ def source():
   return
 
 #==========================UTILS============================
+def _updateNodes():
+    global gNodes
+    gNodes = [obj for obj in gNodes if obj.node]
 
 def getSelected(addt_attr=None):
     if not addt_attr:

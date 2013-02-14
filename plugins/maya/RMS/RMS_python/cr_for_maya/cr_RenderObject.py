@@ -1,12 +1,17 @@
 import os
 import pymel.all as pm
-import cr_Utils
-from chronorender.geometry import Archive
+
+# import cr_Utils
+import cr_GUI as gui
+from cr_Object import CRObject
+
+from chronorender.geometry import Archive, Geometry
+from chronorender.shader import Shader
 from chronorender.renderobject import RenderObject
 from chronorender.cr_scriptable import Scriptable
 
-class CRRenderObject(pm.nt.Mesh):
-# class CRRenderObject(pm.nt.PolyCube):
+# class CRRenderObject_Node(pm.nt.Mesh):
+class CRRenderObject_Node(pm.nt.PolyCube):
     _handle = "robj"
     _counter = 0
 
@@ -14,21 +19,21 @@ class CRRenderObject(pm.nt.Mesh):
     def _isVirtual(cls, obj, name):
         fn = pm.api.MFnDependencyNode(obj)
         try:
-            return fn.hasAttribute(CRRenderObject._handle)
+            return fn.hasAttribute(CRRenderObject_Node._handle)
         except: pass
         return False
 
     @classmethod
     def _preCreateVirtual(cls, **kwargs ):
         if 'name' not in kwargs and 'n' not in kwargs:
-            kwargs['name'] = CRRenderObject._handle
+            kwargs['name'] = CRRenderObject_Node._handle
         return kwargs
 
     @classmethod
     def _postCreateVirtual(cls, newNode ):
         newNode.addAttr('chronorender', dt='string', h=True)
-        newNode.addAttr(CRRenderObject._handle, dt='string', h=True)
-        CRRenderObject.addAttrs(newNode)
+        newNode.addAttr(CRRenderObject_Node._handle, dt='string', h=True)
+        CRRenderObject_Node.addAttrs(newNode)
 
     @classmethod
     def addAttrs(cls, node):
@@ -103,7 +108,7 @@ class CRRenderObject(pm.nt.Mesh):
         trans, mesh = cube[0], cube[1]
         self.attachMesh(trans.getShape())
         ptrans = self.getParent()
-        ptrans.rename(CRRenderObject._handle+str(CRRenderObject._counter))
+        ptrans.rename(CRRenderObject_Node._handle+str(CRRenderObject_Node._counter))
         self.rename(ptrans.name()+"Shape")
 
         self.setAttr('primaryVisibility', False)
@@ -111,13 +116,26 @@ class CRRenderObject(pm.nt.Mesh):
         self.setAttr('receiveShadows', False)
 
         pm.select(self)
-        CRRenderObject._counter += 1
+        CRRenderObject_Node._counter += 1
+
+pm.factories.registerVirtualClass(CRRenderObject_Node, nameRequired=False)
+        
+# class CRRenderObject(CRObject):
+
+    # def __init__(self, factories):
+        # print "FACOREIS"
+        # super(CRRenderObject, self).__init__(factories)
+        # self.node = CRRenderObject_Node()
+        # pm.select(self.node)
+class CRRenderObject(CRObject):
+    def __init__(self, factories):
+        super(CRRenderObject, self).__init__(factories)
 
 def register():
     pm.factories.registerVirtualClass(CRRenderObject, nameRequired=False)
 
 def build():
-    register()
+    # register()
     robj = CRRenderObject()
     robj.init()
     return robj
