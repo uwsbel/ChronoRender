@@ -2,18 +2,18 @@ import os
 import pymel.all as pm
 
 import cr_Utils
-import cr_GUI as gui
 from cr_Object import CRObject, CRObject_Node
+from cr_Geometry import CRGeometry
 
-from chronorender.geometry import Archive, Geometry
+from chronorender.geometry import Geometry
 from chronorender.shader import Shader
 from chronorender.renderobject import RenderObject
-from chronorender.cr_scriptable import Scriptable
 
 # class CRRenderObject_Node(pm.nt.Mesh):
 class CRRenderObject_Node(CRObject_Node):
     _handle = "robj"
     _counter = 0
+    _geoTypeAttr = "geo_type"
 
     @classmethod
     def _postCreateVirtual(cls, newNode ):
@@ -21,17 +21,18 @@ class CRRenderObject_Node(CRObject_Node):
         newNode.addAttr(cls._handle, dt='string', h=True)
         name = newNode.rename(cls._handle)
 
-        # CRRenderObject_Node.addAttrs(newNode)
+        CRRenderObject_Node.addAttrs(newNode)
 
     @classmethod
     def addAttrs(cls, node):
-        node.addAttr('parent', at='message')
-        node.addAttr('name', dt='string')        
-        node.addAttr('condition', dt='string')        
-        node.setAttr('condition', 'id >= 0')
-        node.addAttr('rib_archive', dt='string')
-        node.addAttr('render_script', dt='string')
-        node.addAttr('render_function', dt='string')
+        node.addAttr(CRRenderObject_Node._geoTypeAttr, dt='string', h=True)
+        # node.addAttr('parent', at='message')
+        # node.addAttr('name', dt='string')        
+        # node.addAttr('condition', dt='string')        
+        # node.setAttr('condition', 'id >= 0')
+        # node.addAttr('rib_archive', dt='string')
+        # node.addAttr('render_script', dt='string')
+        # node.addAttr('render_function', dt='string')
 
     def export(self, md):
         trans = self.getParent()
@@ -86,21 +87,78 @@ class CRRenderObject_Node(CRObject_Node):
 pm.factories.registerVirtualClass(CRRenderObject_Node, nameRequired=False)
         
 class CRRenderObject(CRObject):
+    _nodes = []
+
     def __init__(self, factories, typename=''):
         super(CRRenderObject, self).__init__(factories,typename)
         self.node = CRRenderObject_Node()
         self.robj_factories = self.factories.getFactory(RenderObject.getTypeName())
 
-        print "TYPE", typename
+        self.numgeo = 0
+        self.geo_factories = self.factories.getFactory(Geometry.getTypeName())
+        self.geo = []
+
+        self.numshaders = 0
+        self.shdr_factories = self.factories.getFactory(Shader.getTypeName())
+        self.shaders = []
+
         if not typename: typename = RenderObject.getTypeName()
         robj = self.robj_factories.build(typename)
-        print "ROBJ", robj, robj.getSerialized(), robj._members
-        self.addMembers(RenderObject, robj, prefix='default')
+        self.initMembers(RenderObject, robj, prefix='default')
+
+    def attrs2Dict(self):
+        attrdict = super(CRRenderObject, self).attrs2Dict()
+        attrdict[Geometry.getTypeName()] = [geo.attrs2Dict() for geo in self.geo]
+        return attrdict
+
+    def export(self, md):
+        attrdict = self.attrs2Dict()
+        # attrdict[RenderObject.getTypeName()] = [geo.attrs2Dict() for geo in self.geo]
+        geolist = []
+        for geo in self.geo:
+            geolist.append(geo.attrs2Dict())
+        attrdict[Shader.getTypeName()] = geolist
+        # attrdict[Shader.getTypeName()] = [shader.attrs2Dict() for shader in self.shaders]
+        robj = self.robj_factories.build(RenderObject.getTypeName(), **attrdict)
+        md.addElement(RenderObject.getTypeName(),  robj.getSerialized())
+        del robj
+
+    def addGeometry(self):
+        self.numgeo += 1
+        geotype = self._getTypeFromEnum(Geometry,
+                CRRenderObject_Node._geoTypeAttr)
+        src = CRGeometry(self.factories, geotype)
+        src.rename('geo'+str(self.numgeo))
+        self.addCRNode(src)
+        CRRenderObject._nodes.append(src)
+        self.geo.append(src)
+        self.closeGUI()
+
+    def addShader(self):
+        self.closeGUI()
 
     def createGUI(self):
         form_name = self.node.name()+"_form"
         self.window = pm.window(menuBar=True)
         menu   = pm.menu(label='File', tearOff=True)
         layout = pm.scrollLayout(form_name)
+        self._createRObjGUI()
+        self._createShaderGUI()
         return self.window
 
+    def _createRObjGUI(self):
+        pm.rowColumnLayout( numberOfColumns=3 )
+        pm.text( label='Geometry' ) 
+        pm.attrEnumOptionMenuGrp( l='Geo Type', 
+                             at=self.node.name() +
+                             '.'+CRRenderObject_Node._geoTypeAttr,
+                             ei=self._genEnumsFor(Geometry))
+
+        pm.button(label="Add", w=128, c= lambda *args:
+                self.addGeometry())
+
+    def _createShaderGUI(self):
+        pm.rowColumnLayout( numberOfColumns=2 )
+        pm.text( label='Shader' ) 
+        pm.button(label="Add", w=128, c= lambda *args:
+                self.addShader())

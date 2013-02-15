@@ -22,7 +22,7 @@ class CRSimulation_Node(CRObject_Node):
 
         trans = newNode.listConnections()[0]
         shape = trans.getShape()
-        name = newNode.rename('sim')
+        name = newNode.rename(cls._handle)
         CRSimulation_Node.addAttrs(newNode, trans, shape)
         CRSimulation_Node.addRManAttrs(newNode, trans, shape)
 
@@ -55,19 +55,18 @@ class CRSimulation(CRObject):
 
     def export(self, md):
         attrdict = self.attrs2Dict()
-        out = {}
 
-        srclist = []
-        for data in self.datasrcs:
-            srclist.append(data.attrs2Dict())
-        attrdict[DataObject.getTypeName()] = srclist
+        # srclist = []
+        # for data in self.datasrcs:
+            # srclist.append(data.attrs2Dict())
+        if len(self.datasrcs) > 0:
+            attrdict[DataObject.getTypeName()] = self.datasrcs[0].attrs2Dict()
 
         robjlist = []
         for robj in self.robjs:
             robjlist.append(robj.attrs2Dict())
         attrdict[RenderObject.getTypeName()] = robjlist
 
-        simdict = {Simulation.getTypeName() : attrdict}
         sim = self.sim_factories.build(Simulation.getTypeName(), **attrdict)
         md.addElement(Simulation.getTypeName(), sim.getSerialized())
         del sim
@@ -88,6 +87,7 @@ class CRSimulation(CRObject):
         robj = CRRenderObject(self.factories, robjtype)
         robj.rename('robj'+str(self.numrobjs))
         self.addCRNode(robj)
+        CRSimulation._nodes.append(robj)
         self.robjs.append(robj)
         self.closeGUI()
 

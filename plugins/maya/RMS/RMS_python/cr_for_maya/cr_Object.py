@@ -164,7 +164,7 @@ class CRObject(object):
         obj_name = prefix + typ.getTypeName() + str(self.attrs[typ.getTypeName()][0])
         self.attrs[typ.getTypeName()][1][obj_name] = self.addMembersToNode(typ,obj,obj_name)
 
-    def addMembers(self, typ, obj, prefix=''):
+    def initMembers(self, typ, obj, prefix=''):
         attrs = self.addMembersToNode(typ,obj,prefix)
         for attr in attrs:
             attrname, typ, val, mem_name = attr[0], attr[1], attr[2], attr[3]
@@ -190,20 +190,29 @@ class CRObject(object):
         mayatype = cr_Utils.crType2Maya(typ)
 
         if mayatype == 'string':
-            self.node.addAttr(attrname, dt=mayatype, h=hidden, nn=mem_name)
-            self.node.setAttr(attrname, str(val))
+            self._addStringAttr(attrname, val, hidden, mem_name)
         elif typ not in cr_types.builtins:
-            if self._ignore(typ.getTypeName()): return []
-            if not concrete:
-                concrete = typ.getTypeName()
-                type_enum = self._getTypeEnumAttrName(typ)
-                if self.node.hasAttr(type_enum):
-                    concrete = self._getTypeFromEnum(typ, type_enum)
-            val = self._addSubCRObject(typ, concrete, prefix)
+            if not isinstance(val, list):
+                val = self._addCRObjectAttr(typ, concrete, prefix)
+                if not val: return []
         else:
             self.node.addAttr(attrname, at=mayatype, h=hidden, nn=mem_name)
 
         return [(attrname, typ, val, mem_name)]
+
+    def _addStringAttr(self, attrname, val, hidden=False, nicename=''):
+        if not nicename: nicename = attrname
+        self.node.addAttr(attrname, dt='string', h=hidden, nn=nicename)
+        self.node.setAttr(attrname, str(val))
+
+    def _addCRObjectAttr(self, typ, concrete='', prefix=''):
+        if self._ignore(typ.getTypeName()): return None
+        if not concrete:
+            concrete = typ.getTypeName()
+            type_enum = self._getTypeEnumAttrName(typ)
+            if self.node.hasAttr(type_enum):
+                concrete = self._getTypeFromEnum(typ, type_enum)
+        return self._addSubCRObject(typ, concrete, prefix)
 
     def _addSubCRObject(self, typ, concrete, prefix=''):
         obj = typ(factories=self.factories, type=concrete)
