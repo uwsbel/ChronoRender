@@ -1,21 +1,19 @@
-import os, copy, string
 import pymel.all as pm
 
 import cr_GUI as gui
 from cr_Object import CRObject, CRObject_Node
 from cr_RenderObject import CRRenderObject
+from cr_DataObject import CRDataObject
 
 from chronorender.data import DataObject
 from chronorender.datasource import DataSource
-from chronorender.metadata import MDReaderFactory
 from chronorender.renderobject import RenderObject
 from chronorender.simulation import Simulation
 from chronorender.cr_scriptable import Scriptable
 
 class CRSimulation_Node(CRObject_Node):
     _handle = "simulation"
-    _dataSrcTypeAttr = "src_type"
-    _robjTypeAttr    = "robj_type"
+    _robjTypeAttr = "robj_type"
 
     @classmethod
     def _postCreateVirtual(cls, newNode ):
@@ -30,7 +28,6 @@ class CRSimulation_Node(CRObject_Node):
 
     @classmethod
     def addAttrs(cls, node, trans, shape):
-        node.addAttr(CRSimulation_Node._dataSrcTypeAttr, dt='string', h=True)
         node.addAttr(CRSimulation_Node._robjTypeAttr, dt='string', h=True)
 
     @classmethod
@@ -42,9 +39,10 @@ class CRSimulation_Node(CRObject_Node):
 pm.factories.registerVirtualClass(CRSimulation_Node, nameRequired=False)
 
 class CRSimulation(CRObject):
+    _nodes = []
 
-    def __init__(self, factories):
-        super(CRSimulation, self).__init__(factories)
+    def __init__(self, factories, typename=''):
+        super(CRSimulation, self).__init__(factories,typename)
         self.node = CRSimulation_Node()
         self.datasrcs = []
         self.sim_factories = self.factories.getFactory(Simulation.getTypeName())
@@ -57,58 +55,71 @@ class CRSimulation(CRObject):
 
     def export(self, md):
         attrdict = self.attrs2Dict()
+        out = {}
+
+        srclist = []
+        for data in self.datasrcs:
+            srclist.append(data.attrs2Dict())
+        attrdict[DataObject.getTypeName()] = srclist
+
         robjlist = []
         for robj in self.robjs:
-            d = robj.attrs2Dict()[RenderObject.getTypeName()]
-            robjlist.extend(d)
+            robjlist.append(robj.attrs2Dict())
         attrdict[RenderObject.getTypeName()] = robjlist
 
-        print attrdict
         simdict = {Simulation.getTypeName() : attrdict}
         sim = self.sim_factories.build(Simulation.getTypeName(), **attrdict)
         md.addElement(Simulation.getTypeName(), sim.getSerialized())
         del sim
 
-    def addDataSource(self):
+    def addDataObject(self):
         self.numsrcs += 1
-        srctype = self._getTypeFromEnum(DataSource,
-                CRSimulation_Node._dataSrcTypeAttr)
-
-        src = self.src_factories.build(srctype)
-        src.name = 'src'+str(self.numsrcs)
+        src = CRDataObject(self.factories)
+        src.rename('dataobj'+str(self.numsrcs))
+        self.addCRNode(src)
+        CRSimulation._nodes.append(src)
         self.datasrcs.append(src)
-        self.addCRObject(DataSource, src, prefix=src.name)
-
-        self.refreshGUI()
+        self.closeGUI()
 
     def addRenderObject(self):
         self.numrobjs += 1
         robjtype = self._getTypeFromEnum(RenderObject,
                 CRSimulation_Node._robjTypeAttr)
-        robj = CRRenderObject(self.factories)
+        robj = CRRenderObject(self.factories, robjtype)
+        robj.rename('robj'+str(self.numrobjs))
         self.addCRNode(robj)
         self.robjs.append(robj)
-        self.refreshGUI()
+        self.closeGUI()
 
     def createGUI(self):
-        form_name = self.node.name()+"_form"
-        self.window = pm.window(height=512, menuBar=True)
-        menu   = pm.menu(label='File', tearOff=True)
-        layout = pm.scrollLayout(form_name)
-
-        self._createDataSource_GUI()
+        super(CRSimulation, self).createGUI()
+        layout = pm.scrollLayout('sim')
+        pm.separator(h=40, style='in')
+        self._createDataGUI()
+        pm.separator(h=40, style='in')
+        self._createRObjGUI()
+        # pm.separator(h=40, style='in')
+        # self.generateAttrGUI()
+        # pm.separator(h=40, style='in')
+        # self.generateConnGUI()
         return self.window
 
-    def _createDataSource_GUI(self):
-        pm.columnLayout( columnAttach=('left', 5), rowSpacing=10, columnWidth=250 )
-        pm.text( label='Data Source' ) 
+    def _createDataGUI(self):
+        # pm.columnLayout( columnAttach=('left', 5), rowSpacing=10, columnWidth=250 )
+        # pm.columnLayout( columnAttach=('left', 5), rowSpacing=10, columnWidth=250 )
+        pm.rowColumnLayout( numberOfColumns=2 )
+        pm.text( label='Data' ) 
 
-        pm.attrEnumOptionMenuGrp( l='Format', 
+        pm.button(label="Add", w=128, c= lambda *args:
+                self.addDataObject())
+
+    def _createRObjGUI(self):
+        pm.rowColumnLayout( numberOfColumns=3 )
+        pm.text( label='Render Object' ) 
+        pm.attrEnumOptionMenuGrp( l='RObj Type', 
                              at=self.node.name() +
-                             '.'+CRSimulation_Node._dataSrcTypeAttr,
-                             ei=self._genEnumsFor(DataSource))
+                             '.'+CRSimulation_Node._robjTypeAttr,
+                             ei=self._genEnumsFor(RenderObject))
 
-        pm.button(label="Add DataSource", w=128, c= lambda *args: self.addDataSource())
-        pm.button(label="Add RenderObject", w=128, c= lambda *args:
+        pm.button(label="Add", w=128, c= lambda *args:
                 self.addRenderObject())
-        self.generateAttrGUI()

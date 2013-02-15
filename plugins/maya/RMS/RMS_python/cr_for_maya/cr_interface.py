@@ -21,7 +21,6 @@ gNodes = []
 
 #==========================CMDS============================
 def build(typename=None):
-    print "BUILD"
     _updateNodes()
     node = None
     if not typename or typename == CRSimulation.getTypeName():
@@ -52,8 +51,8 @@ def edit():
     _updateNodes()
 
     nodes = sel()
-    for node in nodes:
-        window = node.createGUI()
+    if len(nodes) > 0:
+        window = nodes[0].createGUI()
         pm.showWindow(window)
     # nodes = _getAndVerifyByAttr('createGUI')
     # for node in nodes:
@@ -135,7 +134,11 @@ def source():
 #==========================UTILS============================
 def _updateNodes():
     global gNodes
-    gNodes = [obj for obj in gNodes if obj.node]
+    nodes = []
+    nodes.extend(gNodes)
+    nodes.extend(CRSimulation._nodes)
+    print "NODES", nodes
+    gNodes = [obj for obj in nodes if obj.node]
 
 def getSelected(addt_attr=None):
     if not addt_attr:

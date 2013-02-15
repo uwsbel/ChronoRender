@@ -86,18 +86,21 @@ class CRRenderObject_Node(CRObject_Node):
 pm.factories.registerVirtualClass(CRRenderObject_Node, nameRequired=False)
         
 class CRRenderObject(CRObject):
-    def __init__(self, factories):
-        super(CRRenderObject, self).__init__(factories)
+    def __init__(self, factories, typename=''):
+        super(CRRenderObject, self).__init__(factories,typename)
         self.node = CRRenderObject_Node()
         self.robj_factories = self.factories.getFactory(RenderObject.getTypeName())
 
-        robj = self.robj_factories.build(RenderObject.getTypeName())
-        self.addCRObject(RenderObject, robj, prefix='default')
-
+        print "TYPE", typename
+        if not typename: typename = RenderObject.getTypeName()
+        robj = self.robj_factories.build(typename)
+        print "ROBJ", robj, robj.getSerialized(), robj._members
+        self.addMembers(RenderObject, robj, prefix='default')
 
     def createGUI(self):
         form_name = self.node.name()+"_form"
-        self.window = pm.window(height=512, menuBar=True)
+        self.window = pm.window(menuBar=True)
         menu   = pm.menu(label='File', tearOff=True)
         layout = pm.scrollLayout(form_name)
         return self.window
+

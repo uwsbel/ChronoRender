@@ -20,10 +20,8 @@ class CRObject_Node(pm.nt.PolyCube):
     def _isVirtual(cls, obj, name):
         fn = pm.api.MFnDependencyNode(obj)
         try:
-            if fn.hasAttribute(cls._handle):
-                return True
-        except:
-            pass
+            return fn.hasAttribute(cls._handle)
+        except: pass
         return False
 
     @classmethod
@@ -35,6 +33,10 @@ class CRObject_Node(pm.nt.PolyCube):
     @classmethod
     def _postCreateVirtual(cls, newNode ):
         newNode.addAttr(CRObject_Node._root, dt='string', h=True)
+        shape = newNode.listConnections()[0].getShape()
+        shape.setAttr('primaryVisibility', False)
+        shape.setAttr('castsShadows', False)
+        shape.setAttr('receiveShadows', False)
 
     def getShape(self):
         return self.getTransform().getShape()
@@ -52,8 +54,8 @@ pm.factories.registerVirtualClass(CRObject_Node, nameRequired=False)
 
 
 class CRObject(object):
-    def __init__(self, factories):
-        self.node       = pm.polyCube()
+    def __init__(self, factories, typename=''):
+        self.node       = None
         self.factories  = factories
         self.window     = None
         self.attrs      = {}
@@ -64,13 +66,20 @@ class CRObject(object):
         return
 
     def createGUI(self):
-        return pm.window()
+        form_name = self.node.name()+"_form"
+        self.window = pm.window(height=512, menuBar=True)
+        menu   = pm.menu(label='File', tearOff=True)
+        return self.window
 
     def refreshGUI(self):
         if not self.window: return
         pm.deleteUI(self.window)
         self.window = self.createGUI()
         pm.showWindow(self.window)
+
+    def closeGUI(self):
+        if not self.window: return
+        pm.deleteUI(self.window)
 
     def getConnectedNodes(self):
         out = [self.node.name()]
@@ -81,13 +90,22 @@ class CRObject(object):
             if con not in out:
                 out.append(con.name())
 
+    def rename(self, name):
+        self.node.rename(name)
+        self.node.getShape().rename(name+'Shape')
+        self.node.getTransform().rename(name+'Transform')
+
     def addRManAttrs(self):
         return
 
+    #FIXME dear god this is terrible
     def attrs2Dict(self):
         out = {}
         for obj_type, obj_vals in self.attrs.iteritems():
-            out[obj_type] = self._getMemberDict(obj_vals)
+            if isinstance(obj_vals, tuple):
+                out[obj_type] = self._getInstanceDict([obj_vals])[obj_type]
+            else:
+                out[obj_type] = self._getMemberDict(obj_vals)
         return out
 
     def _getMemberDict(self, obj_vals):
@@ -144,10 +162,16 @@ class CRObject(object):
 
         self.attrs[typ.getTypeName()][0] += 1
         obj_name = prefix + typ.getTypeName() + str(self.attrs[typ.getTypeName()][0])
-        self.attrs[typ.getTypeName()][1][obj_name] = self._addMembersToNode(typ,obj,obj_name)
+        self.attrs[typ.getTypeName()][1][obj_name] = self.addMembersToNode(typ,obj,obj_name)
+
+    def addMembers(self, typ, obj, prefix=''):
+        attrs = self.addMembersToNode(typ,obj,prefix)
+        for attr in attrs:
+            attrname, typ, val, mem_name = attr[0], attr[1], attr[2], attr[3]
+            self.attrs[mem_name] = attr
 
     # return list w/ [(attr1, typ, val), (attr2, type, val), ...]
-    def _addMembersToNode(self, typ, obj, prefix=''):
+    def addMembersToNode(self, typ, obj, prefix=''):
         if self._ignore(typ.getTypeName()): return []
         if obj == None: obj = typ()
 
@@ -184,16 +208,32 @@ class CRObject(object):
     def _addSubCRObject(self, typ, concrete, prefix=''):
         obj = typ(factories=self.factories, type=concrete)
         prefix += typ.getTypeName()
-        return self._addMembersToNode(typ, obj, prefix)
+        return self.addMembersToNode(typ, obj, prefix)
 
     def _removeAttr(self, obj, mem_name):
         if len(obj._members[mem_name]) > 0:
             obj._members[mem_name].pop()
         self.refreshGUI()
 
+    def generateConnGUI(self):
+        pm.columnLayout(nch=2)
+        self.generateChildConnGUI()
+        pm.separator()
+        self.generateParentConnGUI()
+
+    def generateChildConnGUI(self):
+        pm.text(label='Children')
+        for obj, name in self.children.iteritems():
+            pm.text(label=name, align='left')
+
+    def generateParentConnGUI(self):
+        pm.text(label='Parents')
+        for obj, name in self.parents.iteritems():
+            pm.text(label=name, align='left')
+
     # emit a GUI element for this object
     def generateAttrGUI(self):
-        self.layout = pm.scrollLayout()
+        self.layout = pm.scrollLayout(cr=True)
         for obj_type, obj_vals in self.attrs.iteritems():
             self._genMemberGUI(obj_type, obj_vals)
 
