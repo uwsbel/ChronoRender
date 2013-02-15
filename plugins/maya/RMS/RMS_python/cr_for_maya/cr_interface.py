@@ -67,9 +67,7 @@ def sel(addt_attr=None):
     out = []
     selected = pm.selected()
     for obj in gNodes:
-        if obj.node not in selected:
-            continue
-        if obj.node.hasAttr(addt_attr):
+        if obj.node in selected or obj.node.getTransform() in selected or obj.node.getShape() in selected:
             out.append(obj)
     return out
 
