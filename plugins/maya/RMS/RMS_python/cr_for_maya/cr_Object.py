@@ -103,7 +103,9 @@ class CRObject(object):
         out = {}
         for obj_type, obj_vals in self.attrs.iteritems():
             if isinstance(obj_vals, tuple):
-                out[obj_type] = self._getInstanceDict([obj_vals])[obj_type]
+                tmp = self._getInstanceDict([obj_vals])
+                if obj_type in tmp:
+                    out[obj_type] = tmp[obj_type]
             else:
                 out[obj_type] = self._getMemberDict(obj_vals)
         return out
@@ -119,6 +121,7 @@ class CRObject(object):
         for vals in inst_vals:
             attrname, typ, val, mem_name = vals[0], vals[1], vals[2], vals[3]
             if typ not in cr_types.builtins:
+                if self._ignore(typ.getTypeName()): continue
                 val = self._getInstanceDict(val)
                 out[mem_name] = val
                 continue
