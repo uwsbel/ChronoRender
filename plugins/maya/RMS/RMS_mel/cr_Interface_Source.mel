@@ -1,2 +1,2 @@
-python("import cr_Source");
-python("cr_Source.main()");
+python("import cr_for_maya");
+python("reload_package(cr_for_maya)");

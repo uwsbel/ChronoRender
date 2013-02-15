@@ -1,2 +1,1 @@
-python("import cr_interface");
-python("cr_interface.batchRI('posix')");
+python("cr_for_maya.batchRI('posix')");

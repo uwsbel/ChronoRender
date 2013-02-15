@@ -1,0 +1,1 @@
+python("cr_for_maya.build()");

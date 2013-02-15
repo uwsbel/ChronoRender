@@ -33,7 +33,10 @@ class CRObject_Node(pm.nt.PolyCube):
     @classmethod
     def _postCreateVirtual(cls, newNode ):
         newNode.addAttr(CRObject_Node._root, dt='string', h=True)
-        shape = newNode.listConnections()[0].getShape()
+
+    @classmethod
+    def hideShape(cls, node):
+        shape = node.listConnections()[0].getShape()
         shape.setAttr('primaryVisibility', False)
         shape.setAttr('castsShadows', False)
         shape.setAttr('receiveShadows', False)

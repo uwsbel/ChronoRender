@@ -22,6 +22,7 @@ class CRRenderObject_Node(CRObject_Node):
         name = newNode.rename(cls._handle)
 
         CRRenderObject_Node.addAttrs(newNode)
+        CRObject_Node.hideShape(newNode)
 
     @classmethod
     def addAttrs(cls, node):

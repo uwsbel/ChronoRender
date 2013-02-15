@@ -93,11 +93,12 @@ class Shader(Renderable):
         return self._paramdict
 
     def resolveAssets(self, assetman):
-        self._shdrpath = assetman.find(self._filename)
-        self._initShaderParameters()
-        self._resolvedAssetPaths = True
-
-        return [self._shdrpath]
+        if self._filename:
+            self._shdrpath = assetman.find(self._filename)
+            self._initShaderParameters()
+            self._resolvedAssetPaths = True
+            return [self._shdrpath]
+        return []
 
     def setAsset(self, assetname, obj):
         if assetname in self._paramdict:
@@ -105,6 +106,7 @@ class Shader(Renderable):
             self._paramdict[assetname] = vtype(obj)
 
     def render(self, rib, *args, **kwargs):
+        if not self._filename: return
         stype = self.getShaderType()
         rdict = self._getDeclParameterDict()
         if stype == 'surface':

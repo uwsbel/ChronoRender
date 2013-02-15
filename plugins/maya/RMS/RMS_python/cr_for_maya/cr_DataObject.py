@@ -20,6 +20,7 @@ class CRDataObject_Node(CRObject_Node):
         shape = trans.getShape()
         name = newNode.rename('data')
         CRDataObject_Node.addAttrs(newNode, trans, shape)
+        CRObject_Node.hideShape(newNode)
 
     @classmethod
     def addAttrs(cls, node, trans, shape):

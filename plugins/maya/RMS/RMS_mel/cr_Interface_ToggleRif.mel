@@ -1,2 +1,1 @@
-python("import cr_interface");
-python("cr_interface.toggleRif()");
+python("cr_for_maya.toggleRif()");
