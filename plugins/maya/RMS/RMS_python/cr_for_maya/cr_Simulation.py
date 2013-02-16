@@ -105,8 +105,6 @@ class CRSimulation(CRObject):
         return self.window
 
     def _createDataGUI(self):
-        # pm.columnLayout( columnAttach=('left', 5), rowSpacing=10, columnWidth=250 )
-        # pm.columnLayout( columnAttach=('left', 5), rowSpacing=10, columnWidth=250 )
         pm.rowColumnLayout( numberOfColumns=2 )
         pm.text( label='Data' ) 
 

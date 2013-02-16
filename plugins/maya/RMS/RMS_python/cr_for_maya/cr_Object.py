@@ -1,7 +1,8 @@
 import ast
 import pymel.all as pm
 import cr_Utils
-import cr_GUI as gui
+from cr_Object_GUI import CRObject_GUI
+
 from chronorender.cr_object import Object
 from chronorender.attribute import Attribute
 from chronorender.option import Option
@@ -60,10 +61,12 @@ class CRObject(object):
     def __init__(self, factories, typename=''):
         self.node       = None
         self.factories  = factories
+        self.type       = typename
         self.window     = None
         self.attrs      = {}
         self.children   = {}
         self.parents    = {}
+        self.gui        = CRObject_GUI(self)
 
     def export(self, md):
         return
@@ -230,82 +233,12 @@ class CRObject(object):
             obj._members[mem_name].pop()
         self.refreshGUI()
 
-    def generateConnGUI(self):
-        pm.columnLayout(nch=2)
-        self.generateChildConnGUI()
-        pm.separator()
-        self.generateParentConnGUI()
-
-    def generateChildConnGUI(self):
-        pm.text(label='Children')
-        for obj, name in self.children.iteritems():
-            pm.text(label=name, align='left')
-
-    def generateParentConnGUI(self):
-        pm.text(label='Parents')
-        for obj, name in self.parents.iteritems():
-            pm.text(label=name, align='left')
-
-    # emit a GUI element for this object
-    def generateAttrGUI(self):
-        self.layout = pm.scrollLayout(cr=True)
-        for obj_type, obj_vals in self.attrs.iteritems():
-            self._genMemberGUI(obj_type, obj_vals)
-
-    # emit a GUI element for all objs that define this object
-    def _genMemberGUI(self, obj_type, obj_vals):
-        for inst_name, inst_vals in obj_vals[1].iteritems():
-            self._genInstanceGUI(inst_name, inst_vals)
-            pm.separator(height=10, style='double')
-
-    # emit a GUI element for an object instance
-    def _genInstanceGUI(self, inst_name, inst_vals):
-        crobjs = []
-        pm.text( label=inst_name) 
-        for vals in inst_vals:
-            attrname, typ, val, mem_name = vals[0], vals[1], vals[2], vals[3]
-            if typ not in cr_types.builtins:
-                crobjs.append(vals)
-                continue
-
-            self._genTypeGUI(attrname, typ, val)
-
-        for vals in crobjs:
-            attrname, typ, val, mem_name = vals[0], vals[1], vals[2], vals[3]
-            if isinstance(val, list):
-                if typ not in cr_types.builtins:
-                    if self._ignore(typ.getTypeName()): return
-                    enum_attr = self._getTypeEnumAttrName(typ)
-                    pm.attrEnumOptionMenuGrp( l='Type', at=self.node.name()+'.'+enum_attr, ei=self._genEnumsFor(typ))
-                    pm.button(label="Add", w=64, c=pm.Callback(self._addEnumeratedObject, typ, enum_attr))
-            self._genInstanceGUI(mem_name, val)
-
     def _addEnumeratedObject(self, typ, enum_attr):
         fact = self.factories.getFactory(typ.getTypeName())
         srctype = self._getTypeFromEnum(typ, enum_attr)
         obj = fact.build(srctype)
         self.addCRObject(typ, obj)
 
-        self.refreshGUI()
-
-    # emit a GUI element for specific types
-    def _genTypeGUI(self, attrname, typ, val):
-        if pm.attributeQuery(attrname, node=self.node, h=True): return
-
-        if typ == cr_types.url:
-            pm.attrControlGrp(attribute=self.node.name()+'.'+attrname)
-            pm.button(label="Find", w=128, c=
-                    pm.Callback(gui.setAttrFromFileDialog, self.node,
-                        attrname))
-        else:
-            pm.attrControlGrp(attribute=self.node.name()+'.'+attrname)
-
-        # if isinstance(val, list):
-            # pm.button(label="Add", w=64, c=pm.Callback(self._addAttrGUI,
-                # attrname, typ, val, ''))
-
-    def _addAttrGUI(self, name, typ, val, prefix='', concrete=''):
-        self._addAttr(self, name, typ, val, prefix='', concrete='')
         self.refreshGUI()
 
     def _genEnumsFor(self, typ):

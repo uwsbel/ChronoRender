@@ -69,4 +69,4 @@ class CRDataObject(CRObject):
                              ei=self._genEnumsFor(DataSource))
 
         pm.button(label="Add DataSource", w=128, c= lambda *args: self.addDataSource())
-        self.generateAttrGUI()
+        self.gui.generateAttrGUI()
