@@ -31,19 +31,17 @@ class CRDataObject(CRObject):
 
     def __init__(self, factories, typename=''):
         super(CRDataObject, self).__init__(factories, typename)
-        self.crtype = DataObject
-        self.node = CRDataObject_Node()
-        self.src_factories = self.factories.getFactory(DataSource.getTypeName())
         self.datasrcs = weakref.WeakValueDictionary()
         self.numsrcs = 0
 
         pm.select(self.node)
 
-    def createGUI(self):
-        win = super(CRDataObject, self).createGUI()
-        layout = pm.scrollLayout('dataobj')
+    def createNode(self):
+        return CRDataObject_Node()
+
+    def createFormGUI(self):
+        win = super(CRDataObject, self).createFormGUI()
         self._createDataSourceGUI()
-        return win
 
     def _createDataSourceGUI(self):
         pm.columnLayout( columnAttach=('left', 5), rowSpacing=10, columnWidth=250 )

@@ -19,17 +19,6 @@ class CRGeometry(CRObject):
 
     def __init__(self, factories, typename=''):
         super(CRGeometry, self).__init__(factories, typename)
-        self.node = CRGeometry_Node()
-        self.geo_factories = self.factories.getFactory(Geometry.getTypeName())
 
-        if not typename: 
-            typename = Geometry.getTypeName()
-        geo = self.geo_factories.build(typename)
-        self.initMembers(Geometry, geo, prefix='default')
-
-        pm.select(self.node)
-
-    def createGUI(self):
-        win = super(CRGeometry, self).createGUI()
-        self.gui.generateAttrGUI()
-        return win
+    def createNode(self):
+        return CRGeometry_Node()

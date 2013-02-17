@@ -54,16 +54,13 @@ class CRRenderObject(CRObject):
 
         pm.select(self.node)
 
-    def addShader(self):
-        self.closeGUI()
+    def createNode(self):
+        return CRRenderObject_Node()
 
-    def createGUI(self):
-        win = super(CRRenderObject, self).createGUI()
-        layout = pm.scrollLayout('dataobj')
-        pm.rowColumnLayout( numberOfColumns=3 )
+    def createFormGUI(self):
+        win = super(CRRenderObject, self).createFormGUI()
         self._createRObjGUI()
         self._createShaderGUI()
-        return win
 
     def _createRObjGUI(self):
         pm.text( label='Geometry' ) 

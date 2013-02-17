@@ -43,42 +43,31 @@ class CRSimulation_Node(CRObject_Node):
 pm.factories.registerVirtualClass(CRSimulation_Node, nameRequired=False)
 
 class CRSimulation(CRObject):
-    _nodes = []
     crtype = Simulation
 
     def __init__(self, factories, typename=''):
         super(CRSimulation, self).__init__(factories,typename)
-        self.node = CRSimulation_Node()
-        self.datasrcs = weakref.WeakValueDictionary()
+
         self.sim_factories = self.factories.getFactory(Simulation.getTypeName())
-        self.src_factories = self.factories.getFactory(DataSource.getTypeName())
-        self.numsrcs = 0
+        self.datasrcs = weakref.WeakValueDictionary()
         self.robjs = weakref.WeakValueDictionary()
+        self.numsrcs = 0
         self.numrobjs = 0
 
-        if not typename: 
-            typename = Simulation.getTypeName()
-        sim = self.sim_factories.build(typename)
-        self.initMembers(Simulation, sim)
-
-        pm.select(self.node)
+    def createNode(self):
+        return CRSimulation_Node()
 
     def export(self, md):
         attrdict = self.attrs2Dict()
         simdict = attrdict[Simulation.getTypeName()]
-        for key, val in simdict.iteritems():
-            print key, val
         sim = self.sim_factories.build(Simulation.getTypeName(), **simdict)
         md.addElement(Simulation.getTypeName(), sim.getSerialized())
         del sim
 
-    def createGUI(self):
-        win = super(CRSimulation, self).createGUI()
+    def createFormGUI(self):
+        win = super(CRSimulation, self).createFormGUI()
         self._createDataGUI()
         self._createRObjGUI()
-        self._createScriptGUI()
-        self.gui.generateAttrGUI()
-        return win
 
     def _createDataGUI(self):
         pm.text( label='Data' ) 
@@ -98,7 +87,7 @@ class CRSimulation(CRObject):
         pm.attrEnumOptionMenuGrp( l='Type', 
                              at=self.node.name() +
                              '.'+CRSimulation_Node._robjTypeAttr,
-                             ei=(0, DataObject.getTypeName()))
+                             ei=self._genEnumsFor(RenderObject))
 
         pm.button(label="Add", w=128,
                 c=pm.Callback(self.addChildEnumCB, CRRenderObject,

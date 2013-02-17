@@ -64,8 +64,9 @@ pm.factories.registerVirtualClass(CRObject_Node, nameRequired=False)
 class CRObject(object):
     crtype = Object
     _gNodes = []
+
     def __init__(self, factories, typename=''):
-        self.node       = None
+        self.node       = self.createNode()
         self.factories  = factories
         self.type       = typename
         self.attrs      = {}
@@ -73,6 +74,17 @@ class CRObject(object):
         self.parents    = {}
         self.gui        = CRObject_GUI(self)
         self.script     = []
+
+        clstypename = self.__class__.crtype.getTypeName()
+        if not typename: typename = clstypename
+        fact = self.factories.getFactory(clstypename)
+        sim = fact.build(typename)
+        self.initMembers(self.__class__.crtype, sim)
+
+        pm.select(self.node)
+
+    def createNode(self):
+        return CRObject_Node()
 
     def export(self, md):
         return
@@ -320,7 +332,16 @@ class CRObject(object):
 
     def createGUI(self):
         win = self.gui.createGUI()
+        self.createFormGUI()
+        self._createAttrGUI()
+        self._createScriptGUI()
         return win
+
+    def createFormGUI(self):
+        return
+
+    def _createAttrGUI(self):
+        self.gui.generateAttrGUI()
 
     def _createScriptGUI(self):
         if len(self.script) > 0: return
