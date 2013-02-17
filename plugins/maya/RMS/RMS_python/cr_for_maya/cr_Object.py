@@ -146,15 +146,19 @@ class CRObject(object):
                 out[mem_name] = val
                 continue
             if isinstance(val, list):
-                listval = self.node.getAttr(attrname)
-                if listval:
+                listval = None
+                try:
+                    listval = self.node.getAttr(attrname)
                     out[mem_name] = ast.literal_eval(listval)
-                else:
+                except Exception:
                     out[mem_name] = []
             else:
                 if typ == cr_types.url:
                     typ = str
-                out[mem_name] = typ(self.node.getAttr(attrname))
+                try:
+                    out[mem_name] = typ(self.node.getAttr(attrname))
+                except Exception:
+                    out[mem_name] = ''
         return out
 
     def addChildEnumCB(self, mayatype, objlist, 
@@ -201,8 +205,8 @@ class CRObject(object):
         return conn
 
     def _removeNode(self, dic, obj):
-        if self._getNodeConnectionAttr(obj):
-            self._removeNodeConnectionAttr(obj)
+        # if self._getNodeConnectionAttr(obj):
+            # self._removeNodeConnectionAttr(obj)
 
         if obj in dic:
             del dic[obj]
@@ -258,6 +262,7 @@ class CRObject(object):
     def _addAttr(self, mem_name, typ, val, prefix='', concrete=''):
         if val == None: val = typ()
         hidden = True if self._ignore(mem_name) else False
+        print "ADD"
         attrname = CRObject._getAttrName(mem_name, prefix)
         mayatype = cr_Utils.crType2Maya(typ)
 

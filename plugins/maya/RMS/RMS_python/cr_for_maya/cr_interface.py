@@ -7,8 +7,6 @@ from chronorender import ChronoRender
 from chronorender.metadata import MDReaderFactory
 from cr_Object import CRObject, CRObject_Node
 from cr_Simulation import CRSimulation
-from cr_RenderObject import CRRenderObject
-from cr_Geometry import CRGeometry
 
 _crHandle = CRObject_Node._root
 _simHandle = "simulation"
@@ -25,9 +23,7 @@ def build(typename=None):
     _updateNodes()
     node = None
     if not typename or typename == CRSimulation.getTypeName():
-        # node = CRSimulation(Factories)
-        node = CRRenderObject(Factories)
-        # node = CRGeometry(Factories)
+        node = CRSimulation(Factories)
     gNodes.append(node)
 
 def export():
@@ -144,22 +140,15 @@ def source():
 def _updateNodes():
     global gNodes
     nodes = []
-    # nodes.extend(gNodes)
-    # nodes.extend(CRObject._gNodes)
-    # for obj in nodes:
-        # if obj.node: continue
-        # for parent, name in obj.parents.iteritems():
-            # parent.removeChild(obj)
-
     for obj in gNodes:
         if obj.node: continue
-        # for parent, name in obj.parents.iteritems():
-            # parent.removeChild(obj)
+        for parent, name in obj.parents.iteritems():
+            parent.removeChild(obj)
         del obj
     for obj in CRObject._gNodes:
         if obj.node: continue
-        # for parent, name in obj.parents.iteritems():
-            # parent.removeChild(obj)
+        for parent, name in obj.parents.iteritems():
+            parent.removeChild(obj)
         del obj
 
     gNodes = [obj for obj in gNodes if obj.node]

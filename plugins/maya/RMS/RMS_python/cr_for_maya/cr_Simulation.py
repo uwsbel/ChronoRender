@@ -58,6 +58,7 @@ class CRSimulation(CRObject):
         return CRSimulation_Node()
 
     def export(self, md):
+        print "ROBJS", self.robjs, self.robjs.items()
         attrdict = self.attrs2Dict()
         simdict = attrdict[Simulation.getTypeName()]
         sim = self.sim_factories.build(Simulation.getTypeName(), **simdict)
