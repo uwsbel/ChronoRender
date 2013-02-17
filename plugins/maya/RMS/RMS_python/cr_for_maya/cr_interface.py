@@ -27,10 +27,15 @@ def build(typename=None):
     gNodes.append(node)
 
 def export():
-    _updateNodes()
-    global gNodes
-    os.chdir(Utils.getProjPath())
+    _export(sel())
 
+def exportAll():
+    _export(gNodes)
+
+def _export(nodes):
+    _updateNodes()
+
+    os.chdir(Utils.getProjPath())
     cr_Utils.createOutDirs()
     path = cr_Utils.getOutPathFor('root')
     path = os.path.join(path, 'sim.yml')
@@ -39,12 +44,13 @@ def export():
 
     md = MDReaderFactory.build(path)
 
-    selected = sel()
-    for obj in selected:
+    for obj in nodes:
         obj.export(md)
 
     md.writeToDisk()
     del md
+
+
 
 def edit():
     _updateNodes()

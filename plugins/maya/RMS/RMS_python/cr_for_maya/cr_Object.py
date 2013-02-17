@@ -262,7 +262,6 @@ class CRObject(object):
     def _addAttr(self, mem_name, typ, val, prefix='', concrete=''):
         if val == None: val = typ()
         hidden = True if self._ignore(mem_name) else False
-        print "ADD"
         attrname = CRObject._getAttrName(mem_name, prefix)
         mayatype = cr_Utils.crType2Maya(typ)
 

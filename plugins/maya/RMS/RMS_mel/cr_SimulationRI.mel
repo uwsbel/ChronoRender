@@ -7,6 +7,7 @@ string    $pyScriptPath = "${CRENDER_PATH}/bin/crender_sim.py";
 
 string    $cmd = "python " + $pyScriptPath;
 string    $argString = "renderman/sim.yml " + $frame;
+python("cr_for_maya.exportAll()");
 RiIfBegin("!defined(CRENDER_PATH)");
 RiOption "user" "string CRENDER_PATH" $crPath;
 RiIfEnd();
