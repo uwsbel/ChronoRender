@@ -134,6 +134,8 @@ class CRObject(object):
         out = []
         for inst_name, inst_vals in obj_vals[1].iteritems():
             out.append(self._getInstanceDict(inst_vals))
+        if len(out) == 1:
+            return out[0]
         return out
 
     def _getInstanceDict(self, inst_vals):
