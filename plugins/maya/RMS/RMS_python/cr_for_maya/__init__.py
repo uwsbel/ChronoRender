@@ -7,5 +7,6 @@ import cr_Object
 import cr_Object_GUI
 import cr_RenderObject
 import cr_Simulation
+import cr_Scriptable
 import cr_Utils
 from MayaProjUtils import *

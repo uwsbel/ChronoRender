@@ -1,7 +1,9 @@
 import ast
 import pymel.all as pm
 import cr_Utils
-from cr_Object_GUI import CRObject_GUI
+from cr_for_maya.cr_Object_GUI import CRObject_GUI
+from chronorender.cr_scriptable import Scriptable
+# from cr_for_maya.cr_Scriptable import CRScriptable
 
 from chronorender.cr_object import Object
 from chronorender.attribute import Attribute
@@ -11,6 +13,7 @@ import chronorender.cr_types as cr_types
 class CRObject_Node(pm.nt.PolyCube):
     _handle = "chronorender"
     _root = "cr"
+    _scriptTypeAttr = 'script_type'
 
     @classmethod
     def list(cls, *args, **kwargs):
@@ -34,6 +37,7 @@ class CRObject_Node(pm.nt.PolyCube):
     @classmethod
     def _postCreateVirtual(cls, newNode ):
         newNode.addAttr(CRObject_Node._root, dt='string', h=True)
+        newNode.addAttr(CRObject_Node._scriptTypeAttr, dt='string', h=True)
 
     @classmethod
     def hideShape(cls, node):
@@ -68,6 +72,7 @@ class CRObject(object):
         self.children   = {}
         self.parents    = {}
         self.gui        = CRObject_GUI(self)
+        self.script     = []
 
     def export(self, md):
         return
@@ -216,7 +221,9 @@ class CRObject(object):
         self.attrs[typ.getTypeName()][1][obj_name] = self.addMembersToNode(typ,obj,obj_name)
 
     def initMembers(self, typ, obj, prefix=''):
+        print "GIN"
         attrs = self.addMembersToNode(typ,obj,prefix)
+        print "ATTRS", attrs
         for attr in attrs:
             attrname, typ, val, mem_name = attr[0], attr[1], attr[2], attr[3]
             self.attrs[mem_name] = attr
@@ -240,12 +247,14 @@ class CRObject(object):
         attrname = CRObject._getAttrName(mem_name, prefix)
         mayatype = cr_Utils.crType2Maya(typ)
 
-        if mayatype == 'string':
+        if typ not in cr_types.builtins:
+            return []
+        elif mayatype == 'string':
             self._addStringAttr(attrname, val, hidden, mem_name)
-        elif typ not in cr_types.builtins:
-            if not isinstance(val, list):
-                val = self._addCRObjectAttr(typ, concrete, prefix)
-                if not val: return []
+        # elif typ not in cr_types.builtins:
+            # if not isinstance(val, list):
+                # val = self._addCRObjectAttr(typ, concrete, prefix)
+                # if not val: return []
         else:
             self.node.addAttr(attrname, at=mayatype, h=hidden, nn=mem_name)
 
@@ -313,7 +322,21 @@ class CRObject(object):
         return False
 
     def createGUI(self):
-        return self.gui.createGUI()
+        win = self.gui.createGUI()
+        return win
+
+    def _createScriptGUI(self):
+        if len(self.script) > 0: return
+        pm.text( label='Script' ) 
+
+        pm.attrEnumOptionMenuGrp( l='Type', 
+                at=self.node.name() +
+                '.'+CRObject_Node._scriptTypeAttr,
+                ei=(0, Scriptable.getTypeName()))
+
+        pm.button(label="Add", w=128,
+                c=pm.Callback(self.addCRObject, Scriptable,
+                    Scriptable(), prefix='script'))
 
     def refreshGUI(self):
         return self.gui.refreshGUI()

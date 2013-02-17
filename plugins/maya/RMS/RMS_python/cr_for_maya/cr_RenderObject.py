@@ -67,12 +67,12 @@ class CRRenderObject(CRObject):
 
     def _createRObjGUI(self):
         pm.text( label='Geometry' ) 
-        pm.attrEnumOptionMenuGrp( l='Geo Type', 
+        pm.attrEnumOptionMenuGrp( l='Type', 
                              at=self.node.name() +
                              '.'+CRRenderObject_Node._geoTypeAttr,
                              ei=self._genEnumsFor(Geometry))
 
-        pm.button(label="Add Geometry", w=128,
+        pm.button(label="Add", w=128,
                 c=pm.Callback(self.addChildEnumCB, CRGeometry,
                     self.geo, name='geo', 
                     srcattr=CRRenderObject_Node._geoTypeAttr, 
@@ -80,12 +80,12 @@ class CRRenderObject(CRObject):
 
     def _createShaderGUI(self):
         pm.text( label='Shader' ) 
-        pm.attrEnumOptionMenuGrp( l='Shader Type', 
+        pm.attrEnumOptionMenuGrp( l='Type', 
                              at=self.node.name() +
                              '.'+CRRenderObject_Node._sdrTypeAttr,
                              ei=self._genEnumsFor(Shader))
 
-        pm.button(label="Add Shader", w=128,
+        pm.button(label="Add", w=128,
                 c=pm.Callback(self.addChildEnumCB, CRShader,
                     self.shaders, name='shader', 
                     srcattr=CRRenderObject_Node._sdrTypeAttr, 

@@ -16,6 +16,7 @@ import weakref
 class CRSimulation_Node(CRObject_Node):
     _handle = "simulation"
     _robjTypeAttr = "robj_type"
+    _dataTypeAttr = "data_type"
 
     @classmethod
     def _postCreateVirtual(cls, newNode ):
@@ -31,6 +32,7 @@ class CRSimulation_Node(CRObject_Node):
     @classmethod
     def addAttrs(cls, node, trans, shape):
         node.addAttr(CRSimulation_Node._robjTypeAttr, dt='string', h=True)
+        node.addAttr(CRSimulation_Node._dataTypeAttr, dt='string', h=True)
 
     @classmethod
     def addRManAttrs(cls, node, trans, shape):
@@ -54,6 +56,11 @@ class CRSimulation(CRObject):
         self.numsrcs = 0
         self.robjs = weakref.WeakValueDictionary()
         self.numrobjs = 0
+
+        if not typename: 
+            typename = Simulation.getTypeName()
+        sim = self.sim_factories.build(typename)
+        self.initMembers(Simulation, sim)
 
         pm.select(self.node)
 
@@ -88,11 +95,11 @@ class CRSimulation(CRObject):
 
     def createGUI(self):
         win = super(CRSimulation, self).createGUI()
-        layout = pm.scrollLayout('sim')
-        pm.separator(h=40, style='in')
+        # pm.rowColumnLayout( numberOfColumns=3 )
         self._createDataGUI()
-        pm.separator(h=40, style='in')
         self._createRObjGUI()
+        self._createScriptGUI()
+        self.gui.generateAttrGUI()
         # pm.separator(h=40, style='in')
         # self.generateAttrGUI()
         # pm.separator(h=40, style='in')
@@ -100,16 +107,19 @@ class CRSimulation(CRObject):
         return win
 
     def _createDataGUI(self):
-        pm.rowColumnLayout( numberOfColumns=2 )
+        # pm.rowColumnLayout( numberOfColumns=2 )
         pm.text( label='Data' ) 
-
+        pm.attrEnumOptionMenuGrp( l='Type', 
+                             at=self.node.name() +
+                             '.'+CRSimulation_Node._dataTypeAttr,
+                             ei=(0, DataObject.getTypeName()))
         pm.button(label="Add", w=128, c= lambda *args:
                 self.addDataObject())
 
     def _createRObjGUI(self):
-        pm.rowColumnLayout( numberOfColumns=3 )
+        # pm.rowColumnLayout( numberOfColumns=3 )
         pm.text( label='Render Object' ) 
-        pm.attrEnumOptionMenuGrp( l='RObj Type', 
+        pm.attrEnumOptionMenuGrp( l='Type', 
                              at=self.node.name() +
                              '.'+CRSimulation_Node._robjTypeAttr,
                              ei=self._genEnumsFor(RenderObject))

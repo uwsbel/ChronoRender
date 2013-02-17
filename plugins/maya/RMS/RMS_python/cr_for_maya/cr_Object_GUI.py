@@ -10,6 +10,7 @@ class CRObject_GUI():
     def createGUI(self):
         self.window = pm.window(menuBar=True)
         menu   = pm.menu(label='File', tearOff=True)
+        pm.rowColumnLayout( numberOfColumns=3 )
         return self.window
 
     def refreshGUI(self):
@@ -88,6 +89,7 @@ class CRObject_GUI():
     def _genTypeGUI(self, attrname, typ, val):
         if pm.attributeQuery(attrname, node=self.obj.node, h=True): return
 
+        pm.text(l='Attribute')
         if typ == cr_types.url:
             pm.attrControlGrp(attribute=self.obj.node.name()+'.'+attrname)
             pm.button(label="Find", w=128, c=
@@ -95,3 +97,4 @@ class CRObject_GUI():
                         attrname))
         else:
             pm.attrControlGrp(attribute=self.obj.node.name()+'.'+attrname)
+            pm.button(label="ignore", w=128)

@@ -28,3 +28,8 @@ class CRGeometry(CRObject):
         self.initMembers(Geometry, geo, prefix='default')
 
         pm.select(self.node)
+
+    def createGUI(self):
+        win = super(CRGeometry, self).createGUI()
+        self.gui.generateAttrGUI()
+        return win
