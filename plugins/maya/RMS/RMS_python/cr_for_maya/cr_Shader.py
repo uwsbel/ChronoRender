@@ -19,12 +19,6 @@ class CRShader(CRObject):
 
     def __init__(self, factories, typename=''):
         super(CRShader, self).__init__(factories, typename)
-        self.node = CRShader_Node()
-        self.sdr_factories = self.factories.getFactory(Shader.getTypeName())
 
-        if not typename: 
-            typename = Shader.getTypeName()
-        sdr = self.sdr_factories.build(typename)
-        self.initMembers(Shader, sdr, prefix='default')
-
-        pm.select(self.node)
+    def createNode(self):
+        return CRShader_Node()
