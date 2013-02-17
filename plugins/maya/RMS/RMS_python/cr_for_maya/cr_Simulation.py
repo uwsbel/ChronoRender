@@ -11,6 +11,8 @@ from chronorender.renderobject import RenderObject
 from chronorender.simulation import Simulation
 from chronorender.cr_scriptable import Scriptable
 
+import weakref
+
 class CRSimulation_Node(CRObject_Node):
     _handle = "simulation"
     _robjTypeAttr = "robj_type"
@@ -40,34 +42,27 @@ pm.factories.registerVirtualClass(CRSimulation_Node, nameRequired=False)
 
 class CRSimulation(CRObject):
     _nodes = []
+    crtype = Simulation
 
     def __init__(self, factories, typename=''):
         super(CRSimulation, self).__init__(factories,typename)
         self.node = CRSimulation_Node()
-        self.datasrcs = []
+        # self.datasrcs = []
+        self.datasrcs = weakref.WeakValueDictionary()
         self.sim_factories = self.factories.getFactory(Simulation.getTypeName())
         self.src_factories = self.factories.getFactory(DataSource.getTypeName())
         self.numsrcs = 0
-        self.robjs = []
+        self.robjs = weakref.WeakValueDictionary()
         self.numrobjs = 0
 
         pm.select(self.node)
 
     def export(self, md):
         attrdict = self.attrs2Dict()
-
-        # srclist = []
-        # for data in self.datasrcs:
-            # srclist.append(data.attrs2Dict())
-        if len(self.datasrcs) > 0:
-            attrdict[DataObject.getTypeName()] = self.datasrcs[0].attrs2Dict()
-
-        robjlist = []
-        for robj in self.robjs:
-            robjlist.append(robj.attrs2Dict())
-        attrdict[RenderObject.getTypeName()] = robjlist
-
-        sim = self.sim_factories.build(Simulation.getTypeName(), **attrdict)
+        simdict = attrdict[Simulation.getTypeName()]
+        for key, val in simdict.iteritems():
+            print key, val
+        sim = self.sim_factories.build(Simulation.getTypeName(), **simdict)
         md.addElement(Simulation.getTypeName(), sim.getSerialized())
         del sim
 
@@ -75,10 +70,10 @@ class CRSimulation(CRObject):
         self.numsrcs += 1
         src = CRDataObject(self.factories)
         src.rename('dataobj'+str(self.numsrcs))
-        self.addCRNode(src)
-        CRSimulation._nodes.append(src)
-        self.datasrcs.append(src)
+        self.addChild(src)
+        src = self.addObjToGlobalContext(src, self.datasrcs)
         self.closeGUI()
+        pm.showWindow(src.createGUI())
 
     def addRenderObject(self):
         self.numrobjs += 1
@@ -86,13 +81,13 @@ class CRSimulation(CRObject):
                 CRSimulation_Node._robjTypeAttr)
         robj = CRRenderObject(self.factories, robjtype)
         robj.rename('robj'+str(self.numrobjs))
-        self.addCRNode(robj)
-        CRSimulation._nodes.append(robj)
-        self.robjs.append(robj)
+        self.addChild(robj)
+        robj = self.addObjToGlobalContext(robj, self.robjs)
         self.closeGUI()
+        pm.showWindow(robj.createGUI())
 
     def createGUI(self):
-        super(CRSimulation, self).createGUI()
+        win = super(CRSimulation, self).createGUI()
         layout = pm.scrollLayout('sim')
         pm.separator(h=40, style='in')
         self._createDataGUI()
@@ -102,7 +97,7 @@ class CRSimulation(CRObject):
         # self.generateAttrGUI()
         # pm.separator(h=40, style='in')
         # self.generateConnGUI()
-        return self.window
+        return win
 
     def _createDataGUI(self):
         pm.rowColumnLayout( numberOfColumns=2 )

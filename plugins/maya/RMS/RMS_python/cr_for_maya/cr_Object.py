@@ -58,11 +58,12 @@ pm.factories.registerVirtualClass(CRObject_Node, nameRequired=False)
 
 
 class CRObject(object):
+    crtype = Object
+    _gNodes = []
     def __init__(self, factories, typename=''):
         self.node       = None
         self.factories  = factories
         self.type       = typename
-        self.window     = None
         self.attrs      = {}
         self.children   = {}
         self.parents    = {}
@@ -71,30 +72,10 @@ class CRObject(object):
     def export(self, md):
         return
 
-    def createGUI(self):
-        form_name = self.node.name()+"_form"
-        self.window = pm.window(height=512, menuBar=True)
-        menu   = pm.menu(label='File', tearOff=True)
-        return self.window
-
-    def refreshGUI(self):
-        if not self.window: return
-        pm.deleteUI(self.window)
-        self.window = self.createGUI()
-        pm.showWindow(self.window)
-
-    def closeGUI(self):
-        if not self.window: return
-        pm.deleteUI(self.window)
-
-    def getConnectedNodes(self):
-        out = [self.node.name()]
-        for rel in self.node.listRelatives():
-            if rel not in out:
-                out.append(rel.name())
-        for con in self.node.listConnections():
-            if con not in out:
-                out.append(con.name())
+    def addObjToGlobalContext(self, obj, weak_dict):
+        CRObject._gNodes.append(obj)
+        weak_dict[id(obj)] = obj
+        return obj
 
     def rename(self, name):
         self.node.rename(name)
@@ -104,9 +85,13 @@ class CRObject(object):
     def addRManAttrs(self):
         return
 
+    def getCRType(self):
+        return None
+
     #FIXME dear god this is terrible
     def attrs2Dict(self):
         out = {}
+        print self.attrs
         for obj_type, obj_vals in self.attrs.iteritems():
             if isinstance(obj_vals, tuple):
                 tmp = self._getInstanceDict([obj_vals])
@@ -114,7 +99,20 @@ class CRObject(object):
                     out[obj_type] = tmp[obj_type]
             else:
                 out[obj_type] = self._getMemberDict(obj_vals)
-        return out
+        for node in self.children:
+            attrdict = node.attrs2Dict()
+            typename = attrdict.keys()[0]
+            vals = attrdict.values()[0]
+            if typename not in out:
+                out[typename] = vals
+            else:
+                if not isinstance(out[typename], list):
+                    if len(out[typename]) > 0:
+                        out[typename] = [out[typename]]
+                    else:
+                        out[typename] = []
+                out[typename].append(vals)
+        return {self.crtype.getTypeName(): out}
 
     def _getMemberDict(self, obj_vals):
         out = []
@@ -143,26 +141,70 @@ class CRObject(object):
                 out[mem_name] = typ(self.node.getAttr(attrname))
         return out
 
-    def addCRNode(self, obj):
-        node = obj.node
-        pm.parent(node.getTransform().name(), self.node.getTransform().name())
-        conn = self._getNodeConnectionAttr(obj)
-        self.children[obj] = conn
+    def addChildEnumCB(self, mayatype, objlist, 
+            name='obj', srcattr=None, counter=None):
+        srctype = mayatype.crtype.getTypeName()
+        if srcattr:
+            srctype = self._getTypeFromEnum(mayatype.crtype, srcattr)
+
+        objname = name
+        if counter:
+            counter += 1
+            objname = name+str(counter)
+
+        src = mayatype(self.factories, srctype)
+        src.rename(objname)
+        self.addChild(src)
+        self.addObjToGlobalContext(src, objlist)
+        self.closeGUI()
+        pm.showWindow(src.createGUI())
+
+
+    def addChild(self, obj):
+        pm.parent(obj.node.getTransform().name(), self.node.getTransform().name())
+        conn = self._addNode(self.children, obj)
         parent = obj.addParent(self)
         pm.mel.eval("connectAttr " + self.node.name()+ '.' + conn + ' ' +
-                node.name() + '.' + parent)
+                obj.node.name() + '.' + parent)
         return conn
+
+    def removeChild(self, obj):
+        self._removeNode(self.children, obj)
 
     def addParent(self, obj):
+        return self._addNode(self.parents, obj)
+
+    def removeParent(self, obj):
+        self._removeNode(self.parents, obj)
+
+    def _addNode(self, dic, obj):
         conn = self._getNodeConnectionAttr(obj)
-        self.parents[obj] = conn
+        if not conn:
+            conn = self._addNodeConnectionAttr(obj)
+        dic[obj] = conn
         return conn
 
+    def _removeNode(self, dic, obj):
+        if self._getNodeConnectionAttr(obj):
+            self._removeNodeConnectionAttr(obj)
+
+        if obj in dic:
+            del dic[obj]
+
     def _getNodeConnectionAttr(self, obj):
+        name = obj.node.name()
+        if self.node.hasAttr(name):
+            return name
+        return None
+
+    def _addNodeConnectionAttr(self, obj):
         name = obj.node.name()
         if not self.node.hasAttr(name):
             self.node.addAttr(name, at='message')
         return name
+
+    def _removeNodeConnectionAttr(self, obj):
+        self.node.deleteAttr(obj.node.name())
 
     # add to attr dict {typname: {obj_name : [], obj2_name : []}}
     def addCRObject(self, typ, obj, prefix=''):
@@ -269,6 +311,15 @@ class CRObject(object):
         if name == Object.getInstanceQualifier():
             return True
         return False
+
+    def createGUI(self):
+        return self.gui.createGUI()
+
+    def refreshGUI(self):
+        return self.gui.refreshGUI()
+
+    def closeGUI(self):
+        return self.gui.closeGUI()
 
     @staticmethod
     def _getAttrName(name, prefix=''):

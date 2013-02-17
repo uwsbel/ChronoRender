@@ -1,4 +1,4 @@
-import os, sys
+import os, sys, gc
 import pymel.all as pm
 
 import cr_Utils
@@ -51,6 +51,7 @@ def edit():
     _updateNodes()
 
     nodes = sel()
+    print "NODES", nodes
     if len(nodes) > 0:
         window = nodes[0].createGUI()
         pm.showWindow(window)
@@ -67,9 +68,21 @@ def sel(addt_attr=None):
     out = []
     selected = pm.selected()
     for obj in gNodes:
-        if obj.node in selected or obj.node.getTransform() in selected or obj.node.getShape() in selected:
+        if _isSelected(obj, selected):
+            out.append(obj)
+    for obj in CRObject._gNodes:
+        if _isSelected(obj, selected):
             out.append(obj)
     return out
+
+def _isSelected(obj, selected):
+    if obj.node in selected:
+        return True
+    if obj.node.getTransform() in selected:
+        return True
+    if obj.node.getShape() in selected:
+        return True
+    return False
 
 def toggleRif():
     global _bRif
@@ -133,10 +146,27 @@ def source():
 def _updateNodes():
     global gNodes
     nodes = []
-    nodes.extend(gNodes)
-    nodes.extend(CRSimulation._nodes)
-    print "NODES", nodes
-    gNodes = [obj for obj in nodes if obj.node]
+    # nodes.extend(gNodes)
+    # nodes.extend(CRObject._gNodes)
+    # for obj in nodes:
+        # if obj.node: continue
+        # for parent, name in obj.parents.iteritems():
+            # parent.removeChild(obj)
+
+    for obj in gNodes:
+        if obj.node: continue
+        for parent, name in obj.parents.iteritems():
+            parent.removeChild(obj)
+        del obj
+    for obj in CRObject._gNodes:
+        if obj.node: continue
+        for parent, name in obj.parents.iteritems():
+            parent.removeChild(obj)
+        del obj
+
+    gNodes = [obj for obj in gNodes if obj.node]
+    CRObject._gNodes = [obj for obj in CRObject._gNodes if obj.node]
+    gc.collect()
 
 def getSelected(addt_attr=None):
     if not addt_attr:

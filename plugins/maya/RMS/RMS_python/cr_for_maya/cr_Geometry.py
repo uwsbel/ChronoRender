@@ -15,6 +15,7 @@ class CRGeometry_Node(CRObject_Node):
 pm.factories.registerVirtualClass(CRGeometry_Node, nameRequired=False)
 
 class CRGeometry(CRObject):
+    crtype = Geometry
 
     def __init__(self, factories, typename=''):
         super(CRGeometry, self).__init__(factories, typename)
@@ -27,12 +28,3 @@ class CRGeometry(CRObject):
         self.initMembers(Geometry, geo, prefix='default')
 
         pm.select(self.node)
-
-    def export(self, md):
-        attrdict = self.attrs2Dict()
-        geo = self.geo_factories.build(Geometry.getTypeName(), **attrdict)
-        md.addElement(Geometry.getTypeName(), geo.getSerialized())
-        del geo
-
-    def createGUI(self):
-        return self.window
