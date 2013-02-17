@@ -11,6 +11,9 @@ class CRObject_GUI():
         self.window = pm.window(menuBar=True)
         menu   = pm.menu(label='File', tearOff=True)
         pm.rowColumnLayout( numberOfColumns=3 )
+        self.obj.createFormGUI()
+        self.obj._createAttrGUI()
+        self.obj._createScriptGUI()
         return self.window
 
     def refreshGUI(self):
@@ -41,47 +44,21 @@ class CRObject_GUI():
 
     # emit a GUI element for this object
     def generateAttrGUI(self):
-        # for obj_type, obj_vals in self.obj.attrs.iteritems():
-            # print "OBJ", obj_type, obj_vals
-            # self._genInstanceGUI(obj_type, obj_vals)
-        # self.layout = pm.scrollLayout(cr=True)
-        crobjs = []
         for inst_name, inst_vals in self.obj.attrs.iteritems():
-            attrname, typ, val, mem_name = inst_vals[0], inst_vals[1], inst_vals[2], inst_vals[3]
-            if typ not in cr_types.builtins:
-                crobjs.append(inst_vals)
-                continue
+            if isinstance(inst_vals, list):
+                self._genInstanceGUI(inst_vals[0], inst_vals[1])
+            else:
+                attrname, typ, val, mem_name = inst_vals[0], inst_vals[1], inst_vals[2], inst_vals[3]
+                if typ not in cr_types.builtins: continue
 
-            self._genTypeGUI(attrname, typ, val)
-
-    # emit a GUI element for all objs that define this object
-    def _genMemberGUI(self, obj_type, obj_vals):
-        for inst_name, inst_vals in obj_vals[1].iteritems():
-            self._genInstanceGUI(inst_name, inst_vals)
-            pm.separator(height=10, style='double')
+                self._genTypeGUI(attrname, typ, val)
 
     # emit a GUI element for an object instance
     def _genInstanceGUI(self, inst_name, inst_vals):
-        crobjs = []
-        pm.text( label=inst_name) 
         for vals in inst_vals:
             attrname, typ, val, mem_name = vals[0], vals[1], vals[2], vals[3]
-            if typ not in cr_types.builtins:
-                crobjs.append(vals)
-                continue
-
+            if typ not in cr_types.builtins: continue
             self._genTypeGUI(attrname, typ, val)
-
-        for vals in crobjs:
-            attrname, typ, val, mem_name = vals[0], vals[1], vals[2], vals[3]
-            if isinstance(val, list):
-                if typ not in cr_types.builtins:
-                    if self.obj._ignore(typ.getTypeName()): return
-                    enum_attr = self.obj._getTypeEnumAttrName(typ)
-                    pm.attrEnumOptionMenuGrp( l='Type',
-                            at=self.obj.node.name()+'.'+enum_attr, ei=self.obj._genEnumsFor(typ))
-                    pm.button(label="Add", w=64, c=pm.Callback(self.obj._addEnumeratedObject, typ, enum_attr))
-            self._genInstanceGUI(mem_name, val)
 
     # emit a GUI element for specific types
     def _genTypeGUI(self, attrname, typ, val):
@@ -95,4 +72,4 @@ class CRObject_GUI():
                         attrname))
         else:
             pm.attrControlGrp(attribute=self.obj.node.name()+'.'+attrname)
-            pm.button(label="ignore", w=128)
+            pm.button(label="Ignore", w=128, en=False)

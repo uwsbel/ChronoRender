@@ -73,7 +73,7 @@ class CRObject(object):
         self.children   = {}
         self.parents    = {}
         self.gui        = CRObject_GUI(self)
-        self.script     = []
+        self.bScript    = True
 
         clstypename = self.__class__.crtype.getTypeName()
         if not typename: typename = clstypename
@@ -231,6 +231,11 @@ class CRObject(object):
         obj_name = prefix + typ.getTypeName() + str(self.attrs[typ.getTypeName()][0])
         self.attrs[typ.getTypeName()][1][obj_name] = self.addMembersToNode(typ,obj,obj_name)
 
+    def addScript(self, prefix=''):
+        self.addCRObject(Scriptable, Scriptable(), prefix)
+        self.bScript = False
+        self.refreshGUI()
+
     def initMembers(self, typ, obj, prefix=''):
         attrs = self.addMembersToNode(typ,obj,prefix)
         for attr in attrs:
@@ -332,29 +337,26 @@ class CRObject(object):
 
     def createGUI(self):
         win = self.gui.createGUI()
-        self.createFormGUI()
-        self._createAttrGUI()
-        self._createScriptGUI()
         return win
 
     def createFormGUI(self):
-        return
+        pass
 
     def _createAttrGUI(self):
         self.gui.generateAttrGUI()
 
     def _createScriptGUI(self):
-        if len(self.script) > 0: return
         pm.text( label='Script' ) 
 
         pm.attrEnumOptionMenuGrp( l='Type', 
                 at=self.node.name() +
                 '.'+CRObject_Node._scriptTypeAttr,
-                ei=(0, Scriptable.getTypeName()))
+                ei=(0, Scriptable.getTypeName()),
+                en=self.bScript)
 
         pm.button(label="Add", w=128,
-                c=pm.Callback(self.addCRObject, Scriptable,
-                    Scriptable(), prefix='script'))
+                c=pm.Callback(self.addScript, prefix='script'), 
+                en=self.bScript)
 
     def refreshGUI(self):
         return self.gui.refreshGUI()
