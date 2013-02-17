@@ -96,7 +96,6 @@ class CRObject(object):
     #FIXME dear god this is terrible
     def attrs2Dict(self):
         out = {}
-        print self.attrs
         for obj_type, obj_vals in self.attrs.iteritems():
             if isinstance(obj_vals, tuple):
                 tmp = self._getInstanceDict([obj_vals])
@@ -221,9 +220,7 @@ class CRObject(object):
         self.attrs[typ.getTypeName()][1][obj_name] = self.addMembersToNode(typ,obj,obj_name)
 
     def initMembers(self, typ, obj, prefix=''):
-        print "GIN"
         attrs = self.addMembersToNode(typ,obj,prefix)
-        print "ATTRS", attrs
         for attr in attrs:
             attrname, typ, val, mem_name = attr[0], attr[1], attr[2], attr[3]
             self.attrs[mem_name] = attr

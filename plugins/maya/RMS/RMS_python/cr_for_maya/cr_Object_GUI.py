@@ -56,7 +56,6 @@ class CRObject_GUI():
 
     # emit a GUI element for all objs that define this object
     def _genMemberGUI(self, obj_type, obj_vals):
-        print "VALS", obj_vals
         for inst_name, inst_vals in obj_vals[1].iteritems():
             self._genInstanceGUI(inst_name, inst_vals)
             pm.separator(height=10, style='double')
@@ -66,7 +65,6 @@ class CRObject_GUI():
         crobjs = []
         pm.text( label=inst_name) 
         for vals in inst_vals:
-            print '\tgorb', vals
             attrname, typ, val, mem_name = vals[0], vals[1], vals[2], vals[3]
             if typ not in cr_types.builtins:
                 crobjs.append(vals)

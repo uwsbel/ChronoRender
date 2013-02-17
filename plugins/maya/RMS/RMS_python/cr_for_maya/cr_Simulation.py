@@ -49,7 +49,6 @@ class CRSimulation(CRObject):
     def __init__(self, factories, typename=''):
         super(CRSimulation, self).__init__(factories,typename)
         self.node = CRSimulation_Node()
-        # self.datasrcs = []
         self.datasrcs = weakref.WeakValueDictionary()
         self.sim_factories = self.factories.getFactory(Simulation.getTypeName())
         self.src_factories = self.factories.getFactory(DataSource.getTypeName())
@@ -73,56 +72,36 @@ class CRSimulation(CRObject):
         md.addElement(Simulation.getTypeName(), sim.getSerialized())
         del sim
 
-    def addDataObject(self):
-        self.numsrcs += 1
-        src = CRDataObject(self.factories)
-        src.rename('dataobj'+str(self.numsrcs))
-        self.addChild(src)
-        src = self.addObjToGlobalContext(src, self.datasrcs)
-        self.closeGUI()
-        pm.showWindow(src.createGUI())
-
-    def addRenderObject(self):
-        self.numrobjs += 1
-        robjtype = self._getTypeFromEnum(RenderObject,
-                CRSimulation_Node._robjTypeAttr)
-        robj = CRRenderObject(self.factories, robjtype)
-        robj.rename('robj'+str(self.numrobjs))
-        self.addChild(robj)
-        robj = self.addObjToGlobalContext(robj, self.robjs)
-        self.closeGUI()
-        pm.showWindow(robj.createGUI())
-
     def createGUI(self):
         win = super(CRSimulation, self).createGUI()
-        # pm.rowColumnLayout( numberOfColumns=3 )
         self._createDataGUI()
         self._createRObjGUI()
         self._createScriptGUI()
         self.gui.generateAttrGUI()
-        # pm.separator(h=40, style='in')
-        # self.generateAttrGUI()
-        # pm.separator(h=40, style='in')
-        # self.generateConnGUI()
         return win
 
     def _createDataGUI(self):
-        # pm.rowColumnLayout( numberOfColumns=2 )
         pm.text( label='Data' ) 
         pm.attrEnumOptionMenuGrp( l='Type', 
                              at=self.node.name() +
                              '.'+CRSimulation_Node._dataTypeAttr,
                              ei=(0, DataObject.getTypeName()))
-        pm.button(label="Add", w=128, c= lambda *args:
-                self.addDataObject())
+
+        pm.button(label="Add", w=128,
+                c=pm.Callback(self.addChildEnumCB, CRDataObject,
+                    self.datasrcs, name='data', 
+                    srcattr=CRSimulation_Node._dataTypeAttr, 
+                    counter=self.numsrcs))
 
     def _createRObjGUI(self):
-        # pm.rowColumnLayout( numberOfColumns=3 )
-        pm.text( label='Render Object' ) 
+        pm.text( label='RenderObject' ) 
         pm.attrEnumOptionMenuGrp( l='Type', 
                              at=self.node.name() +
                              '.'+CRSimulation_Node._robjTypeAttr,
-                             ei=self._genEnumsFor(RenderObject))
+                             ei=(0, DataObject.getTypeName()))
 
-        pm.button(label="Add", w=128, c= lambda *args:
-                self.addRenderObject())
+        pm.button(label="Add", w=128,
+                c=pm.Callback(self.addChildEnumCB, CRRenderObject,
+                    self.robjs, name='robj', 
+                    srcattr=CRSimulation_Node._robjTypeAttr, 
+                    counter=self.numrobjs))
