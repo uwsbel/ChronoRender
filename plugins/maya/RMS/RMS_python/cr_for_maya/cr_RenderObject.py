@@ -35,24 +35,10 @@ class CRRenderObject(CRObject):
 
     def __init__(self, factories, typename=''):
         super(CRRenderObject, self).__init__(factories, typename)
-        self.crtype = RenderObject
-        self.node = CRRenderObject_Node()
-        self.robj_factories = self.factories.getFactory(RenderObject.getTypeName())
-
-        self.geo_factories = self.factories.getFactory(Geometry.getTypeName())
         self.geo = weakref.WeakValueDictionary()
         self.numgeo = 0
-
-        self.shdr_factories = self.factories.getFactory(Shader.getTypeName())
         self.shaders = weakref.WeakValueDictionary()
         self.numshaders = 0
-
-        if not typename: typename = RenderObject.getTypeName()
-        robj = self.robj_factories.build(typename)
-        # self.addCRObject(RenderObject, robj, prefix='default')
-        self.initMembers(RenderObject, robj, prefix='default')
-
-        pm.select(self.node)
 
     def createNode(self):
         return CRRenderObject_Node()

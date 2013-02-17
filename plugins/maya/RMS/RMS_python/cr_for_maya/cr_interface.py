@@ -51,14 +51,9 @@ def edit():
     _updateNodes()
 
     nodes = sel()
-    print "NODES", nodes
     if len(nodes) > 0:
         window = nodes[0].createGUI()
         pm.showWindow(window)
-    # nodes = _getAndVerifyByAttr('createGUI')
-    # for node in nodes:
-        # window = node.createGUI()
-        # pm.showWindow(window)
 
 def sel(addt_attr=None):
     _updateNodes()
