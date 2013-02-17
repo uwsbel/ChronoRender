@@ -79,7 +79,7 @@ class CRObject(object):
         if not typename: typename = clstypename
         fact = self.factories.getFactory(clstypename)
         sim = fact.build(typename)
-        self.initMembers(self.__class__.crtype, sim)
+        self.initMembers(self.__class__.crtype, sim, prefix='default')
 
         pm.select(self.node)
 
@@ -265,10 +265,6 @@ class CRObject(object):
             return []
         elif mayatype == 'string':
             self._addStringAttr(attrname, val, hidden, mem_name)
-        # elif typ not in cr_types.builtins:
-            # if not isinstance(val, list):
-                # val = self._addCRObjectAttr(typ, concrete, prefix)
-                # if not val: return []
         else:
             self.node.addAttr(attrname, at=mayatype, h=hidden, nn=mem_name)
 

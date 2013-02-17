@@ -36,8 +36,8 @@ class CRRenderObject(CRObject):
     def __init__(self, factories, typename=''):
         super(CRRenderObject, self).__init__(factories, typename)
         self.geo = weakref.WeakValueDictionary()
-        self.numgeo = 0
         self.shaders = weakref.WeakValueDictionary()
+        self.numgeo = 0
         self.numshaders = 0
 
     def createNode(self):

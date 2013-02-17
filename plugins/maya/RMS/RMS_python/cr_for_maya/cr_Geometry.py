@@ -9,7 +9,7 @@ class CRGeometry_Node(CRObject_Node):
     def _postCreateVirtual(cls, newNode):
         CRObject_Node._postCreateVirtual(newNode)
         newNode.addAttr(cls._handle, dt='string', h=True)
-        newNode.rename('geo')
+        newNode.rename(cls._handle)
         CRObject_Node.hideShape(newNode)
 
 pm.factories.registerVirtualClass(CRGeometry_Node, nameRequired=False)

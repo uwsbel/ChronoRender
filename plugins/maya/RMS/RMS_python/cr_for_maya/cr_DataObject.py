@@ -34,8 +34,6 @@ class CRDataObject(CRObject):
         self.datasrcs = weakref.WeakValueDictionary()
         self.numsrcs = 0
 
-        pm.select(self.node)
-
     def createNode(self):
         return CRDataObject_Node()
 
@@ -44,7 +42,6 @@ class CRDataObject(CRObject):
         self._createDataSourceGUI()
 
     def _createDataSourceGUI(self):
-        pm.columnLayout( columnAttach=('left', 5), rowSpacing=10, columnWidth=250 )
         pm.text( label='Data Source' ) 
 
         pm.attrEnumOptionMenuGrp( l='Format', 
