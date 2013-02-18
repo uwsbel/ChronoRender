@@ -82,7 +82,7 @@ class CRObject(object):
         sim = fact.build(typename, **kwargs)
         self.initMembers(self.__class__.crtype, sim, prefix='default')
 
-        self.rename(clstypename)
+        self.rename(typename)
         CRObject.addObjToGlobalContext(self)
 
         pm.select(self.node)

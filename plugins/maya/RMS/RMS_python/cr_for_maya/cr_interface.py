@@ -29,14 +29,14 @@ def build(typename=None):
     gNodes.append(node)
 
 def export():
+    _updateNodes()
     _export(sel())
 
 def exportAll():
+    _updateNodes()
     _export(gNodes)
 
 def _export(nodes):
-    _updateNodes()
-
     os.chdir(Utils.getProjPath())
     cr_Utils.createOutDirs()
     path = cr_Utils.getOutPathFor('root')
