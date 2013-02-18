@@ -82,6 +82,9 @@ class CRObject(object):
         sim = fact.build(typename, **kwargs)
         self.initMembers(self.__class__.crtype, sim, prefix='default')
 
+        self.rename(clstypename)
+        CRObject.addObjToGlobalContext(self)
+
         pm.select(self.node)
 
     def createNode(self):
@@ -90,15 +93,17 @@ class CRObject(object):
     def export(self, md):
         return
 
-    def addObjToGlobalContext(self, obj, weak_dict):
+    @staticmethod
+    def addObjToGlobalContext(obj, weak_dict=None):
         CRObject._gNodes.append(obj)
-        weak_dict[id(obj)] = obj
+        if weak_dict:
+            weak_dict[id(obj)] = obj
         return obj
 
     def rename(self, name):
         newname = self.node.rename(name)
         self.node.getShape().rename(newname+'Shape')
-        self.node.getTransform().rename(newname+'Transform')
+        self.node.getTransform().rename(newname+'_t')
 
     def addRManAttrs(self):
         return
@@ -178,7 +183,7 @@ class CRObject(object):
         src = mayatype(self.factories, srctype)
         src.rename(objname)
         self.addChild(src)
-        self.addObjToGlobalContext(src, objlist)
+        CRObject.addObjToGlobalContext(src, objlist)
         self.closeGUI()
         pm.showWindow(src.createGUI())
 
