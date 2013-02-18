@@ -56,7 +56,11 @@ class DataSource(Object, DataSource):
         return out
 
     def getInputResources(self):
-        path = os.path.abspath(self.resource)
+        # path = os.path.abspath(self.resource)
+        path = self.resource
+        if not os.path.isabs(path):
+            path = os.path.join(os.getcwd(), self.resource)
+        print "GLOBBING", path
         return glob.glob(path)
 
     def initialize(self):

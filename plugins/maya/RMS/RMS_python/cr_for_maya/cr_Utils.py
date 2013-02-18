@@ -25,3 +25,5 @@ def getOutPathFor(what):
     assetman = CRAssetInfo( outpath=os.path.join(Utils.getProjPath(), 'renderman'), jobname=Utils.getSceneName(), relative=False)
     return assetman.getOutPathFor(what)
 
+def normalizePath(path):
+    return path.replace("\\", "/")

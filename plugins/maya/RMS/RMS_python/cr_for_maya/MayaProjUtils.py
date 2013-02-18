@@ -1,6 +1,6 @@
 import maya.cmds as mc
 import os
-  
+
 # Malcolm Kesson
 # Nov 5  2012
   
