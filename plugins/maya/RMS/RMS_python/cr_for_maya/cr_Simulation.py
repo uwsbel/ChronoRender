@@ -51,8 +51,6 @@ class CRSimulation(CRObject):
         self.sim_factories = self.factories.getFactory(Simulation.getTypeName())
         self.datasrcs = weakref.WeakValueDictionary()
         self.robjs = weakref.WeakValueDictionary()
-        self.numsrcs = 0
-        self.numrobjs = 0
 
     def createNode(self):
         return CRSimulation_Node()
@@ -78,9 +76,8 @@ class CRSimulation(CRObject):
 
         pm.button(label="Add", w=128,
                 c=pm.Callback(self.addChildEnumCB, CRDataObject,
-                    self.datasrcs, name='data', 
-                    srcattr=CRSimulation_Node._dataTypeAttr, 
-                    counter=self.numsrcs))
+                    self.datasrcs,
+                    srcattr=CRSimulation_Node._dataTypeAttr))
 
     def _createRObjGUI(self):
         pm.text( label='RenderObject' ) 
@@ -91,6 +88,5 @@ class CRSimulation(CRObject):
 
         pm.button(label="Add", w=128,
                 c=pm.Callback(self.addChildEnumCB, CRRenderObject,
-                    self.robjs, name='robj', 
-                    srcattr=CRSimulation_Node._robjTypeAttr, 
-                    counter=self.numrobjs))
+                    self.robjs,
+                    srcattr=CRSimulation_Node._robjTypeAttr))

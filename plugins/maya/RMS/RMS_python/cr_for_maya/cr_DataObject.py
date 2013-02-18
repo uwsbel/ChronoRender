@@ -32,7 +32,6 @@ class CRDataObject(CRObject):
     def __init__(self, factories, typename='', **kwargs):
         super(CRDataObject, self).__init__(factories, typename, **kwargs)
         self.datasrcs = weakref.WeakValueDictionary()
-        self.numsrcs = 0
 
     def createNode(self):
         return CRDataObject_Node()
@@ -51,6 +50,5 @@ class CRDataObject(CRObject):
 
         pm.button(label="Add DataSource", w=128,
                 c=pm.Callback(self.addChildEnumCB, CRDataSource,
-                    self.datasrcs, name='src', 
-                    srcattr=CRDataObject_Node._dataSrcTypeAttr, 
-                    counter=self.numsrcs))
+                    self.datasrcs,
+                    srcattr=CRDataObject_Node._dataSrcTypeAttr))

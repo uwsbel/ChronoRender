@@ -37,8 +37,6 @@ class CRRenderObject(CRObject):
         super(CRRenderObject, self).__init__(factories, typename, **kwargs)
         self.geo = weakref.WeakValueDictionary()
         self.shaders = weakref.WeakValueDictionary()
-        self.numgeo = 0
-        self.numshaders = 0
 
     def createNode(self):
         return CRRenderObject_Node()
@@ -57,9 +55,8 @@ class CRRenderObject(CRObject):
 
         pm.button(label="Add", w=128,
                 c=pm.Callback(self.addChildEnumCB, CRGeometry,
-                    self.geo, name='geo', 
-                    srcattr=CRRenderObject_Node._geoTypeAttr, 
-                    counter=self.numgeo))
+                    self.geo,
+                    srcattr=CRRenderObject_Node._geoTypeAttr))
 
     def _createShaderGUI(self):
         pm.text( label='Shader' ) 
@@ -70,6 +67,5 @@ class CRRenderObject(CRObject):
 
         pm.button(label="Add", w=128,
                 c=pm.Callback(self.addChildEnumCB, CRShader,
-                    self.shaders, name='shader', 
-                    srcattr=CRRenderObject_Node._sdrTypeAttr, 
-                    counter=self.numshaders))
+                    self.shaders,
+                    srcattr=CRRenderObject_Node._sdrTypeAttr))

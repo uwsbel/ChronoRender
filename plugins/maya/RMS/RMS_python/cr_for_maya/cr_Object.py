@@ -169,19 +169,14 @@ class CRObject(object):
                     out[mem_name] = ''
         return out
 
-    def addChildEnumCB(self, mayatype, objlist, 
-            name='obj', srcattr=None, counter=None):
+    def addChildEnumCB(self, mayatype, objlist, srcattr=None):
+
         srctype = mayatype.crtype.getTypeName()
         if srcattr:
             srctype = self._getTypeFromEnum(mayatype.crtype, srcattr)
 
-        objname = name
-        if counter:
-            counter += 1
-            objname = name+str(counter)
-
         src = mayatype(self.factories, srctype)
-        src.rename(objname)
+        src.rename(srctype)
         self.addChild(src)
         CRObject.addObjToGlobalContext(src, objlist)
         self.closeGUI()
@@ -279,6 +274,7 @@ class CRObject(object):
             self._addStringAttr(attrname, val, hidden, mem_name)
         else:
             self.node.addAttr(attrname, at=mayatype, h=hidden, nn=mem_name)
+            self.node.setAttr(attrname, val)
 
         return [(attrname, typ, val, mem_name)]
 
