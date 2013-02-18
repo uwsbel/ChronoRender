@@ -33,8 +33,8 @@ pm.factories.registerVirtualClass(CRRenderObject_Node, nameRequired=False)
 class CRRenderObject(CRObject):
     crtype = RenderObject
 
-    def __init__(self, factories, typename=''):
-        super(CRRenderObject, self).__init__(factories, typename)
+    def __init__(self, factories, typename='', **kwargs):
+        super(CRRenderObject, self).__init__(factories, typename, **kwargs)
         self.geo = weakref.WeakValueDictionary()
         self.shaders = weakref.WeakValueDictionary()
         self.numgeo = 0

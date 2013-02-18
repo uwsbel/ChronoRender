@@ -1,0 +1,3 @@
+string $filename = `fileDialog`;
+string $cmd = "cr_for_maya.load('" + $filename + "')";
+python($cmd);

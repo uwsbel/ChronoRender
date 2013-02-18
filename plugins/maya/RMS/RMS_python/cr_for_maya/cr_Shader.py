@@ -17,7 +17,7 @@ pm.factories.registerVirtualClass(CRShader_Node, nameRequired=False)
 class CRShader(CRObject):
     crtype = Shader
 
-    def __init__(self, factories, typename=''):
+    def __init__(self, factories, typename='', **kwargs):
         super(CRShader, self).__init__(factories, typename)
 
     def createNode(self):

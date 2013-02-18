@@ -29,8 +29,8 @@ pm.factories.registerVirtualClass(CRDataObject_Node, nameRequired=False)
 class CRDataObject(CRObject):
     crtype = DataObject
 
-    def __init__(self, factories, typename=''):
-        super(CRDataObject, self).__init__(factories, typename)
+    def __init__(self, factories, typename='', **kwargs):
+        super(CRDataObject, self).__init__(factories, typename, **kwargs)
         self.datasrcs = weakref.WeakValueDictionary()
         self.numsrcs = 0
 

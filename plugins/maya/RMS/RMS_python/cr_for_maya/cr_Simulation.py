@@ -45,8 +45,8 @@ pm.factories.registerVirtualClass(CRSimulation_Node, nameRequired=False)
 class CRSimulation(CRObject):
     crtype = Simulation
 
-    def __init__(self, factories, typename=''):
-        super(CRSimulation, self).__init__(factories,typename)
+    def __init__(self, factories, typename='', **kwargs):
+        super(CRSimulation, self).__init__(factories, typename, **kwargs)
 
         self.sim_factories = self.factories.getFactory(Simulation.getTypeName())
         self.datasrcs = weakref.WeakValueDictionary()

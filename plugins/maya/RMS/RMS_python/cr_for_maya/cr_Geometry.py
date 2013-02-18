@@ -17,8 +17,8 @@ pm.factories.registerVirtualClass(CRGeometry_Node, nameRequired=False)
 class CRGeometry(CRObject):
     crtype = Geometry
 
-    def __init__(self, factories, typename=''):
-        super(CRGeometry, self).__init__(factories, typename)
+    def __init__(self, factories, typename='', **kwargs):
+        super(CRGeometry, self).__init__(factories, typename, **kwargs)
 
     def createNode(self):
         return CRGeometry_Node()

@@ -16,8 +16,8 @@ pm.factories.registerVirtualClass(CRDataSource_Node, nameRequired=False)
 
 class CRDataSource(CRObject):
     crtype = DataSource
-    def __init__(self, factories, typename):
-        super(CRDataSource, self).__init__(factories, typename)
+    def __init__(self, factories, typename='', **kwargs):
+        super(CRDataSource, self).__init__(factories, typename, **kwargs)
 
     def createNode(self):
         return CRDataSource_Node()

@@ -1,7 +1,7 @@
 # load environment so can get chronorender
 import sys, inspect, os
 
-def setPythonPathForCRImport():
+def setPythonPathForImport():
     script_file = inspect.getfile(inspect.currentframe())
     script_path = os.path.dirname(os.path.abspath(script_file))
     modtest_path = os.path.split(script_path)[0]
@@ -14,7 +14,7 @@ def setPythonPathForCRImport():
     sys.path.append(mod_path)
 
 
-setPythonPathForCRImport()
+setPythonPathForImport()
 import unittest, argparse, glob
 import chronorender as cr
 

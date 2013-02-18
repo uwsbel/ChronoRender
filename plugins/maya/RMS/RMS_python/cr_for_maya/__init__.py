@@ -1,4 +1,5 @@
 from cr_interface import *
+from cr_loader import *
 import cr_DataSource
 import cr_DataObject
 import cr_Geometry
@@ -7,6 +8,5 @@ import cr_Object
 import cr_Object_GUI
 import cr_RenderObject
 import cr_Simulation
-import cr_Scriptable
 import cr_Utils
 from MayaProjUtils import *

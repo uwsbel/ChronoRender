@@ -3,7 +3,6 @@ import pymel.all as pm
 import cr_Utils
 from cr_for_maya.cr_Object_GUI import CRObject_GUI
 from chronorender.cr_scriptable import Scriptable
-# from cr_for_maya.cr_Scriptable import CRScriptable
 
 from chronorender.cr_object import Object
 from chronorender.attribute import Attribute
@@ -65,7 +64,7 @@ class CRObject(object):
     crtype = Object
     _gNodes = []
 
-    def __init__(self, factories, typename=''):
+    def __init__(self, factories, typename='', **kwargs):
         self.node       = self.createNode()
         self.factories  = factories
         self.type       = typename
@@ -77,8 +76,10 @@ class CRObject(object):
 
         clstypename = self.__class__.crtype.getTypeName()
         if not typename: typename = clstypename
+        if Object.getInstanceQualifier() in kwargs:
+            typename = kwargs[Object.getInstanceQualifier()]
         fact = self.factories.getFactory(clstypename)
-        sim = fact.build(typename)
+        sim = fact.build(typename, **kwargs)
         self.initMembers(self.__class__.crtype, sim, prefix='default')
 
         pm.select(self.node)
@@ -95,9 +96,9 @@ class CRObject(object):
         return obj
 
     def rename(self, name):
-        self.node.rename(name)
-        self.node.getShape().rename(name+'Shape')
-        self.node.getTransform().rename(name+'Transform')
+        newname = self.node.rename(name)
+        self.node.getShape().rename(newname+'Shape')
+        self.node.getTransform().rename(newname+'Transform')
 
     def addRManAttrs(self):
         return

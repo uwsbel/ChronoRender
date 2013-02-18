@@ -2,6 +2,7 @@ import os, sys, gc
 import pymel.all as pm
 
 import cr_Utils
+import cr_for_maya.cr_loader as cr_loader
 from MayaProjUtils import MayaProjUtils
 from chronorender import ChronoRender
 from chronorender.metadata import MDReaderFactory
@@ -21,6 +22,7 @@ gNodes = []
 #==========================CMDS============================
 def build(typename=None):
     _updateNodes()
+
     node = None
     if not typename or typename == CRSimulation.getTypeName():
         node = CRSimulation(Factories)
@@ -50,7 +52,10 @@ def _export(nodes):
     md.writeToDisk()
     del md
 
-
+def load(mdfile):
+    _updateNodes()
+    for obj in cr_loader.import_from_md(mdfile):
+        gNodes.append(obj)
 
 def edit():
     _updateNodes()
