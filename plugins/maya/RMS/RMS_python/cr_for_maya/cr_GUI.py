@@ -12,9 +12,11 @@ def setAttrFromFileDialog(obj, attrname):
     # get the relative path to project
     mutil = mpu.MayaProjUtils()
     projpath = mutil.getProjPath()
+    rpath = projpath
+    # rpath = os.path.join(projpath, 'renderman')
 
     text = pm.fileDialog()
-    path = os.path.relpath(text, projpath)
+    path = os.path.relpath(text, rpath)
     path = crutils.normalizePath(path)
 
     obj.setAttr(attrname, path)

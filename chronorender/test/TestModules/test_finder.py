@@ -12,4 +12,5 @@ class FinderTestCase(unittest.TestCase):
 
         paths = finder.getSearchPaths()
         for i in range(0, len(input_paths)):
+            print "test", comp_paths[i], paths[i]
             self.assertEquals(comp_paths[i], paths[i])

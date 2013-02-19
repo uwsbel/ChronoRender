@@ -21,7 +21,8 @@ class Finder(object):
         if os.path.exists(assetname): return assetname
         assetname = os.path.basename(assetname)
         cwd = os.getcwd()
-        paths = [os.getcwd()]
+        cwd_parent = os.path.dirname(cwd)
+        paths = [cwd, cwd_parent]
         paths.extend(self._searchpaths)
         for path in paths:
             for root, dirs, files in os.walk(path):
