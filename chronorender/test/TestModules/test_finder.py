@@ -12,5 +12,18 @@ class FinderTestCase(unittest.TestCase):
 
         paths = finder.getSearchPaths()
         for i in range(0, len(input_paths)):
-            print "test", comp_paths[i], paths[i]
             self.assertEquals(comp_paths[i], paths[i])
+
+    def test_findDIR(self):
+        finder = FinderFactory.build(['./'])
+        path = None
+        comp_path = os.path.abspath('input')
+        path = finder.find('test/input')
+        self.assertEqual(comp_path, path)
+
+    def test_findFile(self):
+        finder = FinderFactory.build(['./'])
+        path = None
+        comp_path = os.path.abspath('input/data/stationary/0.dat')
+        path = finder.find('test/input/data/stationary/0.dat')
+        self.assertEqual(comp_path, path)
