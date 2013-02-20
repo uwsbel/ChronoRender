@@ -12,33 +12,41 @@ class Finder(object):
     searchpaths = ""
 
     def __init__(self, paths, relative=None):
-      self._searchpaths = Finder.searchpaths
+        self._searchpaths = Finder.searchpaths
 
     def __str__(self):
         return str(self._searchpaths)
 
     def find(self, assetpath):
         if os.path.exists(assetpath): return assetpath
+
+        paths = self._buildPaths()
         assetname = os.path.basename(assetpath)
+        for path in paths:
+            for root, dirs, files in os.walk(path):
+                outfile = self._findFile(root, files, assetname)
+                outfile = self._findDir(root, assetpath)
+                if outfile: return outfile
+        raise AssetNotFoundException(self, 'could not find: ' + assetname)
+
+    def _buildPaths(self):
         cwd = os.getcwd()
         cwd_parent = os.path.dirname(cwd)
         paths = [cwd, cwd_parent]
         paths.extend(self._searchpaths)
-        for path in paths:
-            for root, dirs, files in os.walk(path):
-                if assetname in files:
-                    return os.path.join(root, assetname)
+        return paths
 
-                fdir = self._findDir(root, assetpath)
-                if fdir: return fdir
-        raise AssetNotFoundException(self, 'could not find: ' + assetname)
+    def _findDir(self, root, assetpath):
+        assetdir, ext = os.path.splitext(assetpath)
+        if ext: return None
+        # assetdir = os.path.dirname(assetpath)
+        if root.endswith(assetdir): return root
+        return None
 
-    def _findDir(self, searchpath, assetdir):
-        adir, ext = os.path.splitext(assetdir)
-        if ext:
-            adir = os.path.dirname(adir)
-        if searchpath.endswith(adir):
-            return searchpath
+    def _findFile(self, root, files, assetname):
+        if assetname in files:
+            return os.path.join(root, assetname)
+        return None
 
     def addPathsStr(self, path_string, delim=':'):
         return
