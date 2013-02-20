@@ -53,14 +53,13 @@ class DataSource(Object, DataSource):
         out = []
         if self.script:
             out.extend(self.script.resolveAssets(assetman))
+        self.resource = assetman.find(self.resource)
         return out
 
     def getInputResources(self):
-        # path = os.path.abspath(self.resource)
         path = self.resource
         if not os.path.isabs(path):
             path = os.path.join(os.getcwd(), self.resource)
-        print "GLOBBING", path
         return glob.glob(path)
 
     def initialize(self):

@@ -43,7 +43,7 @@ class DataObjectTestCase(unittest.TestCase):
         meta = md.MetaData('./input/metadata/yaml/datasrc_script.yml')
         args = meta.singleFromType(dat.DataObject)
         dataobj = dat.DataObject(cr._factories, **args)
-        finder = FinderFactory.build('./input')
+        finder = FinderFactory.build(['./input'])
         dataobj.resolveAssets(finder)
 
         poses = []
