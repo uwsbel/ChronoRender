@@ -26,6 +26,8 @@ class DelayedArchive(Geometry):
 
     def resolveAssets(self, assetman):
         out = super(DelayedArchive, self).resolveAssets(assetman)
+        # renderman wants linux paths
+        self.filename = self.filename.replace('\\','/')
         # self.filepath = assetman.find(self.filename)
         # return [self.filename]
         return []
@@ -54,17 +56,3 @@ class DelayedArchive(Geometry):
 
 def build(**kwargs):
     return DelayedArchive(**kwargs)
-
-# Attribute "identifier" "string name" ["pSphere1RibArchive"]
-# ConcatTransform [ 1 0 0 0  0 1 0 0  0 0 1 0  0 0 0 1 ]
-# AttributeBegin 
-# Sides 2
-# ShadingInterpolation "constant"
-# Attribute "user" "int receivesShadows" [1]
-# Attribute "visibility" "int camera" [1] "int specular" [0] "int diffuse" [0]
-# Attribute "grouping" "string membership" ["*"]
-# Attribute "identifier" "string name" ["pSphere1RibArchiveShape"]
-# ConcatTransform [ 1 0 0 0  0 1 0 0  0 0 1 0  0 0 0 1 ]
-#RLF Inject SurfaceShading
-# Procedural "DelayedReadArchive" ["renderman/ribarchives/pSphere1RibArchiveShape.zip!renderman/ribarchives/job/pSphere1RibArchiveShape.job.rib"] [-1 1 -1 1 -1 1]
-# AttributeEnd 
