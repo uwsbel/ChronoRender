@@ -139,7 +139,7 @@ def batchRI(platform):
         sim.setPreShapeScript(script)
         print "script", tmp, sim.getPreShapeScript(), platform
 
-    pm.mel.eval('batchRenderRI("", 1)')
+    pm.mel.eval('batchRenderRI("", 1, \"'+platform+'\")')
 
     for sim in sims:
         sim.setPreShapeScript(SimRenderScript)

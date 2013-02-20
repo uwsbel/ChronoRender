@@ -52,13 +52,15 @@ MAKE SURE TO ADD THE FOLLOWING ENV VARIABLES:
 -----
 Batch Rendering
 1    Set the Maya project directory.
-2    Save the Maya scene.
-3    In Render Setting:
+2    Create a render camera
+3    Save the Maya scene.
+4    In Render Setting:
       - set the start and end frames,
-          - set name.#.ext,
-          - set 4 digits of padding,
-          - set "Image Format" to an appropriate type.
-4    In the script editor (MEL) execute the following command,
+      - set name.#.ext,
+      - set 4 digits of padding,
+      - set "Image Format" to an appropriate type.
+      - set the Renderable Camera to the camera added earlier
+5    In the script editor (MEL) execute the following command,
               batchRenderRI("", 1);
 
 ------

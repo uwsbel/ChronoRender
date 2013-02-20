@@ -3,7 +3,7 @@
           Revised   16 Oct 2011, 23 Oct 2011, 5 Nov 2011 
           23 Jan 2012 - added render layer support
  */
-global proc batchRenderRI(string $rif, int $genrib)
+global proc batchRenderRI(string $rif, int $genrib, string $platform)
 {
     string    $rmsScriptPath = `getenv "RMS_SCRIPT_PATHS"`;
     string    $pyScriptPath = dirname($rmsScriptPath) + "/RMS_python/ribops.py";
@@ -18,6 +18,10 @@ global proc batchRenderRI(string $rif, int $genrib)
     string    $layers[] = `treeView -query -selectItem ("RenderLayerTabRenderLayerEditor")`;
     string    $layer = $layers[0];
     int       $motion = `getAttr "renderManGlobals.rman__torattr___motionBlur"`;
+
+    if(size($platform) == 0) {
+        $platform = "posix";
+    }
 
     // Single frame mode...
     if($anim == 0) {
@@ -36,9 +40,10 @@ global proc batchRenderRI(string $rif, int $genrib)
     print("Start Frame:   \"" + $arg3 + "\"\n");
     print("End Frame:     \"" + $arg4 + "\"\n");
     print("Render Layer:  \"" + $layer + "\"\n");
+    print("Platform:      \"" + $platform + "\"\n");
     print("Rif Module:    \"" + $rif + "\"\n");
     string $fullcmd = $cmd + " " + $pyScriptPath + " " + $arg1 + " " + $arg2 +
-        " " + $arg3 + " " + $arg4 + " " + $layer;
+        " " + $arg3 + " " + $arg4 + " " + $layer + " " + $platform;
     if(size($rif) > 0)
         $fullcmd = $fullcmd + " '" + $rif + "'";
     print("Executing cmd: \"" + $fullcmd + "\"\n");

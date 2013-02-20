@@ -4,18 +4,22 @@
 # Oct 9 2011, Oct 16 2011, Oct 23 2011, Nov 5 2011
 # 23 Jan 2012 - added render layer support
 # Malcolm Kesson
-import re, os, sys, prman, subprocess, time, inspect
-from MayaProjUtils import MayaProjUtils
+# import re, os, sys, prman, subprocess, time, inspect
+import re, os, sys, subprocess, time, inspect
+# from MayaProjUtils import MayaProjUtils
 
-_utils = MayaProjUtils()
+# _utils = MayaProjUtils()
 
 def main():
     args = sys.argv[1:]
     scene = args[0]     # remove .ma or .mb
     project = args[1]   # full path to project
+    # project = os.path.join(project, 'renderman')
     begin = args[2]     # start frame
     end = args[3]       # end frame
     layer = args[4]     # render layer, example, "defaultRenderLayer"
+    platform = args[5]
+
 
     # Get an instance of our rib handling class
     job = Job(project)
@@ -30,7 +34,7 @@ def main():
     # if len(args) == 6:
     # TODO No Rif For Now
     if False:
-        if len(args[5]) > 0:
+        if len(args[6]) > 0:
             rifs = job.getRifsFromString(args[5])
             rifs = rifs[1:]  # Ignore the first item
             geomRifs = []
@@ -48,7 +52,7 @@ def main():
             # Apply all rifs to the _Final rib(s)
             job.rifRibs(rifs, finals)
 
-    job.renderRMSRootRibs(scene, project, roots, begin, end) #scene, project, begin, end)
+    job.renderRMSRootRibs(scene, project, roots, begin, end, platform) #scene, project, begin, end)
 
 class Job():
     # Rifs that implement any of these methods will be applied to the archive ribs
@@ -233,19 +237,23 @@ class Job():
     # The "root" ribs are those created by RMS. They are named
     # with 4 digits ie. 0001.rib
     #
-    def renderRMSRootRibs(self, scene, project, rootRibs, begin, end):
+    def renderRMSRootRibs(self, scene, project, rootRibs, begin, end, platform):
+        scriptpath = os.path.join(project, 'renderman')
         if len(rootRibs) > 0:
-            if os.name == "posix":
-                batchPath = os.path.join(project, 'batchRender')
-                self.makeBatchRenderScript(project, batchPath, rootRibs)
+            if platform == "posix":
+                batchPath = os.path.join(scriptpath, 'batchRender')
+                self.makeBatchRenderScript(scene, scriptpath, 
+                        batchPath, rootRibs, platform, begin, end)
                 os.chmod(batchPath, 0777)
-                args = ['sh', batchPath]
+                # args = ['sh', batchPath]
             else:
-                batchPath = os.path.join(project, 'batchRender.bat')
-                batchPath = self.makeBatchRenderScript(project, batchPath, rootRibs)
-                args = ['start', batchPath]
+                batchPath = os.path.join(scriptpath, 'batchRender.bat')
+                batchPath = self.makeBatchRenderScript(scene, scriptpath, 
+                        batchPath, rootRibs, platform, begin, end)
+                # args = ['start', batchPath]
             # Without PIPE the process blocks when rendering to "it"
-            subprocess.Popen(args,stdout=subprocess.PIPE)
+            # Don't execute
+            # subprocess.Popen(args,stdout=subprocess.PIPE)
         msg = 'Job: \"%s\" in \"%s\".\n' % (scene, project)
         msg += 'Rendered frames %s to %s.\n' % (begin, end)
         self.log('log_render.txt', msg)
@@ -329,19 +337,46 @@ class Job():
     #    prman -t:all renderman/meshToBlobby/rib/0002/0002.rib
     #     ditto...
     #
-    def makeBatchRenderScript(self, rootDir, batchPath, ribs):
+    def makeBatchRenderScript(self, scene, rootDir, batchPath, ribs, platform,
+            begin, end):
+        if len(ribs) <= 0: return
+
+        def _pbsSweepJobPath(rib):
+            arrstr = '`printf %04d $PBS_ARRAYID`'
+            rib = os.path.dirname(rib)
+            rib = os.path.dirname(rib)
+            rib = os.path.join(rib, arrstr)
+            rib = os.path.join(rib, arrstr+'.rib')
+            return rib
+
+        pbssweep = ''
+        if platform == 'posix':
+            pbssweep = Job.convertToLinux(_pbsSweepJobPath(ribs[0]))
+        else:
+            pbssweep = Job.convertToWindows(_pbsSweepJobPath(ribs[0]))
+
         f = open(batchPath, 'w')
-        if os.name == "nt":
-            f.write("SET\n")
-        if len(rootDir) > 0:
-            if os.name == "nt":
-                rootDir = convertToWindows(rootDir)
-            f.write("cd " + rootDir + "\n")
-        for rib in ribs:
-            if os.name == "nt":
-                rib = convertToWindows(rib)
-            f.write('prman -t:all ' + rib + "\n")
+        f.write('#!/bin/bash\n')
+        f.write('#PBS -N ' + scene + '\n')
+        f.write('#PBS -l nodes=1:ppn=32\n')
+        f.write('#PBS -t ' + str(begin)+'-'+str(end) + '\n')
+        f.write('#PBS -q prman\n')
+        f.write('cd $PBS_O_WORKDIR\n')
+        f.write('prman -t:all ' + pbssweep + '\n')
         f.close()
+
+
+        # if os.name == "nt":
+            # f.write("SET\n")
+        # if len(rootDir) > 0:
+            # if os.name == "nt":
+                # rootDir = Job.convertToWindows(rootDir)
+            # f.write("cd " + rootDir + "\n")
+        # for rib in ribs:
+            # if os.name == "nt":
+                # rib = Job.convertToWindows(rib)
+            # f.write('prman -t:all ' + rib + "\n")
+        # f.close()
         return batchPath
 
     # Utility_____________________________________________    
@@ -353,11 +388,19 @@ class Job():
         f.close()        
 
     # Utility_____________________________________________    
+    @staticmethod
     def convertToWindows(linuxpath):
         pattern = re.compile(r"/")
         return pattern.sub(r'\\', linuxpath)
 
     # Utility_____________________________________________    
+    @staticmethod
+    def convertToLinux(winpath):
+        pattern = re.compile(r"\\")
+        return pattern.sub(r'/', winpath)
+
+    # Utility_____________________________________________    
+    @staticmethod
     def getImagePath(beautyRib):
         f = open(beautyRib, 'r')
         lines = f.readlines()
