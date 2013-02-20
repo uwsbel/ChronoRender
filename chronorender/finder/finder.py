@@ -24,9 +24,11 @@ class Finder(object):
         assetname = os.path.basename(assetpath)
         for path in paths:
             for root, dirs, files in os.walk(path):
-                outfile = self._findFile(root, files, assetname)
-                outfile = self._findDir(root, assetpath)
+                outfile = self._findFile(root, files, assetpath)
                 if outfile: return outfile
+
+                outdir = self._findDir(root, assetpath)
+                if outdir: return outdir
         raise AssetNotFoundException(self, 'could not find: ' + assetname)
 
     def _buildPaths(self):
@@ -43,8 +45,10 @@ class Finder(object):
         if root.endswith(assetdir): return root
         return None
 
-    def _findFile(self, root, files, assetname):
-        if assetname in files:
+    def _findFile(self, root, files, assetpath):
+        fdir, assetname = os.path.split(assetpath)
+        if assetname not in files: return None
+        if root.endswith(fdir):
             return os.path.join(root, assetname)
         return None
 

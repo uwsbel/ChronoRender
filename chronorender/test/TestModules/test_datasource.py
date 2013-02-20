@@ -15,7 +15,7 @@ class DataSourceTestCase(unittest.TestCase):
     def test_csvDataSource(self):
         meta = md.MetaData('./input/metadata/yaml/1.yaml')
         infile = './input/data/stationary/0.dat'
-        csvsrc = ds.CSVDataSource(resource=infile))
+        csvsrc = ds.CSVDataSource(resource=infile)
         csvsrc.initialize()
         rows = []
         reader = csvsrc.rows()
