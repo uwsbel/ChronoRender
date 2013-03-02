@@ -12,5 +12,5 @@ RiIfBegin("!defined(CRENDER_PATH)");
 RiOption "user" "string CRENDER_PATH" $crPath;
 RiIfEnd();
 RiProcedural "RunProgram" $cmd -1000000 1000000 -1000000 1000000 -1000000 1000000 $argString;
-RiAttribute "visibility" "int camera" 0 "int diffuse" 0 "int specular" 0;
+RiAttribute "visibility" "int camera" 0 "int diffuse" 0 "int specular" 0 "int transmission" 0;
 }
