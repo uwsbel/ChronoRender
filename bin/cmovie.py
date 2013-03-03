@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import argparse, os
 import script_utils as su
 su.addCRToPath()
