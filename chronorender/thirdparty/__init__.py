@@ -1,3 +1,3 @@
-import yaml
-# import cgkit
-from ordereddict import OrderedDict
+import chronorender.thirdparty.yaml
+# import chronorender.thirdparty.brewery
+from chronorender.thirdparty.ordereddict import OrderedDict
