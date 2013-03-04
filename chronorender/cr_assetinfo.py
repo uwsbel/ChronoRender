@@ -13,11 +13,10 @@ class CRAssetInfo(object):
                             'output': os.path.join(self.jobname,'images'),
                             'shader': os.path.join(self.jobname,'shaders'),
                             'rib'   : os.path.join(self.jobname, 'rib'),
-                            'script': 'scripts', 
-                            # 'archive': os.path.join('job', 'rib'),
-                            'archive': 'ribarchives',
-                            'log':    'log',
-                            'texture': 'textures' }
+                            'script': os.path.join(self.jobname, 'scripts'), 
+                            'archive': os.path.join(self.jobname, 'ribarchives'),
+                            'log':    os.path.join(self.jobname, 'log'),
+                            'texture': os.path.join(self.jobname, 'textures') }
 
     @staticmethod
     def _getFileType(asset):
