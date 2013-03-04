@@ -48,4 +48,13 @@ setup(
     license='LICENSE.txt',
     description='RenderMan Rendering Service Package',
     long_description=open('README.txt').read(),
+    scripts=['bin/cmovie.py', 'bin/crender.py', 'bin/crender_sim.py'],
+    package_data={'chronorender.plugins': [ 
+      'dataprocess/*.py', 
+      'datasource/*.py', 
+      'distributed/*.py',
+      'geometry/*.py', 
+      'movie/*.py',
+      'renderobject/*.py', 
+      'renderpass/*.py']}
     )
