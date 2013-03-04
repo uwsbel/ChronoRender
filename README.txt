@@ -2,7 +2,9 @@ Chrono::Render
 ===========
 
 Chrono::Render is a service-oriented framework for high-quality scientific data
-visualization.  The Chrono::Render package includes a
+visualization.  The Chrono::Render package includes a set of compiled Python
+modules which are intended to be used via the scripts packaged with the
+distribution.
 
 #!/usr/bin/env python
 

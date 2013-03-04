@@ -6,3 +6,6 @@ def addCRToPath():
 
     if currpath not in sys.path:
         sys.path.insert(0, currpath)
+
+if __name__ == '__main__':
+  pass
