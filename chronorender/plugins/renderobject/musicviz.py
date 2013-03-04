@@ -44,9 +44,9 @@ class MusicViz(RenderObject):
         wav = wave.open(self.wavfile, 'r')
         params = wav.getparams()
         self._wavstats = {
-                'nchannels' = params[0], 'sampwidth' = params[1],
-                'framerate' = params[2], 'comptype' = params[3], 
-                'compname' = params[4]}
+                'nchannels' : params[0], 'sampwidth' : params[1],
+                'framerate' : params[2], 'comptype' : params[3], 
+                'compname' : params[4]}
         wav.close()
 
     def _computeCurrColor(self, framenum):

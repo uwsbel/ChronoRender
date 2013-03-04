@@ -29,10 +29,10 @@ class ESDataSource(DataSource):
             * expand: expand dictionary values and treat children as top-level keys with dot '.'
                 separated key path to the child..
         """
-        self.document_type = self.getVar('document_type')
-        self.database_name = self.getVar('database')
-        self.host = self.getVar('host')
-        self.port = self.getVar('port')
+        self.document_type = self.getVar('document_type', elasticsearch_args)
+        self.database_name = self.getVar('database', elasticsearch_args)
+        self.host = self.getVar('host', elasticsearch_args)
+        self.port = self.getVar('port', elasticsearch_args)
         self.elasticsearch_args = elasticsearch_args
         self.expand = expand
         self.connection = None
@@ -41,7 +41,7 @@ class ESDataSource(DataSource):
     def _initMembersDict(self):
         super(ESDataSource, self)._initMembersDict()
         self._members['document_type'] = [str, ""]
-        self._members['database'] = [str ""]
+        self._members['database'] = [str, ""]
         self._members['host'] = [str, None]
         self._members['port'] = [str, None]
 

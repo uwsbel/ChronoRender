@@ -1,5 +1,6 @@
 import chronorender.thirdparty.yaml as yaml
 import inspect, os, glob, sys
+from pkg_resources import resource_string, resource_filename, resource_stream
 
 class PluginManagerException(Exception):
     def __init__(self, value):
@@ -8,7 +9,7 @@ class PluginManagerException(Exception):
         return repr(self.value)
 
 class PluginManager():
-    _defaultConfigFile = 'plugin_manager.yaml'
+    _defaultConfigFile = 'plugin_manager.yml'
 
     @staticmethod
     def _getModuleName(path):
@@ -20,24 +21,30 @@ class PluginManager():
         self._initPlugins(self._findDefaultConfigFile())
 
     def _initPlugins(self, inyaml):
-        f = open(inyaml)
+        # f = open(inyaml)
+        f = resource_stream(__name__, PluginManager._defaultConfigFile)
         data = yaml.safe_load(f)
         f.close()
         self._plugins.update(data)
 
     def _findDefaultConfigFile(self):
-        self._configpath = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+        self._configpath = os.path.dirname(resource_filename(__name__,
+            PluginManager._defaultConfigFile))
         return os.path.join(self._configpath, PluginManager._defaultConfigFile)
 
     def _getPaths(self, pathstr):
         curr_path = os.getcwd()
-        os.chdir(self._configpath)
-        out = []
-        paths = pathstr.split(':')
-        for path in paths:
-            if os.path.exists(path):
-                out.append(os.path.abspath(path)+os.sep)
-        os.chdir(curr_path)
+        try:
+            os.chdir(self._configpath)
+            out = []
+            paths = pathstr.split(':')
+            for path in paths:
+                if os.path.exists(path):
+                    out.append(os.path.abspath(path)+os.sep)
+        except:
+            pass
+        finally:
+            os.chdir(curr_path)
         return out
 
     # find all the src files for plugins
@@ -57,7 +64,7 @@ class PluginManager():
 
         conc_plugin['paths'] = self._getPaths(conc_plugin['paths'])
         for path in conc_plugin['paths']:
-            conc_plugin['plugins'] = [PluginManager._getModuleName(x) for x in glob.glob(path+'*.py')]
+            conc_plugin['plugins'] = [PluginManager._getModuleName(x) for x in glob.glob(path+'*.py*')]
             
 
     def registerPlugins(self):

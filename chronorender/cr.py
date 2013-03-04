@@ -1,4 +1,5 @@
 import inspect, os, shutil
+from pkg_resources import resource_filename 
 
 import chronorender.rndr_job as rndrjob
 import chronorender.cr_object as cr_object
@@ -86,7 +87,10 @@ class ChronoRender(object):
             self._findDefaultConfigFile())
 
     def _findDefaultConfigFile(self):
-        self._configpath = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+        # self._configpath = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+        # return os.path.join(self._configpath, ChronoRender._defaultConfigFile)
+        self._configpath = os.path.dirname(resource_filename(__name__,
+            ChronoRender._defaultConfigFile))
         return os.path.join(self._configpath, ChronoRender._defaultConfigFile)
 
     def getFactories(self, typename=None):

@@ -4,6 +4,8 @@ import chronorender.plugins as pm
 import chronorender.factory as factory
 import chronorender.factorydict as fdict
 
+from pkg_resources import resource_string, resource_filename, resource_stream
+
 class CRConstructor(object):
     def __init__(self):
         self._baseClassDict     = {}
@@ -83,7 +85,8 @@ class CRConstructor(object):
         self._configureBaseClasses(yam)
 
     def _readConfig(self, yml_file):
-        f = open(yml_file)
+        # f = open(yml_file)
+        f = resource_stream(__name__, 'cr.conf.yml')
         yam = yaml.safe_load(f)
         f.close()
         return yam
