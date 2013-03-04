@@ -29,6 +29,8 @@ def main():
     elif action == 'update':
         exe = prog.CRenderUpdate()
     args.insert(0, getExecName(exe))
+    args.insert(0, 'python')
+    print "ARGS", args
     subprocess.call(args)
         # updateJobAssets(args)
 

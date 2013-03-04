@@ -26,11 +26,11 @@ class Prog(object):
         return path, name
 
     def getProgCall(self):
-        out = self.name + " "
+        out = self.name
         for k, v in self.args.iteritems():
             if not v:
                 continue
-            out += "--" + k + " " + str(v) + " "
+            out += " --" + k + " " + str(v)
         return out
 
     def _removePYCExt(self, name):
