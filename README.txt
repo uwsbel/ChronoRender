@@ -1,9 +1,8 @@
-ChronoRender
+Chrono::Render
 ===========
 
-Towel Stuff provides such and such and so and so. You might find
-it most useful for tasks involving <x> and also <y>. Typical usage
-often looks like this::
+Chrono::Render is a service-oriented framework for high-quality scientific data
+visualization.  The Chrono::Render package includes a
 
 #!/usr/bin/env python
 
