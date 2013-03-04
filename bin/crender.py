@@ -44,8 +44,8 @@ def getExecName(exe):
     path = inspect.getfile(type(exe))
     # name, ext = os.path.splitext(os.path.split(path)[1])
     name, ext = os.path.splitext(path)
-    if ext == ".pyc":
-        ext = ".py"
+    # if ext == ".pyc":
+        # ext = ".py"
     return name + ext
 
 def printHelpAndExit():
