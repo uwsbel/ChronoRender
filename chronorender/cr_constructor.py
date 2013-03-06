@@ -4,7 +4,7 @@ import chronorender.plugins as pm
 import chronorender.factory as factory
 import chronorender.factorydict as fdict
 
-from pkg_resources import resource_string, resource_filename, resource_stream
+from chronorender.thirdparty import resource_string, resource_filename, resource_stream
 
 class CRConstructor(object):
     def __init__(self):

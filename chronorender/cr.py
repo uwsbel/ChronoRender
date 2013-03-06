@@ -1,5 +1,5 @@
 import inspect, os, shutil
-from pkg_resources import resource_filename 
+from chronorender.thirdparty import resource_filename
 
 import chronorender.rndr_job as rndrjob
 import chronorender.cr_object as cr_object

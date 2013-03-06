@@ -1,6 +1,6 @@
 import chronorender.thirdparty.yaml as yaml
 import inspect, os, glob, sys
-from pkg_resources import resource_string, resource_filename, resource_stream
+from chronorender.thirdparty import resource_string, resource_filename, resource_stream
 
 class PluginManagerException(Exception):
     def __init__(self, value):
@@ -64,6 +64,7 @@ class PluginManager():
 
         conc_plugin['paths'] = self._getPaths(conc_plugin['paths'])
         for path in conc_plugin['paths']:
+            # conc_plugin['plugins'] = [PluginManager._getModuleName(x) for x in glob.glob(path+'*.py*')]
             conc_plugin['plugins'] = [PluginManager._getModuleName(x) for x in glob.glob(path+'*.py*')]
             
 
