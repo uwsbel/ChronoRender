@@ -1,8 +1,0 @@
-       	
-rman "-version 1" {
-Declare param {float asRad} {
-    label "Sphere Radius"
-    description ""
-    range {0.01 1.0}
-    }
-}
