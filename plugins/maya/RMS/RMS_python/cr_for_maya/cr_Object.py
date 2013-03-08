@@ -82,6 +82,9 @@ class CRObject(object):
         sim = fact.build(typename, **kwargs)
         self.initMembers(self.__class__.crtype, sim, prefix='default')
 
+        if Scriptable.getTypeName() in kwargs:
+            self.addScript(prefix='script', **kwargs[Scriptable.getTypeName()])
+
         self.rename(typename)
         CRObject.addObjToGlobalContext(self)
 
@@ -238,9 +241,13 @@ class CRObject(object):
         obj_name = prefix + typ.getTypeName() + str(self.attrs[typ.getTypeName()][0])
         self.attrs[typ.getTypeName()][1][obj_name] = self.addMembersToNode(typ,obj,obj_name)
 
-    def addScript(self, prefix=''):
-        self.addCRObject(Scriptable, Scriptable(), prefix)
+    def addScript(self, prefix='', **kwargs):
+        script = Scriptable(**kwargs)
+        self.addCRObject(Scriptable, script, prefix)
         self.bScript = False
+
+    def addScriptGUI(self, prefix=''):
+        self.addScript(prefix=prefix)
         self.refreshGUI()
 
     def initMembers(self, typ, obj, prefix=''):
@@ -359,7 +366,7 @@ class CRObject(object):
                 en=self.bScript)
 
         pm.button(label="Add", w=128,
-                c=pm.Callback(self.addScript, prefix='script'), 
+                c=pm.Callback(self.addScriptGUI, prefix='script'), 
                 en=self.bScript)
 
     def refreshGUI(self):
