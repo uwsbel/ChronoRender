@@ -20,7 +20,7 @@ chronorender:
         data:
             datasource:
                 - type: "csv"
-                  resource: "../../data/stationary/*.dat"
+                  resource: "data/stationary/*.dat"
                   name: "gorbdata"
                   fields: [["id", integer],
                             ["pos_z", float], 

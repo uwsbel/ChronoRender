@@ -1,4 +1,5 @@
 import re, inspect, os, sys
+from chronorender.thirdparty import resource_filename
 
 def natural_sort(slist):
     convert = lambda text: int(text) if text.isdigit() else text.lower()
@@ -63,7 +64,7 @@ def findFileOnPath(fname, path):
 
 def getCRAssetPaths():
     paths = []
-    cr_path = os.path.split(inspect.getfile(inspect.currentframe()))[0]
+    cr_path = os.path.dirname(resource_filename(__name__, "cr_utils.py"))
     a_path = os.path.join(cr_path, 'assets')
     for root, dirs, files in os.walk(a_path):
         paths.append(root)
