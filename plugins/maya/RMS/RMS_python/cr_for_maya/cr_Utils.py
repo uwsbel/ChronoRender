@@ -18,11 +18,13 @@ def crType2Maya(typ):
         return None
 
 def createOutDirs():
-    assetman = CRAssetInfo( outpath=os.path.join(Utils.getProjPath(), 'renderman'), jobname=Utils.getSceneName(), relative=False)
+    assetman = CRAssetInfo( outpath=os.path.join(Utils.getProjPath(), 'renderman'), 
+            jobname=Utils.getSceneName(), relative=False)
     assetman.createOutDirs()
 
 def getOutPathFor(what):
-    assetman = CRAssetInfo( outpath=os.path.join(Utils.getProjPath(), 'renderman'), jobname=Utils.getSceneName(), relative=False)
+    assetman = CRAssetInfo( outpath=os.path.join(Utils.getProjPath(), 'renderman'), 
+            jobname=Utils.getSceneName(), relative=False)
     return assetman.getOutPathFor(what)
 
 def normalizePath(path):

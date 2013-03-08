@@ -83,7 +83,8 @@ class DataObject(Object):
             srcnumber = self._currindex
             self.incrDataSourceCounter()
 
-        if srcnumber >= self._maxindex: return None
+        if srcnumber >= self._maxindex: 
+            srcnumber = self._maxindex-1
 
         out = self._run(srcnumber)
         if selectcondition != "":

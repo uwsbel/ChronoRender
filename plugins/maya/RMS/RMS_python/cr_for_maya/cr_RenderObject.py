@@ -69,5 +69,3 @@ class CRRenderObject(CRObject):
                 c=pm.Callback(self.addChildEnumCB, CRShader,
                     self.shaders,
                     srcattr=CRRenderObject_Node._sdrTypeAttr))
- # 6 %DATA_FORMAT=tt,lx,ly,lz,bx,by,bz,r0,r1,r2,r3,ax,ay,az,vx,vy,vz,e0,e1,e2,e3
-[['tt','integer'],['lx','integer'],['ly','integer'],['lz','integer'],['bx','float'],['by','float'],['bz','float'],['r0','float'],['r1','float'],['r2','float'],['r3','float'],['pos_x','float'],['pos_y','float'],['pos_z','float'],['vx','float'],['vy','float'],['vz','float'],['euler_x','float'],['euler_y','float'],['euler_z','float'],['e3','float']]
