@@ -1,4 +1,5 @@
 import sys, types, time, os, os.path, string, getpass, inspect, gzip
+import ri
 #try:
     #from _core import vec3 as _vec3
 #except:
@@ -884,6 +885,12 @@ def Blobby(nleaf, code, floats, strings, *paramlist, **keyparams):
     _ribout.write('Blobby '+str(nleaf)+' '+_seq2list(code)+' '+_seq2list(floats)+
                   ' '+_seq2list(strings)+
                   _paramlist2string(paramlist, keyparams)+'\n')
+
+### new geometry
+#RiVolume
+def Volume(typename, bounds, nvertices, *paramlist, **keyparams):
+    ri.RiVolume(typename, bounds, nvertices, *paramlist, **keyparams)
+### 
 
 # ColorSamples
 def ColorSamples(nRGB, RGBn):

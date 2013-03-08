@@ -296,6 +296,16 @@ class _RenderManAPI:
         strings = self._toCArray(self._ri.RtString, strings)
         self._ri.RiBlobby(nleaf, len(code), code, len(floats), floats, len(strings), strings, *self._createCParamList(paramlist, keyparams))
 
+    ### new geometry
+    #RiVolume
+    def RiVolume(self, typename, bounds, nvertices, *paramlist, **keyparams):
+        bounds = self._toCArray(self._ri.RtFloat, bounds)
+        nvertices = self._toCArray(self._ri.RtInt, nvertices)
+        self._ri.RiVolume(typename, bounds, nvertices,
+                *self._createCParamList(paramlist, keyparams))
+
+    ### 
+
     def RiBound(self, bound):
         """Set the bounding box for subsequent primitives.
     

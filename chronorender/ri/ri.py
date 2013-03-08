@@ -404,7 +404,6 @@ def RiErrorHandler(handler):
     elif handler==RiErrorAbort:
         _ribout.write('ErrorHandler "abort"\n')
 
-
 # RiBegin
 def RiBegin(name):
     """Starts the main block using a particular rendering method.
@@ -958,6 +957,15 @@ def RiBlobby(nleaf, code, floats, strings, *paramlist, **keyparams):
     _ribout.write('Blobby '+str(nleaf)+' '+_seq2list(code)+' '+_seq2list(floats)+
                   ' '+_seq2list(strings)+
                   _paramlist2string(paramlist, keyparams)+'\n')
+
+### new geometry
+#RiVolume
+def RiVolume(typename, bounds, nvertices, *paramlist, **keyparams):
+    _ribout.write('Volume "' + typename + '" ' +_seq2list(bounds) + ' ' + _seq2list(nvertices) +
+            ' ' + _paramlist2string(paramlist, keyparams)+'\n')
+
+### 
+
 
 # RiColorSamples
 def RiColorSamples(nRGB, RGBn):

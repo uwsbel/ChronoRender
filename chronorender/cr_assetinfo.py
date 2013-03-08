@@ -7,16 +7,17 @@ class CRAssetInfo(object):
         self.outputpath = outpath
         self.relative   = relative
         self.jobname = jobname
+        jobdir = os.path.dirname(self.jobname)
         self.outputdirs = { 'root' : '',
                             'job'  : self.jobname,
                             'data' :  os.path.join(self.jobname, 'data'),
                             'output': os.path.join(self.jobname,'images'),
                             'shader': os.path.join(self.jobname,'shaders'),
                             'rib'   : os.path.join(self.jobname, 'rib'),
-                            'script': os.path.join(self.jobname, 'scripts'), 
-                            'archive': os.path.join(self.jobname, 'ribarchives'),
-                            'log':    os.path.join(self.jobname, 'log'),
-                            'texture': os.path.join(self.jobname, 'textures') }
+                            'script': os.path.join(jobdir, 'scripts'), 
+                            'archive': os.path.join(jobdir, 'ribarchives'),
+                            'log':    os.path.join(jobdir, 'log'),
+                            'texture': os.path.join(jobdir, 'textures') }
 
     @staticmethod
     def _getFileType(asset):
