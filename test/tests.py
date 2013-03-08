@@ -9,6 +9,7 @@ def setPythonPathForImport():
     main_path = os.path.join(modtest_path , 'test')
     main_path = os.path.join(main_path, 'TestModules')
     dist_path = os.path.join(main_path, 'distributed_tests')
+    sys.path.append(os.path.dirname(script_path))
     sys.path.append(main_path)
     sys.path.append(dist_path)
     sys.path.append(mod_path)

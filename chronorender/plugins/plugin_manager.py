@@ -63,9 +63,12 @@ class PluginManager():
             self._plugins[plugintype][typename]['plugins'] = []
 
         conc_plugin['paths'] = self._getPaths(conc_plugin['paths'])
+        srcs = []
         for path in conc_plugin['paths']:
             # conc_plugin['plugins'] = [PluginManager._getModuleName(x) for x in glob.glob(path+'*.py*')]
-            conc_plugin['plugins'] = [PluginManager._getModuleName(x) for x in glob.glob(path+'*.py*')]
+            srcs.extend([PluginManager._getModuleName(x) for x in
+                glob.glob(path+'*.py*')])
+        conc_plugin['plugins'] = srcs
             
 
     def registerPlugins(self):
