@@ -1,3 +1,9 @@
+--- 
+layout: main 
+title: SBEL Software 
+description: Software projects in the lab
+---
+
 Chrono::Render
 ==============
 ![CRLogo](images/ChronoRenderLogo_100px.png)
