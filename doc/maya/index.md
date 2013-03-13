@@ -39,11 +39,12 @@ This describes some best practices for using RenderMan Studio and the Chrono::Re
 6. Load the Chrono::Render Plugin
     + from the drop-down menu Chrono::Render -> ReImport
 
-Add the following Environment Variables to your system:
+Add the following Environment Variable to your system:
 
 ```
-  CRENDER_PATH=path_to_ChronoRender_root
-  PYTHONPATH=$PYTHONPATH:$CRENDER_PATH
+  CRENDER_PATH=path_to_ChronoRender_root_in_sitepackages
+  (Linux: /usr/lib/python/site-packages/ChronoRender)
+  (Windows: C:\Python27\Lib\site-packages\ChronoRender)
 ```
 
 ## How It Works
