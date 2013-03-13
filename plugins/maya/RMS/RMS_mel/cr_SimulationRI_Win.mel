@@ -3,7 +3,7 @@ global proc cr_SimulationRI_Win()
 {
 int       $frame = `currentTime -q`;
 string    $crPath = `getenv "CRENDER_PATH"`;
-string    $pyScriptPath = "${CRENDER_PATH}/bin/crender_sim.py";
+string    $pyScriptPath = "${CRENDER_PATH}/scripts/crender_sim.py";
 
 string    $cmd = "python " + $pyScriptPath;
 string    $argString = "renderman/sim.yml " + $frame;
