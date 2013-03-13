@@ -1,0 +1,219 @@
+<h1>Chrono::Render Data Specification</h1>
+
+<h1>Hierarchical Data</h1>
+
+<h2>Root Element</h2>
+
+<ul>
+<li><strong>name</strong>: "chronorender"</li>
+<li><strong>description</strong>: all elements under this will be read and processed by Chrono::Render </li>
+</ul>
+
+<h2>RenderSettings</h2>
+
+<ul>
+<li><strong>name</strong>: "rendersettings"</li>
+<li><strong>description</strong>: all elements under this will be read and processed by Chrono::Render </li>
+<li><strong>parameters</strong>:
+<ul>
+<li><em>out</em> 
+<ul>
+<li>Path/name of the output file</li>
+<li>string</li>
+<li>"./output/test"</li>
+</ul></li>
+<li><em>padding</em> 
+<ul>
+<li>Number of digits to tack onto the output image sequence; evaluates to "<em>out</em>.<em>padding</em>.<em>fileformat</em>"</li>
+<li>integer</li>
+<li>4</li>
+</ul></li>
+<li><em>fileformat</em> 
+<ul>
+<li>The image format to render as; types available varies by renderer  </li>
+<li>string</li>
+<li>"jpg"</li>
+</ul></li>
+<li><em>searchpaths</em>
+<ul>
+<li>A ":" separated list of path names which will be used to find/resolve any assets (such as files or scripts)</li>
+<li>string</li>
+<li>".:..:/home/graphics/ribs"</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<h2>Camera</h2>
+
+<ul>
+<li><strong>name</strong>: "camera"</li>
+<li><strong>description</strong>: the series of RenderMan calls which specify the view transformation and camera effects (such as depth of field or lens angle)</li>
+<li><strong>parameters</strong>:
+<ul>
+<li><em>filename</em>
+<ul>
+<li>file which contains some RIB; can have a relative or absolute path</li>
+<li>string</li>
+<li>"default_camera.rib"</li>
+</ul></li>
+<li><em>script</em>
+<ul>
+<li>see <strong>Script</strong></li>
+</ul></li>
+</ul></li>
+</ul>
+
+<h2>Lighting</h2>
+
+<ul>
+<li><strong>name</strong>: "lighting"</li>
+<li><strong>description</strong>: all elements under this will be read and processed by Chrono::Render </li>
+<li><strong>parameters</strong>:
+<ul>
+<li><em>filename</em></li>
+<li><em>shader</em></li>
+</ul></li>
+</ul>
+
+<h2>Scene</h2>
+
+<ul>
+<li><strong>name</strong>: "scene"</li>
+<li><strong>description</strong>: all elements under this will be read and processed by Chrono::Render </li>
+<li><strong>parameters</strong>:
+<ul>
+<li><em>filename</em></li>
+</ul></li>
+</ul>
+
+<h2>RenderPass</h2>
+
+<ul>
+<li><strong>name</strong>: "scene"</li>
+<li><strong>description</strong>: all elements under this will be read and processed by Chrono::Render </li>
+<li><strong>parameters</strong>:
+<ul>
+<li><em>filename</em></li>
+</ul></li>
+</ul>
+
+<h2>Simulation</h2>
+
+<ul>
+<li><strong>name</strong>: "scene"</li>
+<li><strong>description</strong>: all elements under this will be read and processed by Chrono::Render </li>
+<li><strong>parameters</strong>:
+<ul>
+<li><em>filename</em></li>
+</ul></li>
+</ul>
+
+<h2>Data</h2>
+
+<ul>
+<li><strong>name</strong>: "scene"</li>
+<li><strong>description</strong>: all elements under this will be read and processed by Chrono::Render </li>
+<li><strong>parameters</strong>:
+<ul>
+<li><em>filename</em></li>
+</ul></li>
+</ul>
+
+<h2>DataSource</h2>
+
+<ul>
+<li><strong>name</strong>: "scene"</li>
+<li><strong>description</strong>: all elements under this will be read and processed by Chrono::Render </li>
+<li><strong>parameters</strong>:
+<ul>
+<li><em>filename</em></li>
+</ul></li>
+</ul>
+
+<h2>DataProcess</h2>
+
+<ul>
+<li><strong>name</strong>: "scene"</li>
+<li><strong>description</strong>: all elements under this will be read and processed by Chrono::Render </li>
+<li><strong>parameters</strong>:
+<ul>
+<li><em>filename</em></li>
+</ul></li>
+</ul>
+
+<h2>RenderObject</h2>
+
+<ul>
+<li><strong>name</strong>: "scene"</li>
+<li><strong>description</strong>: all elements under this will be read and processed by Chrono::Render </li>
+<li><strong>parameters</strong>:
+<ul>
+<li><em>filename</em></li>
+</ul></li>
+</ul>
+
+<h2>Geometry</h2>
+
+<ul>
+<li><strong>name</strong>: "scene"</li>
+<li><strong>description</strong>: all elements under this will be read and processed by Chrono::Render </li>
+<li><strong>parameters</strong>:
+<ul>
+<li><em>filename</em></li>
+</ul></li>
+</ul>
+
+<h2>Shader</h2>
+
+<ul>
+<li><strong>name</strong>: "scene"</li>
+<li><strong>description</strong>: all elements under this will be read and processed by Chrono::Render </li>
+<li><strong>parameters</strong>:
+<ul>
+<li><em>filename</em></li>
+</ul></li>
+</ul>
+
+<h2>Script</h2>
+
+<ul>
+<li><strong>name</strong>: "script"</li>
+<li><strong>description</strong>: all elements under this will be read and processed by Chrono::Render </li>
+<li><strong>parameters</strong>:
+<ul>
+<li><em>filename</em></li>
+</ul></li>
+</ul>
+
+<h2>Distributed</h2>
+
+<ul>
+<li><strong>name</strong>: "distributed"</li>
+<li><strong>description</strong>: all elements under this will be read and processed by Chrono::Render </li>
+<li><strong>parameters</strong>:
+<ul>
+<li><em>filename</em></li>
+</ul></li>
+</ul>
+
+<h2>Movie</h2>
+
+<ul>
+<li><strong>name</strong>: "movie"</li>
+<li><strong>description</strong>: all elements under this will be read and processed by Chrono::Render </li>
+<li><strong>parameters</strong>:
+<ul>
+<li><em>filename</em></li>
+</ul></li>
+</ul>
+
+<h1>Supported Renderers</h1>
+
+<p>These are renderers that can be dyanmically linked</p>
+
+<ul>
+<li>Pixar PhotoRealistc Renderman "prman"</li>
+<li>Aqsis</li>
+<li>Pixie</li>
+<li>3Delight</li>
+</ul>
