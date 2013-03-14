@@ -1,8 +1,9 @@
---- 
-layout: main 
-title: SBEL Software 
-description: Software projects in the lab
----
+<hr />
+
+<p>layout: main 
+title: SBEL Software </p>
+
+<h2>description: Software projects in the lab</h2>
 
 <h1>Chrono::Render Data Specification</h1>
 
@@ -19,7 +20,7 @@ description: Software projects in the lab
 
 <ul>
 <li><strong>name</strong>: "rendersettings"</li>
-<li><strong>description</strong>: all elements under this will be read and processed by Chrono::Render </li>
+<li><strong>description</strong>: high-level settings for configuring outputs and paths</li>
 <li><strong>parameters</strong>:
 <ul>
 <li><em>out</em> 
@@ -73,11 +74,21 @@ description: Software projects in the lab
 
 <ul>
 <li><strong>name</strong>: "lighting"</li>
-<li><strong>description</strong>: all elements under this will be read and processed by Chrono::Render </li>
+<li><strong>description</strong>: the series of RenderMan calls which specify the lighting setup</li>
 <li><strong>parameters</strong>:
 <ul>
-<li><em>filename</em></li>
 <li><em>shader</em></li>
+<li>see <strong>Shader</strong></li>
+<li><em>filename</em>
+<ul>
+<li>file which contains some RIB; can have a relative or absolute path</li>
+<li>string</li>
+<li>"default_lighting.rib"</li>
+</ul></li>
+<li><em>script</em>
+<ul>
+<li>see <strong>Script</strong></li>
+</ul></li>
 </ul></li>
 </ul>
 
@@ -85,6 +96,22 @@ description: Software projects in the lab
 
 <ul>
 <li><strong>name</strong>: "scene"</li>
+<li><strong>description</strong>: the series of RenderMan calls which specify additional graphics stuff (like other: geometry, lights, ...)</li>
+<li><strong>parameters</strong>:
+<ul>
+<li><em>filename</em>
+<ul>
+<li>file which contains some RIB; can have a relative or absolute path</li>
+<li>string                        </li>
+</ul></li>
+<li><em>filename</em></li>
+</ul></li>
+</ul>
+
+<h2>Geometry</h2>
+
+<ul>
+<li><strong>name</strong>: "scene"</li>
 <li><strong>description</strong>: all elements under this will be read and processed by Chrono::Render </li>
 <li><strong>parameters</strong>:
 <ul>
@@ -92,10 +119,71 @@ description: Software projects in the lab
 </ul></li>
 </ul>
 
-<h2>RenderPass</h2>
+<h2>Shader</h2>
 
 <ul>
 <li><strong>name</strong>: "scene"</li>
+<li><strong>description</strong>: all elements under this will be read and processed by Chrono::Render </li>
+<li><strong>parameters</strong>:
+<ul>
+<li><em>filename</em></li>
+</ul></li>
+</ul>
+
+<h2>Script</h2>
+
+<ul>
+<li><strong>name</strong>: "script"</li>
+<li><strong>description</strong>: all elements under this will be read and processed by Chrono::Render </li>
+<li><strong>parameters</strong>:
+<ul>
+<li><em>filename</em></li>
+</ul></li>
+</ul>
+
+<h2>Distributed</h2>
+
+<ul>
+<li><strong>name</strong>: "distributed"</li>
+<li><strong>description</strong>: all elements under this will be read and processed by Chrono::Render </li>
+<li><strong>parameters</strong>:
+<ul>
+<li><em>filename</em></li>
+</ul></li>
+</ul>
+
+<h2>Movie</h2>
+
+<ul>
+<li><strong>name</strong>: "movie"</li>
+<li><strong>description</strong>: all elements under this will be read and processed by Chrono::Render </li>
+<li><strong>parameters</strong>:
+<ul>
+<li><em>filename</em></li>
+</ul></li>
+</ul>
+
+<h1>Notes</h1>
+
+<p>All Elements above can contain a type parameter called:</p>
+
+<ul>
+<li><strong>name</strong>: "type"</li>
+<li><strong>description</strong>: the name of the concrete class type
+<ul>
+<li>returned by the class <em>getTypeName</em> function</li>
+</ul></li>
+</ul>
+
+<p>Given that a corresponding named factory directory exists in a plugins directory (see <a href="../tutorials/index.html">plugins</a> for details).  For example, the type parameter becomes available for RenderPa
+      + "default<em>scene.rib"
+  + _script</em>
+      + see <strong>Script</strong></p>
+
+<h2>RenderPass</h2>
+
+<ul>
+<li><strong>name</strong>: "renderpass"</li>
 <li><strong>description</strong>: all elements under this will be read and processed by Chrono::Render </li>
 <li><strong>parameters</strong>:
 <ul>
@@ -212,6 +300,20 @@ description: Software projects in the lab
 <li><em>filename</em></li>
 </ul></li>
 </ul>
+
+<h1>Notes</h1>
+
+<p>All Elements above can contain a type parameter called:</p>
+
+<ul>
+<li><strong>name</strong>: "type"</li>
+<li><strong>description</strong>: the name of the concrete class type
+<ul>
+<li>returned by the class <em>getTypeName</em> function</li>
+</ul></li>
+</ul>
+
+<p>Given that a corresponding named factory directory exists in a plugins directory (see <a href="../tutorials/index.html">plugins</a> for details).  For example, the type parameter becomes available for RenderPass elements if a directory called "plugins/renderpass" is created.  </p>
 
 <h1>Supported Renderers</h1>
 

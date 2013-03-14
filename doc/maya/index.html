@@ -1,8 +1,9 @@
---- 
-layout: main 
-title: SBEL Software 
-description: Software projects in the lab
----
+<hr />
+
+<p>layout: main 
+title: SBEL Software </p>
+
+<h2>description: Software projects in the lab</h2>
 
 <h1>Chrono::Render Autodesk Maya Plugin</h1>
 
@@ -55,11 +56,12 @@ MAYA_SCRIPT_PATH=$MAYA_APP_DIR/projects/RMS_mel
 </ul></li>
 </ol>
 
-<p>Add the following Environment Variables to your system:</p>
+<p>Add the following Environment Variable to your system:</p>
 
 <p><code>
-  CRENDER_PATH=path_to_ChronoRender_root
-  PYTHONPATH=$PYTHONPATH:$CRENDER_PATH
+  CRENDER_PATH=path_to_ChronoRender_root_in_sitepackages
+  (Linux: /usr/lib/python/site-packages/ChronoRender)
+  (Windows: C:\Python27\Lib\site-packages\ChronoRender)
 </code></p>
 
 <h2>How It Works</h2>
@@ -227,7 +229,7 @@ qsub fluid/batchRender
 </ul></li>
 </ul>
 
-<h4>Toggle Rif if RenderMan Studio Is Not Installed On Your Remote Render Farm</h4>
+<h4>Toggle Rif if RenderMan Studio is Not Installed On Your Remote Render Farm</h4>
 
 <p>This needs to be done so shaders are correctly exported without an RMS dependency</p>
 
