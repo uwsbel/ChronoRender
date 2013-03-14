@@ -13,7 +13,7 @@ description: Software projects in the lab
 
 ## RenderSettings
 * **name**: "rendersettings"
-* **description**: all elements under this will be read and processed by Chrono::Render 
+* **description**: high-level settings for configuring outputs and paths
 * **parameters**:
   + _out_ 
       + Path/name of the output file
@@ -48,18 +48,67 @@ description: Software projects in the lab
 * **description**: the series of RenderMan calls which specify the lighting setup
 * **parameters**:
   + _shader_
+    + see **Shader**
   + _filename_
+      + file which contains some RIB; can have a relative or absolute path
+      + string
+      + "default_lighting.rib"
   + _script_
       + see **Script**
 
 ## Scene
 * **name**: "scene"
+* **description**: the series of RenderMan calls which specify additional graphics stuff (like other: geometry, lights, ...)
+* **parameters**:
+  + _filename_
+      + file which contains some RIB; can have a relative or absolute path
+      + string                        
+  + _filename_
+
+## Geometry
+* **name**: "scene"
 * **description**: all elements under this will be read and processed by Chrono::Render 
 * **parameters**:
   + _filename_
 
-## RenderPass
+## Shader
 * **name**: "scene"
+* **description**: all elements under this will be read and processed by Chrono::Render 
+* **parameters**:
+  + _filename_
+
+## Script
+* **name**: "script"
+* **description**: all elements under this will be read and processed by Chrono::Render 
+* **parameters**:
+  + _filename_
+
+## Distributed
+* **name**: "distributed"
+* **description**: all elements under this will be read and processed by Chrono::Render 
+* **parameters**:
+  + _filename_
+
+## Movie
+* **name**: "movie"
+* **description**: all elements under this will be read and processed by Chrono::Render 
+* **parameters**:
+  + _filename_
+
+# Notes
+All Elements above can contain a type parameter called:
+
++ **name**: "type"
+* **description**: the name of the concrete class type
+  + returned by the class _getTypeName_ function
+
+Given that a corresponding named factory directory exists in a plugins directory (see [plugins](../tutorials/index.html) for details).  For example, the type parameter becomes available for RenderPa
+      + "default_scene.rib"
+  + _script_
+      + see **Script**
+
+## RenderPass
+* **name**: "renderpass"
 * **description**: all elements under this will be read and processed by Chrono::Render 
 * **parameters**:
   + _filename_
@@ -123,6 +172,16 @@ description: Software projects in the lab
 * **description**: all elements under this will be read and processed by Chrono::Render 
 * **parameters**:
   + _filename_
+
+# Notes
+All Elements above can contain a type parameter called:
+
++ **name**: "type"
+* **description**: the name of the concrete class type
+  + returned by the class _getTypeName_ function
+
+Given that a corresponding named factory directory exists in a plugins directory (see [plugins](../tutorials/index.html) for details).  For example, the type parameter becomes available for RenderPass elements if a directory called "plugins/renderpass" is created.  
+
 
 # Supported Renderers
 These are renderers that can be dyanmically linked
