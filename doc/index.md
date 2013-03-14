@@ -88,10 +88,10 @@ Chrono::Render is a data-centric application and takes tagged arbitrary data set
 * Plug-in and Scripting interface [here](../examples/index.html)
 
 ##Tutorials
-* Main Page [here](tutorials/index.html)
+* [here](tutorials/index.html)
 
 ##Data Specification
-* Main Page [here](spec/index.html)
+* [here](spec/index.html)
 
 ##Applications
 * Autodesk Maya [here](maya/index.html)
