@@ -2,9 +2,26 @@ import unittest, os, shutil
 from chronorender import ChronoRender
 from chronorender.renderer import Stdout
 from chronorender.geometry import Geometry, Sphere, Archive
+
+import chronorender.plugins as pm
+from chronorender.renderer import RendererFactory
 # from chronorender.geometry import File
 
 class GeometryTestCase(unittest.TestCase):
+    @staticmethod
+    def _createGeoFactories():
+        cr = ChronoRender()
+        factories = cr.getFactories()
+        fact = factories.getFactory('geometry')
+        return fact
+
+    @staticmethod
+    def _createRenderer():
+        renderer_fact = RendererFactory()
+        rib = renderer_fact.build('stdout')
+        rib.init()
+        return rib
+
     def test_geoSphere(self):
         sph = Sphere()
         self.assertEqual(sph.getTypeName(), Sphere.getTypeName())
@@ -13,6 +30,15 @@ class GeometryTestCase(unittest.TestCase):
         arch = Archive(filename='default_scene.rib')
         return True
 
+
+    def test_Plugins(self):
+        geo_fact = GeometryTestCase._createGeoFactories()
+        rib = GeometryTestCase._createRenderer()
+
+        geo = geo_fact.build('cube')
+        geo .addParameter('string test', 'asdgsd')
+        print geo
+        geo.render(rib);
     # def test_geoFile(self):
         # expected_dir = './output'
         # out_arc = os.path.join(expected_dir, 'ARCHIVES')
@@ -30,3 +56,4 @@ class GeometryTestCase(unittest.TestCase):
         # self.assertTrue(os.path.exists(expected_out))
 
         # shutil.rmtree(out_arc)
+

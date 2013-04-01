@@ -5,10 +5,12 @@ def setPythonPathForImport():
     script_file = inspect.getfile(inspect.currentframe())
     script_path = os.path.dirname(os.path.abspath(script_file))
     modtest_path = os.path.split(script_path)[0]
-    mod_path = os.path.split(modtest_path)[0]
+    # mod_path = os.path.split(modtest_path)[0]
+    mod_path = modtest_path
     main_path = os.path.join(modtest_path , 'test')
     main_path = os.path.join(main_path, 'TestModules')
     dist_path = os.path.join(main_path, 'distributed_tests')
+    print mod_path
     sys.path.append(main_path)
     sys.path.append(dist_path)
     sys.path.append(mod_path)
