@@ -1,7 +1,7 @@
 try:
     import numpy as np
 except ImportError:
-    print "No numpy installed, cannot use MusicViz RenderObject"
+    pass
 
 import wave, struct
 from chronorender.renderobject import RenderObject
