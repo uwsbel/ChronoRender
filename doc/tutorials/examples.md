@@ -46,8 +46,8 @@ Chrono::Render is a stage in a pipeline, it is not an end-to-end graphics applic
         data:
           datasource:
            -type: "csv"
-            name: "example_fluid_data"
-            resource: "data/fluid_*.dat"
+            name: "manualYAML"
+            resource: "./data/manualYAML_0.dat"
             fields: [["pos_x", float], 
                       ["pos_y", float],
                       ["pos_z", float]]
