@@ -46,7 +46,7 @@ class CRenderLocal(Prog):
         frange = self.args['framerange']
 
         cr = ChronoRender()
-        job = cr.createJob(md)
+        job = cr.createJob(md, stream)
         job.frames = frange
         cr.runRenderJob(job)
 

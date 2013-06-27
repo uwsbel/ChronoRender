@@ -19,7 +19,7 @@ class RndrJob():
     _RendererFactory = cr.RendererFactory()
     _DistributedFactory = cd.DistributedFactory()
 
-    def __init__(self, infile, factories):
+    def __init__(self, infile, stream, factories):
         self.stream         = 'stdout'
         self.typefilter     = []
         self.frames         = None
