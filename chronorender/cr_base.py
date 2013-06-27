@@ -38,10 +38,10 @@ class ChronoRenderBase(object):
         self._writeDefaultAssets(job)
         self._copyJobMetaDataToPath(job, dest)
 
-    def createJob(self, mdfile=None):
+    def createJob(self, mdfile=None, renderer=None):
         if not mdfile:
             mdfile = self._getDefaultMetaData()
-        return rndrjob.RndrJob(mdfile, self._factories)
+        return rndrjob.RndrJob(mdfile, renderer, self._factories)
 
     def updateJobAssets(self, job):
         mdfile = job.getMetaData().filename

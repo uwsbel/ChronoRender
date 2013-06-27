@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import argparse, os
+import pdb
 
 from cr_prog import Prog
 from chronorender import ChronoRender
@@ -45,9 +46,15 @@ class CRenderLocal(Prog):
         stream = self.args['renderer']
         frange = self.args['framerange']
 
+        #why does cr get what acts like a ChronoRenderBase object
+        # instead of a ChronoRender object???? (from cr_base not cr.py)
+        #ANSWER: it calles /light/cr.py's CHronRender which extends 
+        # ChronoRenderBase
         cr = ChronoRender()
         job = cr.createJob(md, stream)
         job.frames = frange
+        # print "startLocalRenderJob job.stream = " + job.stream
+        # pdb.set_trace()
         cr.runRenderJob(job)
 
 if __name__ == '__main__':

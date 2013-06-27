@@ -13,10 +13,14 @@ class RendererFactory():
     @staticmethod
     def build(renderername):
         if renderername == PRMan.getTypeName():
+            # print "PRMAN"
             return PRMan()
         elif renderername == Aqsis.getTypeName():
+            # print "Aqsis"
             return Aqsis()
         elif renderername == Stdout.getTypeName():
+            # print "Stdout"
             return Stdout()
         else:
+            # print "ALLERT!"
             raise RendererFactoryException('renderer: \"' + renderername + '\" is not supported')

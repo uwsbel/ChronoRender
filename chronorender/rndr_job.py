@@ -20,7 +20,7 @@ class RndrJob():
     _DistributedFactory = cd.DistributedFactory()
 
     def __init__(self, infile, stream, factories):
-        self.stream         = 'stdout'
+        self.stream         = stream
         self.typefilter     = []
         self.frames         = None
         self.bOptions       = True
@@ -31,8 +31,10 @@ class RndrJob():
         self._timecreated   = datetime.datetime.utcnow()
         self._renderer      = None
         self._assetman      = RndrJobAssetManager(self._rootdir, self._rndrdoc)
+        # print "self.stream = " + self.stream
 
     def run(self):
+        # print "run self.stream = " + self.stream
         self._assetman.createOutDirs()
         prevdir = os.getcwd()
         try:
@@ -52,6 +54,7 @@ class RndrJob():
         self._verifyFrameRange()
 
     def _render(self):
+        print "_render " + self.stream
         self._renderer = RndrJob._RendererFactory.build(self.stream)
         self._startRenderer()
         if self.bOptions:
@@ -141,9 +144,11 @@ class RndrJob():
         return job
 
     def _configureProgForJob(self, prog):
+        print "_configureProgForJob self.stream1 = " + self.stream
         prog.args['metadata'] = self._metadata.filename
         prog.args['framerange'] = str(self.frames[0]) + " " + str(self.frames[1])
         prog.args['renderer'] = self.stream
+        print "_configureProgForJob self.stream2 = " + self.stream
         return prog
 
     def _startRenderer(self):

@@ -103,7 +103,7 @@ class ChronoRender(ChronoRenderBase):
 
     def runRenderJob(self, job):
         try:
-            self.setJobStream(job)
+            # self.setJobStream(job)
             job.run()
         except Exception as e:
             print e
