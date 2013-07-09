@@ -5,6 +5,11 @@ class Cube(Geometry):
     def getTypeName():
         return "cube"
 
+    def __init__(self, *args, **kwargs):
+        super(Cube,self).__init__(*args, **kwargs)
+
+        self.side = self.getMember('side')
+
     def __str__(self):
         return 'cube'
 
@@ -13,9 +18,25 @@ class Cube(Geometry):
 
         self._members['side'] = [float, 1.0]
 
+    def updateMembers(self):
+        self.setMember('side', self.side)
+
     def render(self, rib, *args, **kwargs):
-        rib.Cone(1,1,360)
-        # rib.Sphere(1,-1,1,360)
+        p = self.side/2
+        # Bottom
+        rib.Polygon(P=[p,p,-p, -p,p,-p, -p,-p,-p, p,-p,-p])
+        #Top
+        rib.Polygon(P=[p,p,p, -p,p,p, -p,-p,p, p,-p,p])
+        #Near
+        rib.Polygon(P=[p,-p,p, -p,-p,p, -p,-p,-p, p,-p,-p])
+        #Far
+        rib.Polygon(P=[p,p,p, -p,p,p, -p,p,-p, p,p,-p])
+        #Right
+        rib.Polygon(P=[p,-p,p, p,p,p, p,p,-p, p,-p,-p])
+        #Left
+        rib.Polygon(P=[-p,-p,p, -p,p,p, -p,p,-p, -p,-p,-p])
+
+
 
 def build(**kwargs):
     return Cube(**kwargs)
