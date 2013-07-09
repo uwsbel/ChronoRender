@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import argparse, os
-import pdb
 
 from cr_prog import Prog
 from chronorender import ChronoRender
