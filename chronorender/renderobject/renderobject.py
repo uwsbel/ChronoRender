@@ -8,6 +8,9 @@ from chronorender.geometry import Geometry
 from chronorender.shader import Shader
 from chronorender.cr_types import intlist, floatlist
 
+from chronorender.math import utils
+import math
+
 class RenderObject(Movable):
 
     @staticmethod
@@ -106,6 +109,13 @@ class RenderObject(Movable):
         pos_y = record[cre.POS_Y] if cre.POS_X in record else 0.0
         pos_z = record[cre.POS_Z] if cre.POS_X in record else 0.0
         rib.Translate(pos_x, pos_y, pos_z)
+        import pdb; pdb.set_trace()
+        if cre.QUAT_X in record:
+            ex, ey, ez = utils.euler_from_quaternion([record[cre.QUAT_W], record[cre.QUAT_X], record[cre.QUAT_Y], record[cre.QUAT_Z]], axes='sxyz')
+            rib.Rotate(math.degrees(ex), 1, 0, 0)
+            rib.Rotate(math.degrees(ey), 0, 1, 0)
+            rib.Rotate(math.degrees(ez), 0, 0, 1)
+
 
         if cre.EULER_X in record and record[cre.EULER_X] > 0.0:
             rib.Rotate(record[cre.EULER_X], 1, 0, 0)
