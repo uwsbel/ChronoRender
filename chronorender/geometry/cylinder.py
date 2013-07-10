@@ -6,6 +6,7 @@ class Cylinder(Geometry):
         return "cylinder"
 
     def __init__(self, *args, **kwargs):
+        import pdb; pdb.set_trace()
         super(Cylinder,self).__init__(*args, **kwargs)
 
         self.radius = self.getMember('radius')
@@ -28,6 +29,7 @@ class Cylinder(Geometry):
         self.setMember('zmax', self.zmax)
 
     def render(self, rib, *args, **kwargs):
+        import pdb; pdb.set_trace()
         rib.Cylinder(self.radius, self.zmin, self.zmax, self.thetamax)
 
 def build(**kwargs):
