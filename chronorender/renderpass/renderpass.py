@@ -82,7 +82,6 @@ class RenderPass(Renderable):
         if self.script:
             self.script.render(rib, *args, **passargs)
         else:
-            import pdb; pdb.set_trace()
             rib.FrameBegin(framenumber)
             self._renderSettings(rib, **passargs)
 

@@ -77,7 +77,6 @@ class RndrJob():
 
     def _renderFrames(self):
         for framenum in range(self.frames[0], self.frames[1]+1):
-            import pdb; pdb.set_trace()
             self._rndrdoc.render(self._renderer, framenum, self.typefilter)
 
     def _verifyFrameRange(self):
