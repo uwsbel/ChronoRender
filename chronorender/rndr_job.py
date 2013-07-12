@@ -19,19 +19,20 @@ class RndrJob():
     _RendererFactory = cr.RendererFactory()
     _DistributedFactory = cd.DistributedFactory()
 
-    def __init__(self, infile, stream, factories):
+    def __init__(self, infile, frange, stream, factories):
         self.stream         = stream
         self.typefilter     = []
-        self.frames         = None
+        self.frames         = frange
         self.bOptions       = True
         self._factories     = factories
         self._metadata      = md.MetaData(infile)
-        self._rndrdoc       = rd.RndrDoc(self._factories, self._metadata)
+        self._rndrdoc       = rd.RndrDoc(self._factories, self.frames, self._metadata)
         self._rootdir       = os.path.abspath(os.path.split(self._metadata.filename)[0])
         self._timecreated   = datetime.datetime.utcnow()
         self._renderer      = None
         self._assetman      = RndrJobAssetManager(self._rootdir, self._rndrdoc)
         # print "self.stream = " + self.stream
+        
 
     def run(self):
         # print "run self.stream = " + self.stream

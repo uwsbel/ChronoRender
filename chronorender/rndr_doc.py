@@ -17,13 +17,14 @@ class RndrDocException(Exception):
 
 class RndrDoc():
 
-    def __init__(self, factories, md, *args, **kwargs):
+    def __init__(self, factories, frames, md, *args, **kwargs):
         self.md             = md
-        self.settings       = RenderSettings(factories=factories)
+        self.settings       = RenderSettings(factories=factories, md=md, frange=frames)
         self.rndrpasses     = []
         self.renderables    = []
         self.assetpaths     = []
         self.outdir         = ""
+        self.frange = frames
         
         self.initFromMetadata(factories, md)
 
@@ -38,12 +39,13 @@ class RndrDoc():
     def initFromMetadata(self, factories, md):
         self.md = md
         # self.settings   = RenderSettings(factories=factories,**md.singleFromType(RenderSettings, bRequired=False))
-        sett = md.singleFromType(RenderSettings, bRequired=False)
+        sett = md.singleFromType(RenderSettings(frange=self.frange), bRequired=False)
         if sett:
-            self.settings = RenderSettings(factories=factories, **sett)
+            self.settings = RenderSettings(factories=factories, frange=self.frange, **sett)
 
         self._initRenderables(factories, md)
         self._addRenderablesToRenderPasses()
+        # self.settgings._resolveFramerange(
 
     def _initRenderables(self, factories, md):
         for typename, elem in md.getElementsDict().iteritems():

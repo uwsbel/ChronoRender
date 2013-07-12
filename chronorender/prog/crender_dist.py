@@ -48,13 +48,14 @@ class CRenderDist(Prog):
 
     def startDistributedJob(self):
         md = self.verifyMetaData()
-        stream = args['renderer']
-        frames = args['framerange']
+        stream = self.args['renderer']
+        frames = self.args['framerange']
 
         cr = ChronoRender()
         job = cr.createJob(md)
         job.frames = frames
-        prog = CRLocal()
+        # prog = CRLocal()
+        prog = CRenderLocal()
         cr.submitJob(job, prog)
 
 if __name__ == '__main__':

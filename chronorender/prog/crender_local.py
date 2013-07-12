@@ -31,7 +31,7 @@ class CRenderLocal(Prog):
 
         parser.add_argument('-f', '--framerange',
                 nargs=2,
-                help='render the specified framerange; by default renders all frames',
+                help='render the specified framerange; by default renders frame 0',
                 default=[0,0],
                 type=int,
                 required=False)
@@ -50,8 +50,8 @@ class CRenderLocal(Prog):
         #ANSWER: it calles /light/cr.py's CHronRender which extends 
         # ChronoRenderBase
         cr = ChronoRender()
-        job = cr.createJob(md, stream)
-        job.frames = frange
+        job = cr.createJob(md, frange, stream)
+        # job.frames = frange
         # print "startLocalRenderJob job.stream = " + job.stream
         # pdb.set_trace()
         cr.runRenderJob(job)

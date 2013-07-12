@@ -26,10 +26,12 @@ class RenderSettings(Object):
         self.fileformat    = self.getMember('fileformat')
         self.searchpaths   = self.getMember('searchpaths')
         self.framerange    = self.getMember('framerange')
+        self.framerange = kwargs.get("frange", [0,0])
 
 
         self._resolveOutputFormat()
         self._resolvePadding()
+
 
     def _initMembersDict(self):
         super(RenderSettings, self)._initMembersDict()
