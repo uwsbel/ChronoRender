@@ -3,6 +3,7 @@ syntax: glob
 *.log
 *.swp
 *.orig
+./plugins/blender/RENDERMAN/*
 
 syntax: regexp
 .*\#.*\#$
