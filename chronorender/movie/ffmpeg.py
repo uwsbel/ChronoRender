@@ -20,6 +20,7 @@ class FFMPEG(Movie):
         super(FFMPEG, self)._initMembersDict()
 
     def setInputFile(self, filepath):
+        import pdb; pdb.set_trace()
         vals = filepath.split('.')
         index = self._findPadding(vals)
         if not index:
