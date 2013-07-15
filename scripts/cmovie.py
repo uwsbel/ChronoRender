@@ -9,7 +9,7 @@ from chronorender.movie import MovieFactory
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('inputfile', help='directory containing image sequence')
+    parser.add_argument('inputfile', help='The first image file in the sequence you wish to make into a movie')
     parser.add_argument('output', help='path/name of output file')
 
     parser.add_argument('-p', '--program', 
