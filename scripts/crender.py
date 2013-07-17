@@ -25,7 +25,9 @@ def main():
     elif action == 'render':
         exe = prog.CRenderLocal()
     elif action == 'submit':
-        exe = prog.CRenderDist()
+        qsub_script = prog.submit_qsub_script()
+        sys.exit()
+        # exe = prog.CRenderDist()
     elif action == 'update':
         exe = prog.CRenderUpdate()
     args.insert(0, getExecName(exe))
