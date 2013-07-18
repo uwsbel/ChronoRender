@@ -22,7 +22,8 @@ class Cube(Geometry):
         self.setMember('side', self.side)
 
     def render(self, rib, *args, **kwargs):
-        p = self.side/2
+        p = self.side
+        ri.SolidBegin("primitive")
         # Bottom
         rib.Polygon(P=[p,p,-p, -p,p,-p, -p,-p,-p, p,-p,-p])
         #Top
@@ -35,6 +36,7 @@ class Cube(Geometry):
         rib.Polygon(P=[p,-p,p, p,p,p, p,p,-p, p,-p,-p])
         #Left
         rib.Polygon(P=[-p,-p,p, -p,p,p, -p,p,-p, -p,-p,-p])
+        ri.SolidEnd()
 
 
 
