@@ -24,6 +24,10 @@ class CRAssetInfo(object):
         filename, ext = os.path.splitext(asset)
         if ext == ".sl":
             return 'shader'
+        elif ext == ".slx": #TODO: does returning 'shader' for slo/x work?
+            return 'shader'
+        elif ext == ".slo":
+            return 'shader'
         elif ext == ".py":
             return 'script'
         elif ext == ".rib":

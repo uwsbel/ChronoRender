@@ -53,7 +53,6 @@ class CRenderLocal(Prog):
         job = cr.createJob(md, frange, stream)
         # job.frames = frange
         # print "startLocalRenderJob job.stream = " + job.stream
-        # pdb.set_trace()
         cr.runRenderJob(job)
 
 if __name__ == '__main__':
