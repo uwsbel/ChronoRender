@@ -39,6 +39,7 @@ class FFMPEG(Movie):
 
     def encode(self):
         exe = self._verifyExecutable()
+        import pdb; pdb.set_trace()
         subprocess.call(self._getArgsList())
 
     def _findPadding(self, vals):

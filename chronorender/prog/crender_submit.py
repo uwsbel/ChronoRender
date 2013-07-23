@@ -52,11 +52,11 @@ def parseArgs():
 
     return vars(parser.parse_args(sys.argv[2:]))
 
-def write_script(args, filename):
+def write_script(args, name, filename):
     f = open(filename, "w")
 
     f.write("#!/bin/sh\n\n")
-    f.write("#PBS -N {0}\n".format(args["name"]))
+    f.write("#PBS -N {0}\n".format(name))
     f.write("#PBS -l nodes={0}:ppn={1},walltime={2}\n".format(args["nodes"], args["ppn"], args["walltime"]))
     f.write("#PBS -q {0}\n".format(args["queue"]))
     f.write("\n")
@@ -67,11 +67,17 @@ def write_script(args, filename):
 
 def submit_qsub_script(): 
     """docstring for generate_qsub_script"""
-
-    filename="qsub_submit_script.sh"
-
     args = parseArgs()
-    write_script(args, filename)
-    subprocess.Popen(["qsub", "./" + filename])
 
-    return "script!"
+    if args["renderer"] == "aqsis":
+        jobs = []
+        for i in xrange(args["framerange"][0], args["framerange"][1]+1):
+            filename = "qsub_submit_script{0}.sh".format(i)
+            write_script(args, args["name"]+"-"+str(i), filename)
+            subprocess.Popen(["qsub", "./" + filename])
+
+    if args["renderer"] == "prman":
+        filename="qsub_submit_script.sh"
+
+        write_script(args, args["name"], filename)
+        subprocess.Popen(["qsub", "./" + filename])
