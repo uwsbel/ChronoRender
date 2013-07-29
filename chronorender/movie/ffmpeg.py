@@ -20,7 +20,6 @@ class FFMPEG(Movie):
         super(FFMPEG, self)._initMembersDict()
 
     def setInputFile(self, filepath):
-        import pdb; pdb.set_trace()
         vals = filepath.split('.')
         index = self._findPadding(vals)
         if not index:
@@ -39,7 +38,6 @@ class FFMPEG(Movie):
 
     def encode(self):
         exe = self._verifyExecutable()
-        import pdb; pdb.set_trace()
         subprocess.call(self._getArgsList())
 
     def _findPadding(self, vals):

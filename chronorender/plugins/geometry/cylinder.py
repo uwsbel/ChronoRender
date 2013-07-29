@@ -30,11 +30,11 @@ class Cylinder(Geometry):
     #     self.setMember('zmax', self.zmax)
 
     def render(self, ri, *args, **kwargs):
-        ri.SolidBegin("primitive")
+        # ri.SolidBegin("primitive")
         ri.Cylinder(self.radius, -self.height/2.0, self.height/2.0, self.thetamax, *args, **self._params)
         ri.Disk(-self.height/2.0, self.radius, self.thetamax, *args, **self._params)
         ri.Disk(self.height/2.0, self.radius, self.thetamax, *args, **self._params)
-        ri.SolidEnd()
+        # ri.SolidEnd()
 
 def build(**kwargs):
     return Cylinder(**kwargs)

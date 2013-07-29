@@ -411,6 +411,7 @@ def WorldBegin():
     if _insideworld:
         _error(RIE_ILLSTATE, RIE_ERROR, "World blocks cannot be nested.")
     
+    # _ribout.write('Option "statistics" "endofframe" [1] "filename" ["stats.txt"] "xmlfilename" ["stats.xml"]\n')
     _ribout.write("WorldBegin\n")
     _insideworld = 1
 

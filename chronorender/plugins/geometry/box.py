@@ -44,8 +44,8 @@ class Box(Geometry):
         npolys = [4,4,4,4,4,4]
         nverticies = [0,2,3,1,0,1,5,4,0,4,6,2,1,3,7,5,2,6,7,3,4,5,7,6]
 
-        rib.SolidBegin("primitive")
-        rib.PointsPolygons(npolys, nverticies, P=points)
+        # rib.SolidBegin("primitive")
+        rib.PointsPolygons(npolys, nverticies, {"P":points})
         # # Bottom
         # rib.Polygon(P=[x,y,-z, -x,y,-z, -x,-y,-z, x,-y,-z])
         # #Top
@@ -58,7 +58,7 @@ class Box(Geometry):
         # rib.Polygon(P=[x,-y,z, x,y,z, x,y,-z, x,-y,-z])
         # #Left
         # rib.Polygon(P=[-x,-y,z, -x,y,z, -x,y,-z, -x,-y,-z])
-        rib.SolidEnd()
+        # rib.SolidEnd()
 
 
 def build(**kwargs):

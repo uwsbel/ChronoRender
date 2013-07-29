@@ -68,7 +68,8 @@ class CRAssetInfo(object):
             shdrs = glob.glob('./*.sl')
             prog = [sdrc]
             prog.extend(shdrs)
-            subprocess.call(prog)
+            if len(prog) >= 2:
+                subprocess.call(prog)
         finally:
             os.chdir(prevdir)
 

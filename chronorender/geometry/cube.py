@@ -23,20 +23,34 @@ class Cube(Geometry):
 
     def render(self, rib, *args, **kwargs):
         p = self.side
-        ri.SolidBegin("primitive")
-        # Bottom
-        rib.Polygon(P=[p,p,-p, -p,p,-p, -p,-p,-p, p,-p,-p])
-        #Top
-        rib.Polygon(P=[p,p,p, -p,p,p, -p,-p,p, p,-p,p])
-        #Near
-        rib.Polygon(P=[p,-p,p, -p,-p,p, -p,-p,-p, p,-p,-p])
-        #Far
-        rib.Polygon(P=[p,p,p, -p,p,p, -p,p,-p, p,p,-p])
-        #Right
-        rib.Polygon(P=[p,-p,p, p,p,p, p,p,-p, p,-p,-p])
-        #Left
-        rib.Polygon(P=[-p,-p,p, -p,p,p, -p,p,-p, -p,-p,-p])
-        ri.SolidEnd()
+        x = self.side
+        y = self.side
+        z = self.side
+        points = [-x,-y,-z,
+                x,-y,-z,
+                -x,y,-z,
+                x,y,-z,
+                -x,-y,z,
+                x,-y,z,
+                -x,y,z,
+                x,y,z]
+        npolys = [4,4,4,4,4,4]
+        nverticies = [0,2,3,1,0,1,5,4,0,4,6,2,1,3,7,5,2,6,7,3,4,5,7,6]
+        # ri.SolidBegin("primitive")
+        rib.PointsPolygons(npolys, nverticies, {"P":points})
+        # # Bottom
+        # rib.Polygon(P=[p,p,-p, -p,p,-p, -p,-p,-p, p,-p,-p])
+        # #Top
+        # rib.Polygon(P=[p,p,p, -p,p,p, -p,-p,p, p,-p,p])
+        # #Near
+        # rib.Polygon(P=[p,-p,p, -p,-p,p, -p,-p,-p, p,-p,-p])
+        # #Far
+        # rib.Polygon(P=[p,p,p, -p,p,p, -p,p,-p, p,p,-p])
+        # #Right
+        # rib.Polygon(P=[p,-p,p, p,p,p, p,p,-p, p,-p,-p])
+        # #Left
+        # rib.Polygon(P=[-p,-p,p, -p,p,p, -p,p,-p, -p,-p,-p])
+        # ri.SolidEnd()
 
 
 
