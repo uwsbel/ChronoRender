@@ -64,9 +64,16 @@ class RndrJob():
         self._stopRenderer()
 
     def _renderOptions(self):
+        # import pdb; pdb.set_trace()
+        #first get the special default stuff
         cr_paths = cr_utils.getCRAssetPaths()
+        local_paths = os.path.join(os.getcwd(), "textures")
+        local_paths += ":" + os.path.join(os.path.join(os.getcwd(), os.path.join("job")), "rib")
+        local_paths += ":" + os.path.join(os.path.join(os.getcwd(), os.path.join("job")), "images")
+        local_paths += ":" + os.path.join(os.path.join(os.getcwd(), os.path.join("job")), "data")
+        local_paths += ":" + os.path.join(os.path.join(os.getcwd(), os.path.join("job")), "shaders")
         cr_pathsstr = reduce(lambda x, y: str(x) + ":" + str(y), cr_paths)
-        cr_pathsstr += ":"
+        cr_pathsstr += ":" + local_paths + ":"
         self._renderer.Option("searchpath", {"shader":
                 cr_pathsstr + self._assetman.getOutPathFor("shader") + ":@"})
         self._renderer.Option("searchpath", {"procedural" :

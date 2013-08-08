@@ -22,6 +22,7 @@ class CRenderRIBExporter(RIBExporter):
                   (which contain the parameters for a RiDisplay() call). If
                   output is None, no RiDisplay() call is done.
         """
+        import pdb; pdb.set_trace()
 
         scene = getScene()
         self.timestep = scene.timer().timestep
@@ -228,6 +229,7 @@ class RenderPass:
 			
         \param owner (\c Component) The object that requires the result of this pass
         """
+        import pdb; pdb.set_trace()
         self.owner = owner
         self.output = output
         # A reference to the exporter class (this is initialized in the

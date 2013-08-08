@@ -10,6 +10,7 @@ class PhotonGI(PhotonPass):
         return "photon_gi"
 
     def __init__(self, *args, **kwargs):
+        import pdb; pdb.set_trace()
         super(PhotonGI,self).__init__(*args, **kwargs)
 
         self.gpm          = None

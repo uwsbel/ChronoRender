@@ -63,6 +63,7 @@ def findFileOnPath(fname, path):
     return None
 
 def getCRAssetPaths():
+    # import pdb; pdb.set_trace()
     paths = []
     cr_path = os.path.dirname(resource_filename(__name__, "cr_utils.py"))
     a_path = os.path.join(cr_path, 'assets')
