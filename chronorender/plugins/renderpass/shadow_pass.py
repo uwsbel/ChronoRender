@@ -32,9 +32,11 @@ class ShadowPass(RenderPass):
         passargs = dict(passargs.items() + kwargs.items())
 
         rib.FrameBegin(framenumber)
+        rib.PixelFilter("box", 1, 1)
+        # Declare "shadowname" "uniform string"
+        rib.Declare("shadowname", "uniform string")
         self._renderSettings(rib, **passargs)
 
-        rib.PixelFilter("box", 1, 1)
         # rib.BoxFilter("box",1, 1)
         rib.Hider("hidden", {"int jitter": 0}) #TODO: error?
 

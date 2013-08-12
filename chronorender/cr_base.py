@@ -79,6 +79,8 @@ class ChronoRenderBase(object):
         job.copyAssetToDirectory(defaultcam)
         defaultlighting = os.path.join(cr_utils.getAssetsPath(), 'default_lighting.rib')
         job.copyAssetToDirectory(defaultlighting)
+        defaultshader = os.path.join(cr_utils.getAssetsPath(), 'matte.sl')
+        job.copyAssetToDirectory(defaultshader)
 
     def _copyJobMetaDataToPath(self, job, outpath):
         shutil.copy2(job.getMetaData().filename, outpath)

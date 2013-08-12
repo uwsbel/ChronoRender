@@ -114,6 +114,7 @@ class RndrJob():
         self._assetman.updateAssets()
 
     def copyAssetToDirectory(self, asset):
+        # import pdb; pdb.set_trace()
         self._assetman.copyAssetToDirectory(asset)
 
     def submit(self, prog):

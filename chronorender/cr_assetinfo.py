@@ -101,12 +101,16 @@ class CRAssetInfo(object):
 
     def copyAssetToDirectory(self, asset):
         filename, ext = os.path.splitext(asset)
+        prevdir = os.getcwd()
         try:
+            os.chdir(self.outputpath)
             atype = CRAssetInfo._getFileType(asset)
             path = self.getOutPathFor(atype)
             shutil.copy2(asset, path)
         except:
             pass
+        finally:
+            os.chdir(prevdir)
 
     def _getCurrentAssets(self):
         out = []
