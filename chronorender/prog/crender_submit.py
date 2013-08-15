@@ -69,15 +69,15 @@ def submit_qsub_script():
     """docstring for generate_qsub_script"""
     args = parseArgs()
 
-    if args["renderer"] == "aqsis":
+    if args["renderer"] == "aqsis" or args["renderer"] == "prman":
         jobs = []
         for i in xrange(args["framerange"][0], args["framerange"][1]+1):
             filename = "qsub_submit_script{0}.sh".format(i)
             write_script(args, args["name"]+"-"+str(i), i, i, filename)
             subprocess.Popen(["qsub", "./" + filename])
 
-    if args["renderer"] == "prman":
-        filename="qsub_submit_script.sh"
+    # if args["renderer"] == "prman":
+    #     filename="qsub_submit_script.sh"
 
-        write_script(args, args["name"], args["framerange"][0], args["framerange"][1], filename)
-        subprocess.Popen(["qsub", "./" + filename])
+    #     write_script(args, args["name"], args["framerange"][0], args["framerange"][1], filename)
+    #     subprocess.Popen(["qsub", "./" + filename])

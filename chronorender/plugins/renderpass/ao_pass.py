@@ -24,7 +24,7 @@ class AOPass(RenderPass):
         self._members[cs.Shader.getTypeName()] = [cs.Shader, None]
 
     def render(self, rib, passnumber, framenumber, outpath, *args, **kwargs):
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         # super(AOPass, self).render(rib, passnumber, framenumber, 
                                     # outpath, *args, **kwargs)
 
