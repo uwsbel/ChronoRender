@@ -35,6 +35,12 @@ class ShadowPass(RenderPass):
         rib.PixelFilter("box", 1, 1)
         # Declare "shadowname" "uniform string"
         rib.Declare("shadowname", "uniform string")
+        rib.Declare("sfpx", "uniform string")
+        rib.Declare("sfpy", "uniform string")
+        rib.Declare("sfpz", "uniform string")
+        rib.Declare("sfnx", "uniform string")
+        rib.Declare("sfny", "uniform string")
+        rib.Declare("sfnz", "uniform string")
         self._renderSettings(rib, **passargs)
 
         # rib.BoxFilter("box",1, 1)
