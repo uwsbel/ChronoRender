@@ -41,10 +41,11 @@ class AOPass(RenderPass):
 
         self.renderAttributes(rib)
 
-        self._renderInstanceDecls(rib, framenumber=framenumber, **kwargs)
+        self._renderInstanceDecls(rib, **passargs)
 
-        for cam in self.camera:
-            cam.render(rib, **kwargs)
+        self._renderCamera(rib, **passargs) 
+        # for cam in self.camera:
+        #     cam.render(rib, **kwargs)
 
         # self._renderLighting(rib, **kwargs)
 
@@ -54,13 +55,18 @@ class AOPass(RenderPass):
         rib.Attribute("visibility", {"int specular": 1})
         rib.Attribute("visibility", {"int transmission": 1})
         rib.Attribute("trace", {"float bias": 0.005})
+        rib.Attribute("trace", {"int maxdiffusedepth" : self.rndrsettings[0]._params['bounces']})
 
-        bRenderShdrs = False if self.occshader.getShaderType() == 'surface' else True
-        self.occshader.render(rib, **kwargs)
-        for obj in self.renderables:
-            obj.render(rib, framenumber=framenumber, rendershaders=bRenderShdrs, **kwargs)
-        for scene in self.scene:
-            scene.render(rib, **kwargs)
+        # Now we just assume that we use a light shader
+        # bRenderShdrs = False if self.occshader.getShaderType() == 'surface' else True
+        self._renderLighting(rib, **passargs) 
+        # self.occshader.render(rib, **passargs)
+        self._renderRenderables(rib, **passargs)
+        # for obj in self.renderables:
+        #     obj.render(rib, framenumber=framenumber, rendershaders=bRenderShdrs, **kwargs)
+        self._renderScene(rib, **passargs)
+        # for scene in self.scene:
+        #     scene.render(rib, **kwargs)
         rib.WorldEnd()
 
         rib.FrameEnd()
@@ -71,12 +77,12 @@ class AOPass(RenderPass):
         return out
 
     def _renderLighting(self, rib, **kwargs):
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         if self.occshader.getShaderType() == 'light':
             self.occshader.render(rib, **kwargs)
-        else:
-            for light in self.lighting:
-                light.render(rib, **kwargs)
+        # else:
+        for light in self.lighting:
+            light.render(rib, **kwargs)
 
 def build(**kwargs):
     print "build AOPass"

@@ -150,6 +150,9 @@ class ChronoRender(object):
         job.copyAssetToDirectory(defaultlighting)
         defaultshader = cr_utils.getAbsPathRelativeToModule(ChronoRender, '.assets/matte.sl')
         job.copyAssetToDirectory(defaultshader)
+        ao = cr_utils.getAbsPathRelativeToModule(ChronoRender, '.assets/occlusionsurf.sl')
+        job.copyAssetToDirectory(ao)
+        colorbleeding = cr_utils.getAbsPathRelativeToModule(ChronoRender, '.assets/colorbleedinglight.sl')
 
     def _copyJobMetaDataToPath(self, job, oupath):
         shutil.copy2(job.getMetaData().filename, outpath)
