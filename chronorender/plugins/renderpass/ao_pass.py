@@ -28,10 +28,16 @@ class AOPass(RenderPass):
         # super(AOPass, self).render(rib, passnumber, framenumber, 
                                     # outpath, *args, **kwargs)
 
+        #TODO: numbered fames, compile the shader
+
+        passargs = {'framenumber' : framenumber, 'outpath' : outpath}
+        passargs = dict(passargs.items() + kwargs.items())
 
         rib.FrameBegin(passnumber)
-        for sett in self.rndrsettings:
-            sett.render(rib, outpath, **kwargs)
+        
+        self._renderSettings(rib, **passargs)
+        # for sett in self.rndrsettings:
+        #     sett.render(rib, outpath, **kwargs)
 
         self.renderAttributes(rib)
 
@@ -40,9 +46,15 @@ class AOPass(RenderPass):
         for cam in self.camera:
             cam.render(rib, **kwargs)
 
-        self._renderLighting(rib, **kwargs)
+        # self._renderLighting(rib, **kwargs)
 
         rib.WorldBegin()
+        
+        rib.Attribute("visibility", {"int diffuse": 1})
+        rib.Attribute("visibility", {"int specular": 1})
+        rib.Attribute("visibility", {"int transmission": 1})
+        rib.Attribute("trace", {"float bias": 0.005})
+
         bRenderShdrs = False if self.occshader.getShaderType() == 'surface' else True
         self.occshader.render(rib, **kwargs)
         for obj in self.renderables:
@@ -59,6 +71,7 @@ class AOPass(RenderPass):
         return out
 
     def _renderLighting(self, rib, **kwargs):
+        import pdb; pdb.set_trace()
         if self.occshader.getShaderType() == 'light':
             self.occshader.render(rib, **kwargs)
         else:

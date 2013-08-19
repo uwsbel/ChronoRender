@@ -32,15 +32,16 @@ class Display(Renderable):
         return [self._fileout]
 
     def render(self, rib, outpath='', postfix='', **kwargs):
+        # import pdb; pdb.set_trace()
         self._fileout = self._evalOutName(outpath, postfix)
         rib.Display(self._fileout, self.outtype, self.mode)
 
     def _evalOutName(self, outpath, postfix):
         vals = self.output.split('.')
-        out = vals[0] + "." + postfix
-        if len(vals) > 1:
-            for i in range(1,len(vals)):
-                out += "." + vals[i]
+        out = '_'.join(vals[:-1]) + "." + postfix + "." + vals[-1]
+        # if len(vals) > 1:
+        #     for i in range(1,len(vals)):
+        #         out += "." + vals[i]
         return path.join(outpath, out)
 
 
