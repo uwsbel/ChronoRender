@@ -68,6 +68,7 @@ class PRMan(Renderer):
             pass
         
     def _createRIHookFromModule(self):
+        # import pdb; pdb.set_trace()
         if not hasattr(self._module, 'Ri'):
             raise RendererException, 'invalid PRman Python interface, no Ri symbol'
         self._rihook = self._module.Ri()

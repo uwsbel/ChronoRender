@@ -1,4 +1,6 @@
+from __future__ import division
 import argparse
+import math
 import subprocess
 import sys
 
@@ -26,13 +28,21 @@ def parseArgs():
             required=False)
 
     parser.add_argument('-n', '--nodes',
-            help='the number of nodes',
+            help='the number of nodes.',
             default=1,
+            type=int,
+            required=False)
+
+    parser.add_argument('-i', '--instances',
+            help='the number of prman instances. (max 5 on euler)',
+            default=1,
+            type=int,
             required=False)
 
     parser.add_argument('-p', '--ppn',
-            help='the number of cores per node',
+            help='the number of cores per node. For prman, this means the number of cores one instance of prman uses (max 32 on euler)',
             default=1,
+            type=int,
             required=False)
 
         # parser.add_argument('-g', '--gpus',
@@ -42,12 +52,12 @@ def parseArgs():
 
     parser.add_argument('-w', '--walltime',
             help='limit on how long the job can run HH:MM:SS',
-            default='00:01:00',
+            default='01:00:00',
             required=False)
 
     parser.add_argument('-q', '--queue',
             help='which queue to submit the job to',
-            default='render',
+            default='prman',
             required=False)
 
     return vars(parser.parse_args(sys.argv[2:]))
@@ -69,15 +79,24 @@ def submit_qsub_script():
     """docstring for generate_qsub_script"""
     args = parseArgs()
 
-    if args["renderer"] == "aqsis" or args["renderer"] == "prman":
+    if args["renderer"] == "aqsis": 
         jobs = []
         for i in xrange(args["framerange"][0], args["framerange"][1]+1):
             filename = "qsub_submit_script{0}.sh".format(i)
             write_script(args, args["name"]+"-"+str(i), i, i, filename)
             subprocess.Popen(["qsub", "./" + filename])
 
-    # if args["renderer"] == "prman":
-    #     filename="qsub_submit_script.sh"
+    if args["renderer"] == "prman":
+        difference = args["framerange"][1] - args["framerange"][0]
+        fract = int(math.ceil(difference / int(args["instances"])))
 
-    #     write_script(args, args["name"], args["framerange"][0], args["framerange"][1], filename)
-    #     subprocess.Popen(["qsub", "./" + filename])
+        assert args["instances"] <= difference
+
+        for i in xrange(0, args["instances"]):
+            filename="qsub_submit_script_part{0}.sh".format(i)
+
+            minframe = args["framerange"][0] + (i+1)*fract -1
+            if i == args["instances"] - 1:
+                minframe = args["framerange"][1]
+            write_script(args, args["name"], args["framerange"][0] + i*fract, minframe, filename)
+            subprocess.Popen(["qsub", "./" + filename])

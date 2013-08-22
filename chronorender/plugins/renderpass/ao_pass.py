@@ -24,7 +24,6 @@ class AOPass(RenderPass):
         self._members[cs.Shader.getTypeName()] = [cs.Shader, None]
 
     def render(self, rib, passnumber, framenumber, outpath, *args, **kwargs):
-        # import pdb; pdb.set_trace()
         # super(AOPass, self).render(rib, passnumber, framenumber, 
                                     # outpath, *args, **kwargs)
 
@@ -48,6 +47,7 @@ class AOPass(RenderPass):
         #     cam.render(rib, **kwargs)
 
         # self._renderLighting(rib, **kwargs)
+        self._renderHider(rib, **passargs)
 
         rib.WorldBegin()
         
@@ -77,7 +77,6 @@ class AOPass(RenderPass):
         return out
 
     def _renderLighting(self, rib, **kwargs):
-        # import pdb; pdb.set_trace()
         if self.occshader.getShaderType() == 'light':
             self.occshader.render(rib, **kwargs)
         # else:
