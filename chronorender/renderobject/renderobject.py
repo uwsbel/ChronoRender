@@ -123,7 +123,7 @@ class RenderObject(Movable):
         if cre.EULER_Z in record and record[cre.EULER_Z] > 0.0:
             rib.Rotate(record[cre.EULER_Z], 0, 0, 1)
 
-    def renderShape(self, rib, rendershaders=True, **kwargs):
+    def renderShape(self, rib, rendershaders=True, colorobject=True, **kwargs):
         if len(self.color) == 3:
             rib.Color(self.color)
         

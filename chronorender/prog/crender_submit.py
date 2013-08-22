@@ -34,7 +34,7 @@ def parseArgs():
             required=False)
 
     parser.add_argument('-i', '--instances',
-            help='the number of prman instances. (max 5 on euler)',
+            help='the number of prman instances. (max 5 can run at the same time on euler.) Also known as the number of jobs this framerange is broken up into.',
             default=1,
             type=int,
             required=False)
