@@ -12,7 +12,7 @@ class Hider(Renderable):
     def getTypeName():
         return "hider"
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, name=None, *args, **kwargs):
         super(Hider,self).__init__(*args, **kwargs)
         self._name = name if name != None else self.getMember('name')
 
