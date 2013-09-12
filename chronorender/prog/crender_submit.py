@@ -88,6 +88,8 @@ def submit_qsub_script():
 
     if args["renderer"] == "prman":
         difference = args["framerange"][1] - args["framerange"][0]
+        if difference == 0:
+            difference = 1
         fract = int(math.ceil(difference / int(args["instances"])))
 
         assert args["instances"] <= difference

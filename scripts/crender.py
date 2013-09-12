@@ -9,16 +9,17 @@ import sys, subprocess, inspect, os
 import chronorender.prog as prog
 
 
-def main():
+def main(sysargs):
+    print(sysargs)
     # args = getArgs()
-    if len(sys.argv) < 2:
+    if len(sysargs) < 2:
         printHelpAndExit()
 
-    action = sys.argv[1]
+    action = sysargs[1]
     if action not in getOptions():
         printHelpAndExit()
 
-    args = sys.argv[2:len(sys.argv)]
+    args = sysargs[2:len(sysargs)]
     exe = None
     if action == 'init':
         exe = prog.CRenderInit()
@@ -115,4 +116,4 @@ def printHelpAndExit():
     # exit()
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv)

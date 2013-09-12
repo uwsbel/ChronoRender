@@ -75,6 +75,7 @@ class ShadowPass(RenderPass):
         rib.WorldBegin()
         for obj in self.renderables:
             obj.render(rib, rendershaders=False, colorobject=False, framenumber=framenumber, **kwargs)
+            # obj.render(rib, colorobject=False, framenumber=framenumber, **kwargs)
         for scene in self.scene:
             scene.render(rib, **kwargs)
 
