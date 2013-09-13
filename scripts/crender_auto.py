@@ -1,9 +1,13 @@
 #!/usr/bin/env python
 import tarfile
 import os
+import sys
+
 import crender
 
-def render(path_to_data_archive, path_to_metadata_archive, root_render_folder, frames=(0,0), renderer="aqsis", job_name="default_render_job_name", num_nodes=1, num_prman_instances=1, ppn=1, walltime="1:00:00", queue="prman", overwrite_data = True):
+def render(path_to_data_archive, path_to_metadata_archive, root_render_folder, frames=(0,0), renderer="prman", job_name="default_render_job_name", num_nodes=1, num_prman_instances=1, ppn=1, walltime="1:00:00", queue="prman", overwrite_data = True, crend_path=None):
+    if crend_path == None:
+        crend_path = os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "crender.py")
 
     
     crender.main(["crender.py", "init"])
@@ -23,15 +27,14 @@ def render(path_to_data_archive, path_to_metadata_archive, root_render_folder, f
     metadata_file = os.path.basename(path_to_metadata_archive).split(".")[0] + ".yaml"
     metadata_path = os.path.join(root_render_folder, "RENDERMAN", metadata_file)
 
-    import pdb; pdb.set_trace()
-    crender.main(["crender.py", "submit", "-m", metadata_path, "-r", renderer, "-f", frames[0], frames[1], "-c", job_name, "-n", num_nodes, "-i", num_prman_instances, "-p", ppn, "-w", walltime, "-q", queue])
+    # import pdb; pdb.set_trace()
+    crender.main([crend_path, "submit", "-m", metadata_path, "-r", renderer, "-f", str(frames[0]), str(frames[1]), "-c", str(job_name), "-n", str(num_nodes), "-i", str(num_prman_instances), "-p", str(ppn), "-w", str(walltime), "-q", str(queue)])
 
-    #TODO: why doesn't it render???
     #TODO: video!
 
 def main():
     #TEST hardcoded
-    render("/home/dankaczma/demo/data.tar.gz", "/home/dankaczma/demo/out.tar.gz", "/home/dankaczma/demo")
+    render("/home/dankaczma/demo/data.tar.gz", "/home/dankaczma/demo/out.tar.gz", "/home/dankaczma/demo", frames=(0,10))
 
 
 if __name__ == '__main__':

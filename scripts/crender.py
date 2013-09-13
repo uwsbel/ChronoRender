@@ -26,7 +26,7 @@ def main(sysargs):
     elif action == 'render':
         exe = prog.CRenderLocal()
     elif action == 'submit':
-        qsub_script = prog.submit_qsub_script()
+        qsub_script = prog.submit_qsub_script(sysargs=sysargs)
         sys.exit()
         # exe = prog.CRenderDist()
     elif action == 'update':
