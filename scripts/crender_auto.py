@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import tarfile
+import subprocess
 import os
 import sys
 
@@ -11,18 +12,20 @@ def render(path_to_data_archive, path_to_metadata_archive, root_render_folder, f
 
     
     crender.main(["crender.py", "init"])
-    metadata = tarfile.open(path_to_metadata_archive)
+    # metadata = tarfile.open(path_to_metadata_archive)
 
     #TODO: tarfile extraction unsafe?
-    metadata.extractall(os.path.join(root_render_folder, "RENDERMAN"))
-    metadata.close()
+    # metadata.extractall(os.path.join(root_render_folder, "RENDERMAN"))
+    # metadata.close()
+    subprocess.call(["tar", "-zxvf", path_to_metadata_archive, "-C", os.path.join(root_render_folder, "RENDERMAN")])
 
     num_data_files = os.listdir(os.path.join(root_render_folder, "RENDERMAN", "job", "data"))
 
     if overwrite_data or len(num_data_files) > 0:
-        data = tarfile.open(path_to_data_archive)
-        data.extractall(os.path.join(root_render_folder, "RENDERMAN"))
-        data.close()
+        # data = tarfile.open(path_to_data_archive)
+        # data.extractall(os.path.join(root_render_folder, "RENDERMAN"))
+        # data.close()
+        subprocess.call(["tar", "-zxvf", path_to_data_archive, "-C", os.path.join(root_render_folder, "RENDERMAN")])
 
     metadata_file = os.path.basename(path_to_metadata_archive).split(".")[0] + ".yaml"
     metadata_path = os.path.join(root_render_folder, "RENDERMAN", metadata_file)
