@@ -4,7 +4,7 @@ import math
 import subprocess
 import sys
 
-def parseArgs():
+def parseArgs(args=None):
     parser = argparse.ArgumentParser()
 
     parser.add_argument('-m', '--metadata', help='the data file that contains the \
@@ -60,9 +60,16 @@ def parseArgs():
             default='prman',
             required=False)
 
-    return vars(parser.parse_args(sys.argv[2:]))
+    if args == None:
+        # print("here")
+        # print(sys.argv)
+        return vars(parser.parse_args(sys.argv[2:]))
+    else:
+        # print("here")
+        # print(args)
+        return vars(parser.parse_args(args[2:]))
 
-def write_script(args, name, frame_begin, frame_end, filename):
+def write_script(args, name, frame_begin, frame_end, filename, prog_name=sys.argv[0]):
     f = open(filename, "w")
 
     f.write("#!/bin/sh\n\n")
@@ -71,23 +78,25 @@ def write_script(args, name, frame_begin, frame_end, filename):
     f.write("#PBS -q {0}\n".format(args["queue"]))
     f.write("\n")
     f.write("cd $PBS_O_WORKDIR\n")
-    f.write("{0} render -m {1} -r {2} -f {3} {4}".format(sys.argv[0], args["metadata"], args["renderer"], frame_begin, frame_end))
+    f.write("{0} render -m {1} -r {2} -f {3} {4}".format(prog_name, args["metadata"], args["renderer"], frame_begin, frame_end))
     
     f.close()
 
-def submit_qsub_script(): 
+def submit_qsub_script(sysargs=None): 
     """docstring for generate_qsub_script"""
-    args = parseArgs()
+    args = parseArgs(sysargs)
 
     if args["renderer"] == "aqsis": 
         jobs = []
         for i in xrange(args["framerange"][0], args["framerange"][1]+1):
             filename = "qsub_submit_script{0}.sh".format(i)
-            write_script(args, args["name"]+"-"+str(i), i, i, filename)
+            write_script(args, args["name"]+"-"+str(i), i, i, filename, prog_name=sysargs[0])
             subprocess.Popen(["qsub", "./" + filename])
 
     if args["renderer"] == "prman":
         difference = args["framerange"][1] - args["framerange"][0]
+        if difference == 0:
+            difference = 1
         fract = int(math.ceil(difference / int(args["instances"])))
 
         assert args["instances"] <= difference
@@ -98,5 +107,5 @@ def submit_qsub_script():
             minframe = args["framerange"][0] + (i+1)*fract -1
             if i == args["instances"] - 1:
                 minframe = args["framerange"][1]
-            write_script(args, args["name"], args["framerange"][0] + i*fract, minframe, filename)
+            write_script(args, args["name"], args["framerange"][0] + i*fract, minframe, filename, prog_name=sysargs[0])
             subprocess.Popen(["qsub", "./" + filename])
