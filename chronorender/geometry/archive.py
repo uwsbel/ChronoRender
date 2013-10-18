@@ -24,6 +24,7 @@ class Archive(Geometry):
         return []
 
     def render(self, rib, *args, **kwargs):
+        # import pdb; pdb.set_trace()
         rib.ReadArchive(self.filename)
 
 def build(**kwargs):

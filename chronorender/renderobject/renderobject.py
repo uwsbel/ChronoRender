@@ -90,12 +90,14 @@ class RenderObject(Movable):
             rargs = dict(rargs, **kwargs)
             self.script.render(rib, *args, **rargs)
         else:
+            # import pdb; pdb.set_trace()
             for entry in data:
                 self._renderSingleObject(rib, record=entry, **kwargs)
 
     def _renderSingleObject(self, rib, record={}, **kwargs):
         rib.AttributeBegin()
         self.renderAttributes(rib)
+        # import pdb; pdb.set_trace()
         self._renderTransformData(rib, record, **kwargs)
         
         if self.instanced:

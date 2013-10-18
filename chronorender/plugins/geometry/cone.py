@@ -23,7 +23,7 @@ class Cone(Geometry):
 
     def render(self, ri, *args, **kwargs):
         # ri.SolidBegin("primitive")
-        ri.Cone(self.height, self.radius, self.thetamax, *args, **self._params)
+        ri.Cone(2.0*self.height, self.radius, self.thetamax, *args, **self._params)
         ri.Disk(0.0, self.radius, self.thetamax, *args, **self._params)
         # ri.SolidEnd()
 

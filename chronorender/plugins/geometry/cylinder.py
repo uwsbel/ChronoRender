@@ -31,9 +31,9 @@ class Cylinder(Geometry):
 
     def render(self, ri, *args, **kwargs):
         # ri.SolidBegin("primitive")
-        ri.Cylinder(self.radius, -self.height/2.0, self.height/2.0, self.thetamax, *args, **self._params)
-        ri.Disk(-self.height/2.0, self.radius, self.thetamax, *args, **self._params)
-        ri.Disk(self.height/2.0, self.radius, self.thetamax, *args, **self._params)
+        ri.Cylinder(self.radius, -self.height, self.height, self.thetamax, *args, **self._params)
+        ri.Disk(-self.height, self.radius, self.thetamax, *args, **self._params)
+        ri.Disk(self.height, self.radius, self.thetamax, *args, **self._params)
         # ri.SolidEnd()
 
 def build(**kwargs):
