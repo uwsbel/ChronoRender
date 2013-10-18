@@ -4,6 +4,7 @@ import mathutils
 import os
 import yaml
 import tarfile
+import shutil
 #TODO: shader selection inside blender?
 
 #TODO: walltime for one frame instead of for the whole big render?
@@ -28,11 +29,25 @@ import tarfile
 #TODO: import obj files! Blender-to-Renderman-master
 #-rotation and translation of meshes
 
-#TODO: zip up and unzip the config and data files. Add one master config file for render options.
-
+#TODO: try hardcoding position in and see differences. See what the axis actuall are
 
 #Resolution and shading rate affect time and quality of render
 
+#TODO: for server-side, are tarbombs a problem?
+
+#TODO: rotations for obj files
+#TODO: let obj files move according to the data files
+#TODO: multiple frames end up with multiple objects!!!! (one file for all extrageometry will NOT work. Fix it!)
+# reason: can't selectivly move one obj but not other. Want to try to get untied from blender doing all the work, let chronorender
+# figure out where they go using the actual dat files.
+
+#TODO: Figure out how to deal with multiple part imports. Merging into one makes separate materials not work. Some sort of naming system to overrule the ones in the file. Do we need a new type of object to deal with the multiple imported mess? Ask about how povray one was done.
+
+#TODO: check axis changing for importing in blender. base it off of the renderman render. try with one shicp to start.
+
+#TODO: the fov for simple shots is way off. Why?
+
+#TODO: check if cone (and other objs) should have location in center or not.
 bl_info = {
         "name": "Chrono::Render plugin",
         "description": "Allows for easy graphical manipulation of simulated data before rendering with a powerful renderman renderer",
@@ -46,6 +61,10 @@ bl_info = {
         "category": "Import-Export"}
 
 DEFAULT_COLOR = (0.4, 0.4, 0.6)
+
+MESH_IMPORT_FUNCTIONS = {"obj": bpy.ops.import_scene.obj,
+                        "stl": bpy.ops.import_mesh.stl,
+                        "ply": bpy.ops.import_mesh.ply}
 
 fin = ""
 objects = ""
@@ -85,7 +104,7 @@ class AmbientLightProxy:
         self.obj = bpy.context.active_object
         
 class Object:
-    def __init__(self, data):
+    def __init__(self, data, currdir):
         # print("DATA:",data)
         self.group = data[0]
         self.index = int(data[1]) #The objects unique ID/index number
@@ -95,6 +114,7 @@ class Object:
         self.z = float(data[4])
 
         self.quat = mathutils.Quaternion((float(data[5]), float(data[6]), float(data[7]), float(data[8])))
+        # self.euler_zyx = self.quat.to_euler('ZYX')
         self.euler = tuple(a for a in self.quat.to_euler())
 
         self.obj_type = data[9].lower()
@@ -104,9 +124,18 @@ class Object:
         # for x in range(10,len(data)):
         #     if data[x] is not '\n':
         #         test.append(float(data[x]))
-        self.ep = [float(data[x]) for x in range(10,len(data)) if data[x] is not '\n'] 
+        # self.ep = [float(data[x]) for x in range(10,len(data)) if data[x] is not '\n'] 
+        self.ep = []
+        for x in range(10,len(data)):
+            if data[x] is not '\n':
+                try:
+                    self.ep.append(float(data[x]))
+                except ValueError:
+                    self.ep.append(data[x].strip("\n"))
+
 
         self.color = DEFAULT_COLOR
+        self.currdir = currdir
         self.material = self.create_material()
 
     def create_material(self):
@@ -135,8 +164,8 @@ class Object:
             bpy.context.object.rotation_euler = mathutils.Euler(self.euler)
         # Cylinder
         elif self.obj_type == "cylinder":
-            # ep[0] = radius of top, ep[1] = depth
-            bpy.ops.mesh.primitive_cylinder_add(radius=self.ep[0], depth=self.ep[1], location=(self.x, self.y, self.z), rotation=self.euler)
+            # ep[0] = radius of top, 2*ep[1] = depth
+            bpy.ops.mesh.primitive_cylinder_add(radius=self.ep[0], depth=2*self.ep[1], location=(self.x, self.y, self.z), rotation=self.euler)
         # Sphere
         elif self.obj_type == "sphere":
             # ep[0] = radius of the sphere
@@ -152,32 +181,54 @@ class Object:
 
         #Cone
         elif self.obj_type == "cone":
-            # self.ep[0] = radius of cone bottom, self.ep[1] = height of cone
-            bpy.ops.mesh.primitive_cone_add(radius1=self.ep[0], depth=self.ep[1], location=(self.x, self.y, self.z), rotation=self.euler)
+            # self.ep[0] = radius of cone bottom, self.ep[1] = half_height of cone
+            bpy.ops.mesh.primitive_cone_add(radius1=self.ep[0], depth=2*self.ep[1], location=(self.x, self.y, self.z), rotation=self.euler)
         #Torus
         elif self.obj_type == "torus":
             bpy.ops.mesh.primitive_torus_add(rotation=self.euler, location=(self.x, self.y, self.z), major_radius=self.ep[0], minor_radius=self.ep[1])
+        #External Mesh
+        elif self.obj_type in MESH_IMPORT_FUNCTIONS:
+            # import pdb; pdb.set_trace()
+            filename = os.path.join(self.currdir, "meshes", self.ep[0])
+            MESH_IMPORT_FUNCTIONS[self.obj_type](filepath=filename, use_split_groups=False, use_split_objects=False)
+            # bpy.ops.object.join()
+            for o in bpy.context.selected_objects:
+                o.location = [self.x, self.y, self.z]
+                # Now rotate and move to match what renderman render looks like
+                o.rotation_euler = mathutils.Euler(self.euler)
+                # o.rotation_euler = self.euler_zyx
+                # o.rotation_euler.rotate(mathutils.Euler((math.pi, 0, 0)))
+                # o.rotation_quaternion = self.quat.rotate(mathutils.Euler((180, 0, 0)))
+                bpy.context.scene.objects.active = o 
         else:
             print("Object type {} is not currently supported as a primitive in the blender plugin")
  
+        bpy.context.active_object.rotation_mode = 'ZYX'
+        # import pdb; pdb.set_trace()
         bpy.context.active_object["index"] = self.index
+        # import pdb; pdb.set_trace()
         bpy.context.active_object.name = "Obj # {}".format(self.index)
         bpy.context.active_object.active_material = self.material
         self.obj = bpy.context.active_object
         #object.get("index") to get the value
         #object["index"] doesn't work?
 
+        #TODO: it is taking the obj2 as active_object and then relabling it here
+
     def update(self):
         """Grabs stuff like color, texture and stores them"""
         try:
+            # import pdb; pdb.set_trace()
             self.obj = bpy.context.scene.objects['Obj # {}'.format(self.index)]
             self.color = (self.obj.active_material.diffuse_color[0], self.obj.active_material.diffuse_color[1], self.obj.active_material.diffuse_color[2])
             self.mat = self.obj.active_material
-        except:
+        except Exception as e:
+            print(e.strerror)
+            print("EXCEPTION! Dropping to pdb shell")
             import pdb; pdb.set_trace()
 
 class ProxyObject(Object):
-    def __init__(self, data, indicies):
+    def __init__(self, data, currdir, indicies):
         """ data is a line of the input file, indicies is a list of lines 
         from the file that this obj represents whichAttribute is a num which 
         specifies the column of data on the line that decides proxyObjs and 
@@ -185,7 +236,7 @@ class ProxyObject(Object):
         (sphere, cube...) """
         # print("MAKING PROXY OBJ")
 
-        Object.__init__(self, data)
+        Object.__init__(self, data, currdir)
         self.indicies = indicies
         # print(self.group)
         self.color = DEFAULT_COLOR
@@ -206,6 +257,7 @@ class ProxyObject(Object):
             self.color = (self.obj.active_material.diffuse_color[0], self.obj.active_material.diffuse_color[1], self.obj.active_material.diffuse_color[2])
             self.mat = self.obj.active_material
         except:
+            print("EXCEPTION! Dropping to pdb shell")
             import pdb; pdb.set_trace()
 
     # def update(self):
@@ -233,25 +285,47 @@ class ImportChronoRender(bpy.types.Operator):
     def process_max_dimensions(self, data):
         global max_dim
         global min_dim
-        max_length = max(float(data[x]) for x in range(10,len(data)) if data[x] is not '\n') 
+        max_length = 0
+        if data[9] in MESH_IMPORT_FUNCTIONS:
+            pass
+            #TODO: this could screw up some shadows. Fix.
+        else:
+            max_length = max(float(data[x]) for x in range(10,len(data)) if data[x] is not '\n') 
         for coord in (data[2:5]):
             if float(coord) + max_length > max_dim:
                 max_dim = float(coord) + max_length
             if float(coord) - max_length < min_dim:
                 min_dim = float(coord) - max_length
 
+    def import_mesh(self, data):
+        global extra_geometry_indicies
+
+        mesh_filename = os.path.join(self.directory, "meshes", data[10].strip("\n"))
+        MESH_IMPORT_FUNCTIONS["obj"](filepath=mesh_filename)
+        extra_geometry_indicies.append(int(data[1]))
+
+        for o in bpy.context.selected_objects:
+            o.location = [float(data[2]), float(data[3]), float(data[4])]
+
+        quat = mathutils.Quaternion((float(data[5]), float(data[6]), float(data[7]), float(data[8])))
+        euler = tuple(a for a in quat.to_euler())
+
+        for o in bpy.context.selected_objects:
+            o.rotation_euler =  mathutils.Euler(euler)
+
     def execute(self, context):
         global fin_name
         global objects
         global proxyObjects
         global ambient_proxy
-        global extra_geometry_index
+        global extra_geometry_indicies
         global fin_dir
         # filename = "/home/xeno/repos/blender-plugin/plugins/blender/blender_input_test.dat"
         # individualObjectsIndicies = [1,2,3,4, 5, 6] #LINE NUMBERS
 
         objects = []
         proxyObjects = []
+        extra_geometry_indicies = []
 
         fin_name = self.filename
         filepath = os.path.join(self.directory, self.filename)
@@ -260,24 +334,26 @@ class ImportChronoRender(bpy.types.Operator):
         fin = open(filepath, "r")
 
         for i, line in enumerate(fin):
-            if line.split(",")[9].lower() == "extrageometry":
-                extra_geometry_index = line.split(",")[1]
-            else:
-                self.process_max_dimensions(line.split(","))
-                if line.split(",")[0].lower() == "individual":
-                    objects.append(Object(line.split(",")))
-                    print("Object {}".format(i))
+            # if line.split(",")[9].lower() == "extrageometry":
+                # extra_geometry_indicies.append(line.split(",")[1])
+            # if line.split(",")[9].lower() in MESH_IMPORT_FUNCTIONS:
+                # self.import_mesh(line.split(","))
+            # else:
+            self.process_max_dimensions(line.split(","))
+            if line.split(",")[0].lower() == "individual":
+                objects.append(Object(line.split(","), self.directory))
+                print("Object {}".format(i))
 
-                else:
-                    data = line.split(",")
-                    proxyExists = False
-                    for obj in proxyObjects:
-                        if obj.group == data[0]:
-                            obj.indicies.append(i+1)
-                            proxyExists = True
-                    if not proxyExists:
-                        print("New Proxy line num {}".format(i))
-                        proxyObjects.append(ProxyObject(data, [i+1]))
+            else:
+                data = line.split(",")
+                proxyExists = False
+                for obj in proxyObjects:
+                    if obj.group == data[0]:
+                        obj.indicies.append(i+1)
+                        proxyExists = True
+                if not proxyExists:
+                    print("New Proxy line num {}".format(i))
+                    proxyObjects.append(ProxyObject(data, [i+1], self.directory))
 
         configInitialScene()
 
@@ -306,6 +382,7 @@ class ExportChronoRender(bpy.types.Operator):
 
     def invoke(self, context, event):
         context.window_manager.fileselect_add(self)
+        self.context = context
         return {'RUNNING_MODAL'}
 
     def construct_condition(self, indicies):
@@ -319,28 +396,32 @@ class ExportChronoRender(bpy.types.Operator):
         return rtnd[:-10] #-10 t remove the trailing or id ==
 
     def export_mesh(self, context, fout, obj):
-        for face in obj.data.polygons:
+        #TODO: don't use just one file for the whole animation. One per frame. (per obj also?)
+        # import pdb; pdb.set_trace()
+        for face in obj.obj.data.polygons:
             pgonstr = "Polygon "
             vertices = '"P" ['
             for v in face.vertices:
-                vert = obj.data.vertices[v].co
-                vertices += "  {} {} {}".format(vert.x + obj.location[0], vert.y + obj.location[1], vert.z + obj.location[2])
+                vert = obj.obj.data.vertices[v].co
+                vertices += "  {} {} {}".format(vert.x, vert.y, vert.z)
 
             vertices += ']\n'
             pgonstr += vertices
 
-            fout.write('AttributeBegin\n')
-            fout.write('Surface "matte"\n')
-            fout.write('Color [{} {} {}]\n'.format(obj.color[0], obj.color[1], obj.color[2]))
-            fout.write('Rotate {} 1 0 0\n'.format(math.degrees(obj.rotation_euler[0])))
-            fout.write('Rotate {} 0 1 0\n'.format(math.degrees(obj.rotation_euler[1])))
-            fout.write('Rotate {} 0 0 1\n'.format(math.degrees(obj.rotation_euler[2])))
-            # fout.write('Translate {} {} {}\n'.format(obj.location[0], obj.location[1], obj.location[2]))
+            # fout.write('AttributeBegin\n')
+            # fout.write('Surface "matte"\n')
+            # fout.write('Color [{} {} {}]\n'.format(obj.color[0], obj.color[1], obj.color[2]))
+            #TODO: get rotations to work with any blender rotation scheme
+            # fout.write('Rotate {} 0 0 1\n'.format(math.degrees(obj.rotation_euler[2])))
+            # fout.write('Rotate {} 0 1 0\n'.format(math.degrees(obj.rotation_euler[1])))
+            # fout.write('Rotate {} 1 0 0\n'.format(math.degrees(obj.rotation_euler[0])))
+            # fout.write('Translate {} {} {}\n'.format(obj.location[0], obj.location[2], -obj.location[1]))
             fout.write(pgonstr)
-            fout.write('AttributeEnd\n')
+            # fout.write('AttributeEnd\n')
 
     def write_object(self, objects, is_proxy=False):
         renderobject = []
+        # import pdb; pdb.set_trace()
         for obj in objects:
             obj.update()
             name = obj.group
@@ -360,7 +441,10 @@ class ExportChronoRender(bpy.types.Operator):
                 data["condition"] = "id >= {} and id <= {}".format(minIndex, maxIndex)
 
             data["color"] = color
-            data["geometry"] = [{"type" : obj.obj_type}]
+            if obj.obj_type in MESH_IMPORT_FUNCTIONS:
+                data["geometry"] = [{"type" : "archive"}]
+            else:
+                data["geometry"] = [{"type" : obj.obj_type}]
             data["shader"] = [{"name" : "matte.sl"}] #TODO: not hardcoded
             
             if obj.obj_type.lower() == "sphere":
@@ -384,6 +468,20 @@ class ExportChronoRender(bpy.types.Operator):
                 data["geometry"][0]["xlength"] = obj.ep[0]
                 data["geometry"][0]["ylength"] = obj.ep[1]
                 data["geometry"][0]["zlength"] = obj.ep[2]
+            elif obj.obj_type.lower() in MESH_IMPORT_FUNCTIONS:
+                extra_rib_filename = "extra_geo_{}".format(obj.index) + ".rib"
+                data["geometry"][0]["filename"] = extra_rib_filename
+                # import pdb; pdb.set_trace()
+                renderman_dir = os.path.join(self.directory, "RENDERMAN")
+                if not os.path.exists(renderman_dir):
+                    os.makedirs(renderman_dir)
+                ribarchives_dir = os.path.join(renderman_dir, "ribarchives")
+                if not os.path.exists(ribarchives_dir):
+                    os.makedirs(ribarchives_dir)
+                fout_fullpath = os.path.join(ribarchives_dir,  extra_rib_filename)
+                fout = open(fout_fullpath, "w")
+                self.export_mesh(self.context, fout, obj)
+                fout.close()
             else:
                 print("Geometry type {} not supported by blender export at this time".format(obj.obj_type))
 
@@ -393,7 +491,7 @@ class ExportChronoRender(bpy.types.Operator):
         return renderobject
 
     def write_extra_geometry(self, context, obj):
-        global extra_geometry_index
+        global extra_geometry_indicies
         renderobject = []
         data = dict()
         # data["color"] = "{} {} {}".format(obj.color[0], obj.color[1], obj.color[2])
@@ -401,7 +499,11 @@ class ExportChronoRender(bpy.types.Operator):
         # data["shader"] = [{"type" : "matte.sl"}]
         data["geometry"][0]["filename"] = "extrageometry.rib"
         data["name"] = "extrageometry"
-        data["condition"] = "id == {}".format(extra_geometry_index)
+        id_str = ""
+        for i in extra_geometry_indicies:
+            id_str += "id == {} or ".format(i)
+        id_str = id_str[:-4]
+        data["condition"] = id_str
 
         renderobject.append(data)
         return renderobject
@@ -722,20 +824,39 @@ class ExportChronoRender(bpy.types.Operator):
 
         yaml.safe_dump(data, fout)
 
+        self.move_ribs(self.fout_dir)
+
         print("Export complete! (yes really)")
         print("Compression beginning")
         self.compress(fin_name, fin_dir, self.filename, self.fout_dir)
         print("Compression finished")
         return {'FINISHED'}
 
+    def move_ribs(self, fout_dir):
+        """Moves all rib files to the ribarchive directory"""
+        ribarchives = os.path.join(fout_dir, "ribarchives")
+        if not os.path.isdir(ribarchives):
+            os.mkdir(ribarchives)
+        init_dir = os.getcwd()
+
+        os.chdir(fout_dir)
+        # import pdb; pdb.set_trace()
+        for f in os.listdir("."):
+            if f.endswith(".rib"):
+                dest = os.path.join(ribarchives, os.path.basename(f))
+                shutil.copy(f, dest)
+
+        os.chdir(init_dir)
+
     def compress(self, fin_name, fin_dir, fout_name, fout_dir, force_data=False):
+        #TODO: allow user to select force_data
+        #requires a SEPARATE data directory to work
+        #TODO: put all extra .rib file sin the ribarchives dir so they can be used
         data_zipped_path = os.path.join(self.directory, "data.tar.gz")
         metadata_zipped_path = os.path.join(self.directory, fout_name.split(".")[0] + ".tar.gz")
-        import pdb; pdb.set_trace()
         if not os.path.exists(data_zipped_path) or force_data == True:
             with tarfile.open(data_zipped_path, "w:gz") as tar:
                 tar.add(fin_dir, arcname="job/data")
-        # import pdb; pdb.set_trace()
         with tarfile.open(metadata_zipped_path, "w:gz") as tar2:
             tar2.add(fout_dir, arcname="")
 
@@ -761,3 +882,4 @@ def unregister():
 
 if __name__ == "__main__":
     register()
+
