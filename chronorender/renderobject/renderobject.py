@@ -126,7 +126,7 @@ class RenderObject(Movable):
             rotated = numpy.dot(rot_matrix, init_vector)
             rotated = rotated * -1
             # import pdb; pdb.set_trace()
-            rib.Translate(rotated[0][0], rotated[1][0], rotated[2][0])
+            rib.Translate(rotated.item(0), rotated.item(1), rotated.item(2))
 
         rib.Translate(pos_x, pos_y, pos_z)
         if cre.QUAT_X in record:
