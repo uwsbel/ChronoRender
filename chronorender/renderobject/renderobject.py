@@ -125,7 +125,9 @@ class RenderObject(Movable):
 
             rotated = numpy.dot(rot_matrix, init_vector)
             rotated = rotated * -1
-            rib.Translate(rotated[0], rotated[1], rotated[2])
+            # import pdb; pdb.set_trace()
+            rib.Translate(rotated[0][0], rotated[1][0], rotated[2][0])
+
         rib.Translate(pos_x, pos_y, pos_z)
         if cre.QUAT_X in record:
             ex, ey, ez = utils.euler_from_quaternion([record[cre.QUAT_W], record[cre.QUAT_X], record[cre.QUAT_Y], record[cre.QUAT_Z]], axes='sxyz')
