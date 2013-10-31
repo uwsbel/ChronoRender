@@ -27,8 +27,9 @@ def main(sysargs):
         exe = prog.CRenderLocal()
     elif action == 'submit':
         qsub_script = prog.submit_qsub_script(sysargs=sysargs)
-        sys.exit()
+        # sys.exit()
         # exe = prog.CRenderDist()
+        return
     elif action == 'update':
         exe = prog.CRenderUpdate()
     args.insert(0, getExecName(exe))

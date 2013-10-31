@@ -10,6 +10,7 @@ from chronorender.cr_types import intlist, floatlist
 
 from chronorender.math import utils
 import math
+import numpy
 
 class RenderObject(Movable):
 
@@ -96,6 +97,7 @@ class RenderObject(Movable):
 
     def _renderSingleObject(self, rib, record={}, **kwargs):
         rib.AttributeBegin()
+        # import pdb; pdb.set_trace()
         self.renderAttributes(rib)
         # import pdb; pdb.set_trace()
         self._renderTransformData(rib, record, **kwargs)
@@ -110,6 +112,20 @@ class RenderObject(Movable):
         pos_x = record[cre.POS_X] if cre.POS_X in record else 0.0
         pos_y = record[cre.POS_Y] if cre.POS_X in record else 0.0
         pos_z = record[cre.POS_Z] if cre.POS_X in record else 0.0
+
+        # Offset for the fact that prman has cone's location
+        # at bottom center instead of center.
+        if self.geometry[0].getTypeName() == "cone":
+            init_vector = numpy.array([[0],[0],[1],[1]])
+            rot_matrix = None
+            if cre.QUAT_X in record:
+                rot_matrix = utils.quaternion_matrix([record[cre.QUAT_W], record[cre.QUAT_X], record[cre.QUAT_Y], record[cre.QUAT_Z]])
+            else:
+                rot_matrix = utils.euler_matrix([record[cre.EULER_X], record[cre.EULER_Y], record[cre.EULER_Z]])
+
+            rotated = numpy.dot(rot_matrix, init_vector)
+            rotated = rotated * -1
+            rib.Translate(rotated[0], rotated[1], rotated[2])
         rib.Translate(pos_x, pos_y, pos_z)
         if cre.QUAT_X in record:
             ex, ey, ez = utils.euler_from_quaternion([record[cre.QUAT_W], record[cre.QUAT_X], record[cre.QUAT_Y], record[cre.QUAT_Z]], axes='sxyz')

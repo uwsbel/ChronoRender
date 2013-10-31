@@ -23,6 +23,7 @@ class Cone(Geometry):
 
     def render(self, ri, *args, **kwargs):
         # ri.SolidBegin("primitive")
+        # import pdb; pdb.set_trace()
         ri.Cone(2.0*self.height, self.radius, self.thetamax, *args, **self._params)
         ri.Disk(0.0, self.radius, self.thetamax, *args, **self._params)
         # ri.SolidEnd()

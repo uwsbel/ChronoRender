@@ -48,7 +48,7 @@ setup(
     license='LICENSE.txt',
     description='RenderMan Rendering Service Package',
     long_description=open('README.txt').read(),
-    scripts=['scripts/cmovie.py', 'scripts/crender.py', 'scripts/crender_sim.py', 'scripts/script_utils.py'],
+    scripts=['scripts/cmovie.py', 'scripts/crender.py', 'scripts/crender_sim.py', 'scripts/script_utils.py', 'scripts/crender_auto.py'],
     package_data={
       'chronorender': [
         'cr.conf.yml',

@@ -11,12 +11,16 @@ def render(path_to_data_archive, path_to_metadata_archive, root_render_folder, f
         crend_path = os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "crender.py")
 
     
-    crender.main(["crender.py", "init"])
+    if not os.path.exists(os.path.join(root_render_folder, "RENDERMAN")):
+        os.makedirs(os.path.join(root_render_folder, "RENDERMAN"))
+    crender.main(["crender.py", "init", "-o", os.path.join(root_render_folder, "RENDERMAN")])
     # metadata = tarfile.open(path_to_metadata_archive)
 
     #TODO: tarfile extraction unsafe?
     # metadata.extractall(os.path.join(root_render_folder, "RENDERMAN"))
     # metadata.close()
+    # if not os.path.exists(os.path.join(root_render_folder, "RENDERMAN")):
+    #     os.makedirs(os.path.join(root_render_folder, "RENDERMAN"))
     subprocess.call(["tar", "-zxvf", path_to_metadata_archive, "-C", os.path.join(root_render_folder, "RENDERMAN")])
 
     num_data_files = os.listdir(os.path.join(root_render_folder, "RENDERMAN", "job", "data"))
@@ -37,7 +41,7 @@ def render(path_to_data_archive, path_to_metadata_archive, root_render_folder, f
 
 def main():
     #TEST hardcoded
-    render("/home/dankaczma/obj_test/data.tar.gz", "/home/dankaczma/obj_test/out.tar.gz", "/home/dankaczma/obj_test", frames=(0,0))
+    render("/home/dankaczma/obj_test/data.tar.gz", "/home/dankaczma/obj_test/out.tar.gz", "/home/dankaczma/obj_test/out", frames=(0,0))
 
 
 if __name__ == '__main__':
