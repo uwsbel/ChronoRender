@@ -14,11 +14,13 @@ class Camera(Movable):
 
         self.filename   = self.getMember('filename')
         self.script     = self.getMember(Scriptable.getTypeName())
+        self.moving_camera = self.getMember('moving_camera')
 
     def _initMembersDict(self):
         super(Camera, self)._initMembersDict()
         self._members['filename']   = [str, '']
         self._members[Scriptable.getTypeName()] = [Scriptable, None]
+        self._members['moving_camera'] = [bool, True]
 
     def updateMembers(self):
         super(Camera, self).updateMembers()
@@ -37,9 +39,15 @@ class Camera(Movable):
     def setAsset(self, assetname, obj):
         return
 
-    def render(self, rib, *args, **kwargs):
+    def render(self, rib, frame=None, *args, **kwargs):
+        # import pdb; pdb.set_trace()
         if self.script:
             self.script.render(rib, *args, **kwargs)
+        elif self.moving_camera:
+            filename = self.filename.strip(".rib")
+            filename = filename + "_{0}.rib".format(frame)
+            rib.ReadArchive(filename)
+            
         elif self.filename != '':
             rib.ReadArchive(self.filename)
 
