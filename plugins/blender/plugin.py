@@ -198,7 +198,6 @@ class Object:
             bpy.ops.mesh.primitive_torus_add(rotation=self.euler, location=(self.x, self.y, self.z), major_radius=self.ep[0], minor_radius=self.ep[1])
         #External Mesh
         elif self.obj_type in MESH_IMPORT_FUNCTIONS:
-            # import pdb; pdb.set_trace()
             filename = os.path.join(self.currdir, "meshes", self.ep[0])
             MESH_IMPORT_FUNCTIONS[self.obj_type](filepath=filename, use_split_groups=False, use_split_objects=False)
             # bpy.ops.object.join()
@@ -214,9 +213,7 @@ class Object:
             print("Object type {} is not currently supported as a primitive in the blender plugin")
  
         bpy.context.active_object.rotation_mode = 'ZYX'
-        # import pdb; pdb.set_trace()
         bpy.context.active_object["index"] = self.index
-        # import pdb; pdb.set_trace()
         bpy.context.active_object.name = "Obj # {}".format(self.index)
         bpy.context.active_object.active_material = self.material
         self.obj = bpy.context.active_object
@@ -228,7 +225,6 @@ class Object:
     def update(self):
         """Grabs stuff like color, texture and stores them"""
         try:
-            # import pdb; pdb.set_trace()
             self.obj = bpy.context.scene.objects['Obj # {}'.format(self.index)]
             self.color = (self.obj.active_material.diffuse_color[0], self.obj.active_material.diffuse_color[1], self.obj.active_material.diffuse_color[2])
             self.mat = self.obj.active_material
@@ -277,9 +273,11 @@ class ProxyObject(Object):
     #         self.color = (self.obj.active_material.diffuse_color[0], self.obj.active_material.diffuse_color[1], self.obj.active_material.diffuse_color[2])
     #         self.mat = self.obj.active_material
 
-def configInitialScene():
+def configInitialScene(fin_frame):
     # bpy.ops.object.delete()
-    pass
+    bpy.data.scenes["Scene"].frame_end = fin_frame
+    bpy.data.scenes["Scene"].frame_start = 0
+    bpy.data.scenes["Scene"].frame_current = bpy.data.scenes["Scene"].frame_start
 
 class ImportChronoRender(bpy.types.Operator):
     """Import ChronoRender"""
@@ -338,6 +336,13 @@ class ImportChronoRender(bpy.types.Operator):
         extra_geometry_indicies = []
 
         fin_name = self.filename
+        fin_frame = 250
+        try:
+            fin_frame = self.filename.replace(".dat", "")
+            fin_frame = int(fin_frame.replace("data_", ""))
+        except:
+            print("Failed to automatically get the framerange from the file")
+        
         filepath = os.path.join(self.directory, self.filename)
         fin_dir = self.directory
 
@@ -365,7 +370,7 @@ class ImportChronoRender(bpy.types.Operator):
                     print("New Proxy line num {}".format(i))
                     proxyObjects.append(ProxyObject(data, self.directory, [i+1]))
 
-        configInitialScene()
+        configInitialScene(fin_frame)
 
         for obj in objects:
             obj.addToBlender()
@@ -407,7 +412,6 @@ class ExportChronoRender(bpy.types.Operator):
 
     def export_mesh(self, context, fout, obj):
         #TODO: don't use just one file for the whole animation. One per frame. (per obj also?)
-        # import pdb; pdb.set_trace()
         for face in obj.obj.data.polygons:
             pgonstr = "Polygon "
             vertices = '"P" ['
@@ -431,7 +435,6 @@ class ExportChronoRender(bpy.types.Operator):
 
     def write_object(self, objects, is_proxy=False):
         renderobject = []
-        # import pdb; pdb.set_trace()
         for obj in objects:
             obj.update()
             name = obj.group
@@ -481,7 +484,6 @@ class ExportChronoRender(bpy.types.Operator):
             elif obj.obj_type.lower() in MESH_IMPORT_FUNCTIONS:
                 extra_rib_filename = "extra_geo_{}".format(obj.index) + ".rib"
                 data["geometry"][0]["filename"] = extra_rib_filename
-                # import pdb; pdb.set_trace()
                 renderman_dir = os.path.join(self.directory, "RENDERMAN")
                 if not os.path.exists(renderman_dir):
                     os.makedirs(renderman_dir)
@@ -690,12 +692,21 @@ class ExportChronoRender(bpy.types.Operator):
         ##############
         #Camera stuff#
         ##############
-        cam_file_name = "custom_camera.rib"
-        cam_file_path = os.path.join(self.fout_dir, cam_file_name)
-        cam_file = open(cam_file_path, 'w')
-        cam_file.write(self.camera_to_renderman(context, bpy.data.objects['Camera']))
+        current_frame = bpy.context.scene.frame_current
+        fmax = bpy.data.scenes["Scene"].frame_end
+        fmin = 0
+        for frame in range(fmin, fmax+1):
+            bpy.context.scene.frame_set(frame)
+            cam_file_name = "custom_camera_{}.rib".format(frame)
+            cam_file_path = os.path.join(self.fout_dir, cam_file_name)
+            cam_file = open(cam_file_path, 'w')
+            cam_file.write(self.camera_to_renderman(context, bpy.data.objects['Camera']))
 
-        cam_file.close()
+            cam_file.close()
+            #TODO: set frame markers in blender to be start and end of sim. curr to be curr frame
+
+        cam_file_name = "custom_camera.rib"
+        bpy.context.scene.frame_current = current_frame
         #############
         #Light stuff#
         #############
@@ -850,7 +861,6 @@ class ExportChronoRender(bpy.types.Operator):
         init_dir = os.getcwd()
 
         os.chdir(fout_dir)
-        # import pdb; pdb.set_trace()
         for f in os.listdir("."):
             if f.endswith(".rib"):
                 dest = os.path.join(ribarchives, os.path.basename(f))

@@ -117,7 +117,8 @@ class RenderPass(Renderable):
 
     def _renderCamera(self, rib, **kwargs):
         for cam in self.camera:
-            cam.render(rib, **kwargs)
+            # import pdb; pdb.set_trace()
+            cam.render(rib, frame=kwargs['framenumber'], **kwargs)
 
     def _renderHider(self, rib, **kwargs):
         for hider in self.hiders:

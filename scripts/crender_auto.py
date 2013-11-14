@@ -41,7 +41,7 @@ def render(path_to_data_archive, path_to_metadata_archive, root_render_folder, f
 
 def main():
     #TEST hardcoded
-    render("/home/dankaczma/obj_test/data.tar.gz", "/home/dankaczma/obj_test/out.tar.gz", "/home/dankaczma/obj_test/out", frames=(0,0))
+    render("/home/dankaczma/obj_test/data.tar.gz", "/home/dankaczma/obj_test/out.tar.gz", "/home/dankaczma/obj_test/out", frames=(0,5), ppn=4, num_nodes=1)
 
 
 if __name__ == '__main__':
