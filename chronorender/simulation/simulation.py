@@ -52,6 +52,7 @@ class Simulation(Movable):
         else:
             for robj in self._robjs:
                 # import pdb; pdb.set_trace()
+                # import pdb; pdb.set_trace()
                 data = self._data.getData(framenumber, robj.condition)
                 robj.render(ri, data, *args, **kwargs)
 

@@ -20,6 +20,8 @@ def get_logger():
         
 def create_logger():
     """Create a default logger"""
+    logging.basicConfig(filename='mylogger.log', level=logging.DEBUG, format='%(asctime)s %(levelname)s %(message)s')
+
     global logger
     logger = logging.getLogger(logger_name)
 

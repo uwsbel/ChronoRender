@@ -109,3 +109,6 @@ def submit_qsub_script(sysargs=None):
                 minframe = args["framerange"][1]
             write_script(args, args["name"], args["framerange"][0] + i*fract, minframe, filename, prog_name=sysargs[0])
             subprocess.Popen(["qsub", "./" + filename])
+
+    if args["renderer"] == "stdout":
+        print("Sorry, stdout not yet supported for cluster rendering")

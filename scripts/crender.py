@@ -7,9 +7,11 @@ su.addCRToPath()
 # from chronorender.cr import ChronoRender
 import sys, subprocess, inspect, os
 import chronorender.prog as prog
+import cProfile
 
 
 def main(sysargs):
+    print("crender.py main()")
     print(sysargs)
     # args = getArgs()
     if len(sysargs) < 2:

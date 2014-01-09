@@ -141,7 +141,7 @@ class ChronoRender(object):
         return cr_utils.getAbsPathRelativeToModule(ChronoRender, './assets/default.yml')
 
     def _writeDefaultAssets(self):
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         defaultscene = cr_utils.getAbsPathRelativeToModule(ChronoRender, './assets/default_scene.rib')
         job.copyAssetToDirectory(defaultscene)
         defaultcam = cr_utils.getAbsPathRelativeToModule(ChronoRender, './assets/default_camera.rib')

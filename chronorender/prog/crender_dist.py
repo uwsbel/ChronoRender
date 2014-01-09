@@ -56,7 +56,6 @@ class CRenderDist(Prog):
         job.frames = frames
         # prog = CRLocal()
         prog = CRenderLocal()
-        import pdb; pdb.set_trace()
         cr.submitJob(job, prog)
 
 if __name__ == '__main__':

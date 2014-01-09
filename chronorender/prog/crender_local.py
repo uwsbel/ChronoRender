@@ -3,6 +3,7 @@ import argparse, os
 
 from cr_prog import Prog
 from chronorender import ChronoRender
+import cProfile
 
 class CRenderLocal(Prog):
     def __init__(self):
@@ -11,7 +12,13 @@ class CRenderLocal(Prog):
 
     def main(self):
         self.args = self.parseArgs()
-        self.startLocalRenderJob()
+
+        cProfile.runctx(
+        'self.startLocalRenderJob()',
+        globals(),
+        locals(),
+        'myProfilingFile.pstats'
+        )
 
     def getArgs(self):
         return { 'metadata' : '',
