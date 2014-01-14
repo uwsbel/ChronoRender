@@ -31,6 +31,7 @@ class Renderable(Object):
         Renderable._instanceid += 1
 
     def _initMembersDict(self):
+        # import pdb; pdb.set_trace()
         super(Renderable, self)._initMembersDict()
         self._members[Attribute.getTypeName()]   = [Attribute, []]
         self._members[Option.getTypeName()]      = [Option, []]

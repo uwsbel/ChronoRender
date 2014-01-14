@@ -3,7 +3,6 @@ from chronorender.cr_scriptable import Scriptable
 from chronorender.cr_object import Object
 import chronorender.cr_types as cr_types
 import glob, os
-import pdb
 # Should implement:
 # * fields
 # * prepare()

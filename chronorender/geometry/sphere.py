@@ -18,7 +18,7 @@ class Sphere(Geometry):
     def _initMembersDict(self):
         super(Sphere,self)._initMembersDict()
 
-        self._members['radius']     = [float, 1.0]
+        self._members['radius']     = [float, 2.0]
         # self._members['zmin']       = [float,-1.0]
         # self._members['zmax']       = [float, 1.0]
         self._members['thetamax']   = [float, 360.0]
@@ -28,6 +28,8 @@ class Sphere(Geometry):
         self.setMember('thetamax', self.thetamax)
 
     def render(self, rib, *args, **kwargs):
+        if self.changingparams:
+            self.radius = kwargs['ep1']
         rib.Sphere(self.radius, -self.radius, self.radius, self.thetamax)
 
 def build(**kwargs):

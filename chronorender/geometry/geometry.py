@@ -19,14 +19,17 @@ class Geometry(Movable):
     def __init__(self, *args, **kwargs):
         super(Geometry,self).__init__(*args, **kwargs)
         self.script     = self.getMember(Scriptable.getTypeName())
+        self.changingparams = self.getMember('changingparams')
 
     def _initMembersDict(self):
         super(Geometry, self)._initMembersDict()
         self._members[Scriptable.getTypeName()] = [Scriptable, None]
+        self._members['changingparams']         = [bool, False]
 
     def updateMembers(self):
         super(Geometry, self).updateMembers()
         self.setMember(Scriptable.getTypeName(), self.script)
+        self.setMember('changingparams', self.changingparams)
 
     def resolveAssets(self, assetman):
         out = []

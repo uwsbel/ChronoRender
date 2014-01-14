@@ -363,6 +363,7 @@ class Stream(Graph):
 
         """
 
+        # import pdb; pdb.set_trace()
         self.logger.info("initializing stream")
         self.logger.debug("sorting nodes")
         sorted_nodes = self.sorted_nodes()
@@ -433,13 +434,14 @@ class Stream(Graph):
             threads.append((thread, node))
 
         self.exceptions = []
+        
         for (thread, node) in threads:
             self.logger.debug("joining thread for %s" % node_label(node))
             while True:
                 thread.join(JOIN_TIMEOUT)
                 if thread.isAlive():
+                    self.logger.debug("thread join timed out?")
                     pass
-                    # self.logger.debug("thread join timed out")
                 else:
                     if thread.exception:
                         self._add_thread_exception(thread)
@@ -502,6 +504,7 @@ class Stream(Graph):
         # FIXME: encapsulate finalization in exception handler, collect exceptions
         for node in self.sorted_nodes():
             self.logger.debug("finalizing node %s" % node_label(node))
+            # import pdb; pdb.set_trace() #between here
             node.finalize()
 
 def node_label(node):

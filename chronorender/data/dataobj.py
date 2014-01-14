@@ -79,6 +79,8 @@ class DataObject(Object):
         self._dataprocs.append(proc)
 
     def getData(self, srcnumber=-1, selectcondition=""):
+        # srcnumber gets passed framenumber. selectcondition the "id >= 0" thing
+        # import pdb; pdb.set_trace()
         if srcnumber == -1:
             srcnumber = self._currindex
             self.incrDataSourceCounter()
@@ -87,12 +89,14 @@ class DataObject(Object):
             srcnumber = self._maxindex-1
 
         out = self._run(srcnumber)
+        #out is a dict of objects attrs and the values {id: 0, pos_x: 3....}
         if selectcondition != "":
             src= ds.RecordListSourceNode(name="tmp", a_list=out, 
                     fields=FieldList(self._allfields))
             procs = []
             procs.append(dp.SelectNode(condition=selectcondition))
-            out = DataObject._doProcs(src, procs)
+            # import pdb; pdb.set_trace()
+            out = DataObject._doProcs(src, procs) #dict of attrs of the matching object for the frame
 
         datasrc = self._getResource(0, srcnumber)
         if datasrc.script and datasrc.script.isGood():
@@ -179,6 +183,7 @@ class DataObject(Object):
 
         connections = DataObject._createProcGraph(nodes, procs, "in","out")
         stream = Stream(nodes, connections)
+        # import pdb; pdb.set_trace() #its above here...
         stream.run() 
         return out.data
 

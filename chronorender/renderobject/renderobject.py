@@ -27,6 +27,7 @@ class RenderObject(Movable):
         self.data         = []
         self.multiobject  = False
 
+        self.ep1        = self.getMember('ep1')
         self.geometry   = self.getMember(Geometry.getTypeName())
         self.shaders    = self.getMember(Shader.getTypeName())
         self.condition  = self.getMember('condition')
@@ -39,6 +40,7 @@ class RenderObject(Movable):
 
         # self._members['motionblur']     = [bool, False]
         # self._members['range']          = [intlist, [-1,-1]]
+        self._members['ep1']                    = [float, 1.0]
         self._members[Geometry.getTypeName()]   = [Geometry, []]
         self._members[Shader.getTypeName()]     = [Shader, []]
         self._members['condition']              = [str, '']
@@ -49,6 +51,7 @@ class RenderObject(Movable):
     def updateMembers(self):
         super(RenderObject, self).updateMembers()
 
+        self.setMember('ep1', self.ep1)
         self.setMember(Geometry.getTypeName(), self.geometry)
         self.setMember(Shader.getTypeName(), self.shaders)
         self.setMember('condition', self.condition)
@@ -96,11 +99,25 @@ class RenderObject(Movable):
                 self._renderSingleObject(rib, record=entry, **kwargs)
 
     def _renderSingleObject(self, rib, record={}, **kwargs):
+        # Update geometry parameters per object
+        # import pdb; pdb.set_trace()
+
+        #TODO: don't go through this work if the changingprams flag False
+        self.ep = {}
+        for elem in ('ep1', 'ep2', 'ep3', 'ep4'):
+            if record[elem] is not None:
+                self.ep[elem] = float(record[elem])
+            else:
+                self.ep[elem] = None
+
+        #Make the rib
+
         rib.AttributeBegin()
         # import pdb; pdb.set_trace()
         self.renderAttributes(rib)
         # import pdb; pdb.set_trace()
         self._renderTransformData(rib, record, **kwargs)
+        # import pdb; pdb.set_trace()
         
         if self.instanced:
             rib.ObjectInstance(self.getInstanceID())
@@ -109,6 +126,7 @@ class RenderObject(Movable):
         rib.AttributeEnd()
 
     def _renderTransformData(self, rib, record={}, **kwargs):
+        # import pdb; pdb.set_trace()
         pos_x = record[cre.POS_X] if cre.POS_X in record else 0.0
         pos_y = record[cre.POS_Y] if cre.POS_X in record else 0.0
         pos_z = record[cre.POS_Z] if cre.POS_X in record else 0.0
@@ -144,6 +162,7 @@ class RenderObject(Movable):
             rib.Rotate(record[cre.EULER_Z], 0, 0, 1)
 
     def renderShape(self, rib, rendershaders=True, colorobject=True, **kwargs):
+        # import pdb; pdb.set_trace()
         if len(self.color) == 3:
             rib.Color(self.color)
         
@@ -152,7 +171,7 @@ class RenderObject(Movable):
                 shdr.render(rib, **kwargs)
 
         for geo in self.geometry: 
-            geo.render(rib, **kwargs)
+            geo.render(rib, ep1=self.ep['ep1'], ep2=self.ep['ep2'], ep3=self.ep['ep3'], ep4=self.ep['ep4'], **kwargs)
 
 
     def getInstanceables(self):
