@@ -23,17 +23,20 @@ class Cylinder(Geometry):
         # self._members['zmax']       = [float, 1.0]
         self._members['thetamax']   = [float, 360.0]
 
-    # def updateMembers(self):
-    #     self.setMember('radius', self.radius)
-    #     self.setMember('thetamax', self.thetamax)
-    #     self.setMember('zmin', self.zmin)
-    #     self.setMember('zmax', self.zmax)
+    def updateMembers(self):
+        self.setMember('radius', self.radius)
+        self.setMember('thetamax', self.thetamax)
+        self.setMember('zmin', self.zmin)
+        self.setMember('zmax', self.zmax)
 
     def render(self, ri, *args, **kwargs):
+        if self.changingparams:
+            self.radius = kwargs['ep1']
+            self.height = kwargs['ep2']
         # ri.SolidBegin("primitive")
-        ri.Cylinder(self.radius, -self.height, self.height, self.thetamax, *args, **self._params)
-        ri.Disk(-self.height, self.radius, self.thetamax, *args, **self._params)
-        ri.Disk(self.height, self.radius, self.thetamax, *args, **self._params)
+        ri.Cylinder(self.radius, -self.height, self.height, self.thetamax)
+        ri.Disk(-self.height, self.radius, self.thetamax)
+        ri.Disk(self.height, self.radius, self.thetamax)
         # ri.SolidEnd()
 
 def build(**kwargs):
