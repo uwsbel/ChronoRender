@@ -6,41 +6,5 @@ visualization.  The Chrono::Render package includes a set of compiled Python
 modules which are intended to be used via the scripts packaged with the
 distribution.
 
-#!/usr/bin/env python
+All documentation associated with using Chrono::Render may be found with the blender plugin at https://github.com/uwsbel/blenderPlugin
 
-from towelstuff import location
-from towelstuff import utils
-
-if utils.has_towel():
-  print "Your towel is located:",
-  location.where_is_my_towel()
-
-  (Note the double-colon and 4-space indent formatting
-   above.)
-
-  Paragraphs are separated by blank lines. *Italics*,
-  **bold**,
-  and ``monospace`` look like this.
-
-
-  A Section
-  =========
-
-  Lists look like this:
-
-  * First
-
-  * Second. Can be multiple lines
-  but must be indented properly.
-
-  A Sub-Section
-  -------------
-
-  Numbered lists look like you'd expect:
-
-  1. hi there
-
-  2. must be going
-
-  Urls are http://like.this and links can be
-  written `like this <http://www.example.com/foo/bar>`_.
